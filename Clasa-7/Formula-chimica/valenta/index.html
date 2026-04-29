@@ -443,12 +443,10 @@
 </div>
 
 <!-- POPUP TABEL MENDELEEV -->
-<div id="popup">
-    <div id="popupContent">
-        <h3>Tabelul periodic al elementelor</h3>
-        <button class="secondary" style="margin-bottom:8px;" onclick="closePopup()">Închide</button>
-        <!-- presupunem că tabel.png este în același folder cu acest fișier -->
-        <img src="../tabel.png" alt="Tabelul periodic al elementelor">
+<div id="popup" onclick="closePopup(event)">
+    <div id="popupContent" onclick="event.stopPropagation()">
+        <button class="secondary" onclick="closePopup(event)">Închide</button>
+        <img src="../tabel.png" alt="Tabelul periodic">
     </div>
 </div>
 
