@@ -347,12 +347,12 @@ function checkTabel(i, f, n, c, exp) {
 // ---------------------------
 // POPUP MENDELEEV
 // ---------------------------
-function openPopup() {
-    document.getElementById("popup").style.display = "flex";
-}
-function closePopup() {
-    document.getElementById("popup").style.display = "none";
-}
+<div id="popup" onclick="closePopup(event)">
+    <div id="popupContent" onclick="event.stopPropagation()">
+        <button class="secondary" onclick="closePopup(event)">Închide</button>
+        <img src="../tabel.png" alt="Tabelul periodic">
+    </div>
+</div>
 
 // ---------------------------
 // EXPORT PDF CU ANTET
