@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>Substanțe compuse – Clasa a VII-a</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: #eef2f7;
+        color: #2c3e50;
+    }
+
+    .wrapper {
+        max-width: 900px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+        margin-bottom: 6px;
+    }
+
+    header h2, header h3 {
+        font-weight: normal;
+        color: #555;
+        margin: 4px 0;
+    }
+
+    .step {
+        display: none;
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .step.active {
+        display: block;
+    }
+
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    button {
+        border: none;
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        background: #3498db;
+        color: #fff;
+    }
+
+    button.secondary {
+        background: #bdc3c7;
+    }
+
+    button:hover:not(:disabled) {
+        background: #217dbb;
+    }
+
+    /* Popup */
+    #popup {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        z-index: 1000;
+    }
+
+    #popupContent {
+        background: #fff;
+        border-radius: 12px;
+        max-width: 900px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 12px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<header>
+    <h2>Școala Gimnazială „Gala Galaction”, Mangalia</h2>
+    <h3>Prof. Dănuț Andronie – <span style="color:#217dbb;">danutmg@gmail.com</span></h3>
+    <h1>Substanțe compuse</h1>
+</header>
+
+<!-- PASUL 1 -->
+<div class="step active" id="step1">
+    <h2>Pasul 1 – Ce sunt substanțele compuse?</h2>
+    <p>O <b>substanță compusă</b> este formată din <b>două sau mai multe elemente chimice diferite</b> unite între ele.</p>
+
+    <p>Exemple:</p>
+    <ul>
+        <li><b>H<sub>2</sub>O</b> – apă (hidrogen + oxigen)</li>
+        <li><b>CO<sub>2</sub></b> – dioxid de carbon (carbon + oxigen)</li>
+        <li><b>NaCl</b> – sare de bucătărie (sodiu + clor)</li>
+    </ul>
+
+    <button onclick="openPopup()">Deschide tabelul periodic</button>
+
+    <div class="nav-buttons">
+        <button class="secondary" disabled>Înapoi</button>
+        <button onclick="goStep(2)">Înainte</button>
+    </div>
+</div>
+
+<!-- PASUL 2 -->
+<div class="step" id="step2">
+    <h2>Pasul 2 – Cum recunoaștem o substanță compusă?</h2>
+
+    <p>O formulă chimică reprezintă o substanță compusă dacă:</p>
+
+    <ul>
+        <li>conține <b>cel puțin două simboluri diferite</b> de elemente</li>
+        <li>ex: <b>HCl</b>, <b>NaOH</b>, <b>CaCO<sub>3</sub></b></li>
+    </ul>
+
+    <button onclick="openPopup()">Deschide tabelul periodic</button>
+
+    <div class="nav-buttons">
+        <button class="secondary" onclick="goStep(1)">Înapoi</button>
+        <button onclick="goStep(3)">Înainte</button>
+    </div>
+</div>
+
+<!-- PASUL 3 -->
+<div class="step" id="step3">
+    <h2>Pasul 3 – Exemple și clasificare</h2>
+
+    <p>Substanțele compuse pot fi:</p>
+
+    <ul>
+        <li><b>Oxizi</b> – CO₂, Fe₂O₃</li>
+        <li><b>Acizi</b> – HCl, H₂SO₄</li>
+        <li><b>Baze</b> – NaOH, Ca(OH)₂</li>
+        <li><b>Săruri</b> – NaCl, CaCO₃</li>
+    </ul>
+
+    <button onclick="openPopup()">Deschide tabelul periodic</button>
+
+    <div class="nav-buttons">
+        <button class="secondary" onclick="goStep(2)">Înapoi</button>
+        <button onclick="goStep(4)">Înainte</button>
+    </div>
+</div>
+
+<!-- PASUL 4 – RECAPITULARE -->
+<div class="step" id="step4">
+    <h2>Pasul 4 – Recapitulare</h2>
+    <p>Scrie <b>C</b> dacă este substanță compusă sau <b>S</b> dacă este substanță simplă.</p>
+
+    <ul>
+        <li>1) H₂O – <b>C</b></li>
+        <li>2) O₂ – <b>S</b></li>
+        <li>3) CO₂ – <b>C</b></li>
+        <li>4) Fe – <b>S</b></li>
+        <li>5) NaCl – <b>C</b></li>
+    </ul>
+
+    <p style="color:green; font-weight:bold;">Ai 5 răspunsuri corecte din 5.</p>
+
+    <!-- Navigare externă -->
+    <div class="nav-buttons">
+        <button class="secondary" onclick="window.location.href='../';">⟵ Înapoi la capitol</button>
+        <button onclick="window.location.href='../valenta/';">Lecția următoare ⟶</button>
+    </div>
+</div>
+
+</div>
+
+<!-- POPUP -->
+<div id="popup" onclick="closePopup(event)">
+    <div id="popupContent" onclick="event.stopPropagation()">
+        <button class="secondary" onclick="closePopup(event)">Închide</button>
+        <img src="../tabel.png" alt="Tabelul periodic">
+    </div>
+</div>
+
+<script>
+function goStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step' + n).classList.add('active');
+}
+
+function openPopup() {
+    document.getElementById("popup").style.display = "flex";
+}
+
+function closePopup(event) {
+    document.getElementById("popup").style.display = "none";
+}
+</script>
+
+</body>
+</html>
