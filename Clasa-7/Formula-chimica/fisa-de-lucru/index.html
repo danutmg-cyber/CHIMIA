@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Fișă de lucru – Substanțe compuse</title>
 
-<!-- Biblioteca pentru export PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
@@ -135,19 +134,18 @@
     <div id="tabelContainer"></div>
 </div>
 
-<!-- POPUP TABEL MENDELEEV -->
+<!-- POPUP -->
 <div id="popup" onclick="closePopup(event)">
     <div id="popupContent" onclick="event.stopPropagation()">
         <button onclick="closePopup(event)">Închide</button>
-        <!-- tabel.png este în directorul Formula-chimica -->
-        <img src="../tabel.png" alt="Tabelul periodic al elementelor">
+        <img src="../tabel.png" alt="Tabelul periodic">
     </div>
 </div>
 
 <script>
-// ---------------------------
-// SISTEM DE PUNCTAJ
-// ---------------------------
+/* ---------------------------
+   SISTEM DE PUNCTAJ
+----------------------------*/
 let score = 0;
 
 function addPoints(p) {
@@ -168,28 +166,30 @@ function resetTest() {
     score = 0;
     document.getElementById("score").innerText = 0;
     document.getElementById("badge").innerText = "";
-    loadQuestions();
-    loadValenta();
-    loadGreseli();
-    loadTabel();
+    loadAll();
 }
 
-// ---------------------------
-// SECȚIUNEA 1
-// ---------------------------
+/* ---------------------------
+   SECȚIUNEA 1 – FORMULE
+----------------------------*/
 const questions = [
     { text: "Scrie formula chimică pentru acid sulfuric", answer: "H2SO4", explanation: "Acid ternar: H₂SO₄." },
     { text: "Scrie formula chimică pentru oxid de fier(III)", answer: "Fe2O3", explanation: "Fe³⁺ + O²⁻ → Fe₂O₃." },
     { text: "Scrie formula chimică pentru piatra iadului", answer: "AgNO3", explanation: "Azotat de argint: AgNO₃." },
     { text: "Scrie formula chimică pentru clorură de bariu", answer: "BaCl2", explanation: "Ba²⁺ + 2Cl⁻ → BaCl₂." },
     { text: "Scrie formula chimică pentru dioxid de sulf", answer: "SO2", explanation: "SO₂: dioxid = 2 oxigeni." },
-    { text: "Scrie formula chimică pentru acid clorhidric", answer: "HCl", explanation: "H⁺ + Cl⁻ → HCl." }
+    { text: "Scrie formula chimică pentru acid clorhidric", answer: "HCl", explanation: "H⁺ + Cl⁻ → HCl." },
+    { text: "Scrie formula chimică pentru oxid de calciu", answer: "CaO", explanation: "Ca²⁺ + O²⁻ → CaO." },
+    { text: "Scrie formula chimică pentru hidroxid de sodiu", answer: "NaOH", explanation: "Na⁺ + OH⁻ → NaOH." }
 ];
 
 function loadQuestions() {
     const c = document.getElementById("exerciseContainer");
     c.innerHTML = "";
-    [...questions].sort(() => Math.random() - 0.5).forEach((q, i) => {
+
+    const selected = [...questions].sort(() => Math.random() - 0.5).slice(0, 5);
+
+    selected.forEach((q, i) => {
         c.innerHTML += `
         <div class="question">
             <p><b>${i+1}. ${q.text}</b></p>
@@ -204,7 +204,8 @@ function loadQuestions() {
 function checkAnswer(i, correct, exp) {
     const val = document.getElementById("q"+i).value.trim();
     const fb = document.getElementById("f"+i);
-    if (val.toUpperCase() === correct.toUpperCase()) {
+
+    if (val === correct) {
         fb.style.color = "green";
         fb.innerHTML = "Corect!";
         addPoints(10);
@@ -214,9 +215,9 @@ function checkAnswer(i, correct, exp) {
     }
 }
 
-// ---------------------------
-// SECȚIUNEA 2
-// ---------------------------
+/* ---------------------------
+   SECȚIUNEA 2 – VALENȚA
+----------------------------*/
 const valentaQuestions = [
     { formula:"NaCl", valenta:1, explanation:"Cl are valența I → Na I." },
     { formula:"NiCl2", valenta:2, explanation:"Cl I → Ni II." },
@@ -231,7 +232,10 @@ const valentaQuestions = [
 function loadValenta() {
     const c = document.getElementById("valentaContainer");
     c.innerHTML = "";
-    [...valentaQuestions].sort(() => Math.random() - 0.5).forEach((q, i) => {
+
+    const selected = [...valentaQuestions].sort(() => Math.random() - 0.5).slice(0, 5);
+
+    selected.forEach((q, i) => {
         c.innerHTML += `
         <div class="question">
             <p><b>${i+1}. Valența metalului în ${q.formula}</b></p>
@@ -246,6 +250,7 @@ function loadValenta() {
 function checkValenta(i, correct, exp) {
     const val = document.getElementById("v"+i).value;
     const fb = document.getElementById("vf"+i);
+
     if (parseInt(val) === correct) {
         fb.style.color = "green";
         fb.innerHTML = "Corect!";
@@ -256,22 +261,25 @@ function checkValenta(i, correct, exp) {
     }
 }
 
-// ---------------------------
-// SECȚIUNEA 3
-// ---------------------------
+/* ---------------------------
+   SECȚIUNEA 3 – FORMULE GREȘITE
+----------------------------*/
 const greseliQuestions = [
     { wrong:"NaS", correct:"Na2S", explanation:"Na I, S II → Na₂S." },
     { wrong:"MgOH", correct:"Mg(OH)2", explanation:"Mg II, OH I → Mg(OH)₂." },
-    { wrong:"CaO", correct:"CaO", explanation:"Formula este corectă." },
-    { wrong:"CO2", correct:"CO2", explanation:"Formula este corectă." },
     { wrong:"AgCl2", correct:"AgCl", explanation:"Ag I, Cl I → AgCl." },
-    { wrong:"AlO2", correct:"Al2O3", explanation:"Al III, O II → Al₂O₃." }
+    { wrong:"AlO2", correct:"Al2O3", explanation:"Al III, O II → Al₂O₃." },
+    { wrong:"FeO2", correct:"Fe2O3", explanation:"Fe III, O II → Fe₂O₃." },
+    { wrong:"CaCl", correct:"CaCl2", explanation:"Ca II, Cl I → CaCl₂." }
 ];
 
 function loadGreseli() {
     const c = document.getElementById("greseliContainer");
     c.innerHTML = "";
-    [...greseliQuestions].sort(() => Math.random() - 0.5).forEach((q, i) => {
+
+    const selected = [...greseliQuestions].sort(() => Math.random() - 0.5).slice(0, 5);
+
+    selected.forEach((q, i) => {
         c.innerHTML += `
         <div class="question">
             <p><b>${i+1}. Corectează formula: ${q.wrong}</b></p>
@@ -286,7 +294,8 @@ function loadGreseli() {
 function checkGreseli(i, correct, exp) {
     const val = document.getElementById("g"+i).value.trim();
     const fb = document.getElementById("gf"+i);
-    if (val.toUpperCase() === correct.toUpperCase()) {
+
+    if (val === correct) {
         fb.style.color = "green";
         fb.innerHTML = "Corect!";
         addPoints(10);
@@ -296,9 +305,9 @@ function checkGreseli(i, correct, exp) {
     }
 }
 
-// ---------------------------
-// SECȚIUNEA 4
-// ---------------------------
+/* ---------------------------
+   SECȚIUNEA 4 – TABEL
+----------------------------*/
 const tabelQuestions = [
     { formula:"H2SO4", name:"Acid sulfuric", category:"acid", explanation:"H⁺ + SO₄²⁻ → H₂SO₄." },
     { formula:"Al(NO3)3", name:"Azotat de aluminiu", category:"sare", explanation:"Al³⁺ + NO₃⁻." },
@@ -313,7 +322,10 @@ const tabelQuestions = [
 function loadTabel() {
     const c = document.getElementById("tabelContainer");
     c.innerHTML = "";
-    [...tabelQuestions].sort(() => Math.random() - 0.5).forEach((q, i) => {
+
+    const selected = [...tabelQuestions].sort(() => Math.random() - 0.5).slice(0, 5);
+
+    selected.forEach((q, i) => {
         c.innerHTML += `
         <div class="question">
             <p><b>${i+1}. Completează datele pentru: ${q.name}</b></p>
@@ -336,9 +348,7 @@ function checkTabel(i, f, n, ccat, exp) {
     const c1 = document.getElementById("tc"+i).value.trim().toLowerCase();
     const fb = document.getElementById("tfb"+i);
 
-    if (f1.toUpperCase() === f.toUpperCase() &&
-        n1.toLowerCase() === n.toLowerCase() &&
-        c1 === ccat) {
+    if (f1 === f && n1.toLowerCase() === n.toLowerCase() && c1 === ccat) {
         fb.style.color = "green";
         fb.innerHTML = "Corect!";
         addPoints(15);
@@ -354,9 +364,9 @@ function checkTabel(i, f, n, ccat, exp) {
     }
 }
 
-// ---------------------------
-// POPUP MENDELEEV
-// ---------------------------
+/* ---------------------------
+   POPUP
+----------------------------*/
 function openPopup() {
     document.getElementById("popup").style.display = "flex";
 }
@@ -365,9 +375,9 @@ function closePopup(event) {
     document.getElementById("popup").style.display = "none";
 }
 
-// ---------------------------
-// EXPORT PDF CU ANTET
-// ---------------------------
+/* ---------------------------
+   EXPORT PDF
+----------------------------*/
 function exportPDF() {
     const clone = document.createElement("div");
     clone.innerHTML = `
@@ -377,22 +387,4 @@ function exportPDF() {
     `;
     const opt = {
         margin: 0.5,
-        filename: 'Fisa_Chimie_Clasa_7.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'cm', format: 'a4', orientation: 'portrait' }
-    };
-    html2pdf().set(opt).from(clone).save();
-}
-
-// ---------------------------
-// PORNIRE
-// ---------------------------
-loadQuestions();
-loadValenta();
-loadGreseli();
-loadTabel();
-</script>
-
-</body>
-</html>
+        filename:
