@@ -351,10 +351,10 @@
 </div>
 
 <!-- POPUP TABEL -->
-<div id="popup">
-    <div id="popupContent">
-        <button class="secondary" onclick="closePopup()">Închide</button>
-        <img src="../tabel.png" alt="Tabelul periodic al elementelor">
+<div id="popup" onclick="closePopup(event)">
+    <div id="popupContent" onclick="event.stopPropagation()">
+        <button class="secondary" onclick="closePopup(event)">Închide</button>
+        <img src="../tabel.png" alt="Tabelul periodic">
     </div>
 </div>
 
