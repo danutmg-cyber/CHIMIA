@@ -12,49 +12,60 @@
         padding: 40px 20px;
         text-align: center;
         color: #2c3e50;
+        margin: 0;
     }
 
-    h1 {
+    header {
+        margin-bottom: 40px;
+    }
+
+    header h1 {
         font-size: 2.2rem;
         margin-bottom: 6px;
     }
 
-    h2 {
+    header h2 {
         font-size: 1.1rem;
         font-weight: normal;
-        margin-top: 0;
-        margin-bottom: 30px;
         color: #444;
+        margin: 4px 0;
+    }
+
+    header h3 {
+        font-size: 1rem;
+        font-weight: normal;
+        color: #444;
+        margin-bottom: 20px;
     }
 
     .menu {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: 20px;
         max-width: 500px;
         margin: auto;
     }
 
-    a.lesson {
+    a.chapter {
         display: block;
-        padding: 18px;
+        padding: 20px;
         background: white;
         border-radius: 12px;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         color: #2c3e50;
         text-decoration: none;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         transition: 0.2s;
     }
 
-    a.lesson:hover {
+    a.chapter:hover {
         background: #3498db;
         color: white;
         transform: translateY(-3px);
     }
 
     footer {
-        margin-top: 40px;
+        margin-top: 50px;
         font-size: 0.9rem;
         color: #777;
     }
@@ -62,53 +73,28 @@
 </head>
 <body>
 
-<h1>CHIMIA – Clasa a VII-a</h1>
-<h2>Prof. Dănuț Andronie – <span style="color:#217dbb;">danutmg@gmail.com</span></h2>
+<header>
+    <h1>CHIMIA – Clasa a VII-a</h1>
+    <h2>Școala Gimnazială „Gala Galaction”, Mangalia</h2>
+    <h3>Prof. Dănuț Andronie – <span style="color:#217dbb;">danutmg@gmail.com</span></h3>
+</header>
 
 <div class="menu">
 
-    <a class="lesson" href="Clasa-7/Formula-chimica/Substante-simple/">
-        🧪 Substanțe simple
+    <a class="chapter" href="Clasa-7/Formula-chimica/">
+        📘 Formula chimică
     </a>
 
-    <a class="lesson" href="Clasa-7/Formula-chimica/Substante-compuse/">
-        ⚗️ Substanțe compuse
+    <a class="chapter" href="#">
+        📗 Reacții chimice (în curând)
     </a>
 
-    <a class="lesson" href="Clasa-7/Formula-chimica/Valenta/">
-        🔢 Valența
+    <a class="chapter" href="#">
+        📙 Legături chimice (în curând)
     </a>
 
-    <a class="lesson" href="Clasa-7/Formula-chimica/Compusi-binari/">
-        🧬 Compuși binari
-    </a>
-
-    <a class="lesson" href="Clasa-7/Formula-chimica/Compusi-ternari/">
-        🧬 Compuși ternari
-    </a>
-
-    <a class="lesson" href="Clasa-7/Formula-chimica/Oxizi/">
-        🌫️ Oxizi
-    </a>
-
-    <a class="lesson" href="Clasa-7/Formula-chimica/Acizi/">
-        🧴 Acizi
-    </a>
-
-    <a class="lesson" href="Clasa-7/Formula-chimica/Baze/">
-        🧼 Baze
-    </a>
-
-    <a class="lesson" href="Clasa-7/Formula-chimica/Saruri/">
-        🧂 Săruri
-    </a>
-
-    <a class="lesson" href="Clasa-7/Formula-chimica/Oxiacizi/">
-        💧 Oxiacizi
-    </a>
-
-    <a class="lesson" href="Clasa-7/Formula-chimica/Saruri-ale-oxiacizilor/">
-        🧊 Săruri ale oxiacizilor
+    <a class="chapter" href="#">
+        📕 Alte capitole (în curând)
     </a>
 
 </div>
