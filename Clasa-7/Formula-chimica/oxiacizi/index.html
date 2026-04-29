@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>Oxiacizi – Clasa a VII-a</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    :root {
+        --bg: #eef2f7;
+        --card: #ffffff;
+        --accent: #3498db;
+        --accent-dark: #217dbb;
+        --text: #2c3e50;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        justify-content: center;
+    }
+
+    .wrapper {
+        width: 100%;
+        max-width: 900px;
+        padding: 16px;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 16px;
+    }
+
+    header h1 {
+        margin: 8px 0;
+        font-size: 1.8rem;
+    }
+
+    header h2 {
+        margin: 4px 0;
+        font-size: 1.1rem;
+        font-weight: normal;
+        color: #555;
+    }
+
+    .step-card {
+        background: var(--card);
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        margin-bottom: 16px;
+    }
+
+    .step-title {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .step-title span.badge {
+        background: var(--accent);
+        color: #fff;
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 0.8rem;
+    }
+
+    .step-content {
+        margin-top: 8px;
+        line-height: 1.5;
+        font-size: 0.98rem;
+    }
+
+    .highlight-box {
+        background: #f7f9fc;
+        border-left: 4px solid var(--accent);
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-top: 10px;
+        font-size: 0.95rem;
+    }
+
+    .visual-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .visual-card {
+        flex: 1 1 140px;
+        min-width: 120px;
+        background: #fdfefe;
+        border-radius: 10px;
+        border: 1px solid #dde4ec;
+        padding: 10px;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+
+    .visual-symbol {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+
+    .visual-type {
+        font-size: 0.8rem;
+        color: #777;
+    }
+
+    .question-box {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        background: #f7f9fc;
+        border: 1px dashed #c9d6e2;
+        font-size: 0.95rem;
+    }
+
+    .question-box input {
+        margin-top: 6px;
+        width: 100%;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid #c9d6e2;
+        font-size: 0.95rem;
+    }
+
+    .feedback {
+        margin-top: 6px;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    button {
+        border: none;
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        background: var(--accent);
+        color: #fff;
+    }
+
+    button.secondary {
+        background: #bdc3c7;
+    }
+
+    button:hover:not(:disabled) {
+        background: var(--accent-dark);
+    }
+
+    /* Popup */
+    #popup {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        z-index: 1000;
+    }
+
+    #popupContent {
+        background: #fff;
+        border-radius: 12px;
+        max-width: 900px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 12px;
+    }
+
+    #popupContent img {
+        width: 100%;
+        height: auto;
+    }
+
+    @media (max-width: 600px) {
+        button { width: 100%; }
+        .nav-buttons { flex-direction: column-reverse; }
+    }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+<header>
+    <h2>Școala Gimnazială „Gala Galaction”, Mangalia</h2>
+    <h1>Oxiacizi</h1>
+    <h2>Chimie – Clasa a VII-a</h2>
+</header>
+
+<div class="step-indicator" style="text-align:center; margin-bottom:10px;">
+    Pasul <span id="stepNumber">1</span> din 4
+</div>
+
+<!-- PAS 1 -->
+<section class="step-card" id="step1">
+    <div class="step-title">
+        <span class="badge">Pasul 1</span>
+        <span>Ce sunt oxiacizii?</span>
+    </div>
+
+    <div class="step-content">
+        <p>
+            <b>Oxiacizii</b> sunt acizi care conțin <b>hidrogen</b>, un <b>nemetal</b> și <b>oxigen</b>.
+        </p>
+
+        <div class="highlight-box">
+            Exemple:
+            <br>– <b>H₂SO₄</b> (acid sulfuric)
+            <br>– <b>HNO₃</b> (acid azotic)
+            <br>– <b>H₂CO₃</b> (acid carbonic)
+        </div>
+
+        <div class="visual-row">
+            <div class="visual-card">
+                <div class="visual-symbol">H₂SO₄</div>
+                <div class="visual-type">acid sulfuric</div>
+            </div>
+            <div class="visual-card">
+                <div class="visual-symbol">HNO₃</div>
+                <div class="visual-type">acid azotic</div>
+            </div>
+            <div class="visual-card">
+                <div class="visual-symbol">H₂CO₃</div>
+                <div class="visual-type">acid carbonic</div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="secondary" disabled>Înapoi</button>
+            <button onclick="goStep(2)">Înainte</button>
+        </div>
+    </div>
+</section>
+
+<!-- PAS 2 -->
+<section class="step-card" id="step2" style="display:none;">
+    <div class="step-title">
+        <span class="badge">Pasul 2</span>
+        <span>Structura oxiacizilor</span>
+    </div>
+
+    <div class="step-content">
+        <p>
+            Oxiacizii au forma generală:
+        </p>
+
+        <div class="highlight-box">
+            <b>H<sub>n</sub>XO<sub>m</sub></b>  
+            unde X = nemetalul, iar O = oxigenul
+        </div>
+
+        <button onclick="openPopup()">Deschide tabelul lui Mendeleev</button>
+
+        <div class="nav-buttons">
+            <button class="secondary" onclick="goStep(1)">Înapoi</button>
+            <button onclick="goStep(3)">Înainte</button>
+        </div>
+    </div>
+</section>
+
+<!-- PAS 3 -->
+<section class="step-card" id="step3" style="display:none;">
+    <div class="step-title">
+        <span class="badge">Pasul 3</span>
+        <span>Scrierea formulelor – valența</span>
+    </div>
+
+    <div class="step-content">
+        <p>
+            Pentru a scrie formula unui oxiacid, folosim <b>valența radicalului acid</b> și <b>valența hidrogenului (I)</b>.
+        </p>
+
+        <div class="highlight-box">
+            Exemple:
+            <br>– H₂SO₄ → SO₄ are valența II  
+            <br>– HNO₃ → NO₃ are valența I  
+            <br>– H₂CO₃ → CO₃ are valența II
+        </div>
+
+        <div class="question-box">
+            Scrie formula oxiacidului format din:  
+            – H(I) și NO₃(I)
+            <input id="q3" placeholder="Ex: HNO3">
+            <div class="feedback" id="f3"></div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="secondary" onclick="goStep(2)">Înapoi</button>
+            <button onclick="checkQ3()">Verifică și mergi mai departe</button>
+        </div>
+    </div>
+</section>
+
+<!-- PAS 4 -->
+<section class="step-card" id="step4" style="display:none;">
+    <div class="step-title">
+        <span class="badge">Pasul 4</span>
+        <span>Recapitulare</span>
+    </div>
+
+    <div class="step-content">
+        <p>Spune dacă următoarele sunt oxiacizi (O) sau nu (N):</p>
+
+        <div class="question-box">
+            1) H₂SO₄ <input id="r1">
+            2) HCl <input id="r2">
+            3) HNO₃ <input id="r3">
+            4) H₂S <input id="r4">
+            <div class="feedback" id="f4"></div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="secondary" onclick="goStep(3)">Înapoi</button>
+            <button onclick="checkRecap()">Verifică răspunsurile</button>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<!-- POPUP -->
+<div id="popup">
+    <div id="popupContent">
+        <button class="secondary" onclick="closePopup()">Închide</button>
+        <img src="../tabel.png" alt="Tabelul periodic">
+    </div>
+</div>
+
+<script>
+function goStep(n){
+    for(let i=1;i<=4;i++){
+        document.getElementById("step"+i).style.display="none";
+    }
+    document.getElementById("step"+n).style.display="block";
+    document.getElementById("stepNumber").innerText=n;
+    window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function openPopup(){ document.getElementById("popup").style.display="flex"; }
+function closePopup(){ document.getElementById("popup").style.display="none"; }
+
+function checkQ3(){
+    const v=document.getElementById("q3").value.toUpperCase().replace(/\s/g,"");
+    const fb=document.getElementById("f3");
+    if(v==="HNO3"){
+        fb.style.color="green";
+        fb.innerText="Corect! HNO₃ este acidul azotic.";
+        setTimeout(()=>goStep(4),700);
+    } else {
+        fb.style.color="orange";
+        fb.innerText="Gândește-te: H(I) + NO₃(I) → HNO₃.";
+    }
+}
+
+function checkRecap(){
+    const ans={r1:"O", r2:"N", r3:"O", r4:"N"};
+    let ok=0;
+    for(const id in ans){
+        const v=document.getElementById(id).value.toUpperCase();
+        if(v===ans[id]) ok++;
+    }
+    const fb=document.getElementById("f4");
+    fb.style.color=ok===4?"green":"orange";
+    fb.innerText=`Ai ${ok} răspunsuri corecte din 4.`;
+}
+</script>
+
+</body>
+</html>
