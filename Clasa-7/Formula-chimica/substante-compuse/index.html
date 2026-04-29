@@ -167,27 +167,28 @@
     </div>
 </div>
 
-<!-- PASUL 4 – RECAPITULARE -->
+<!-- PASUL 4 – RECAPITULARE INTERACTIVĂ -->
 <div class="step" id="step4">
-    <h2>Pasul 4 – Recapitulare</h2>
-    <p>Scrie <b>C</b> dacă este substanță compusă sau <b>S</b> dacă este substanță simplă.</p>
+    <h2>Pasul 4 – Recapitulare: recunoaște substanțele compuse</h2>
+    <p>Pentru fiecare formulă, scrie <b>C</b> dacă este substanță compusă sau <b>S</b> dacă este substanță simplă.</p>
 
-    <ul>
-        <li>1) H₂O – <b>C</b></li>
-        <li>2) O₂ – <b>S</b></li>
-        <li>3) CO₂ – <b>C</b></li>
-        <li>4) Fe – <b>S</b></li>
-        <li>5) NaCl – <b>C</b></li>
-    </ul>
+    <div class="exercise">
+        <p>1) H₂O – <input id="q1" maxlength="1"></p>
+        <p>2) O₂ – <input id="q2" maxlength="1"></p>
+        <p>3) CO₂ – <input id="q3" maxlength="1"></p>
+        <p>4) Fe – <input id="q4" maxlength="1"></p>
+        <p>5) NaCl – <input id="q5" maxlength="1"></p>
+    </div>
 
-    <p style="color:green; font-weight:bold;">Ai 5 răspunsuri corecte din 5.</p>
+    <button onclick="checkAnswers()">Verifică</button>
+
+    <p id="result" style="font-weight:bold; margin-top:15px;"></p>
 
     <!-- Navigare externă -->
     <div class="nav-buttons">
         <button class="secondary" onclick="window.location.href='../';">⟵ Înapoi la capitol</button>
         <button onclick="window.location.href='../valenta/';">Lecția următoare ⟶</button>
     </div>
-</div>
 
 </div>
 
