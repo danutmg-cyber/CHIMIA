@@ -7,222 +7,119 @@
 
 <style>
     :root {
-        --bg: #eef2f7;
-        --card: #ffffff;
         --accent: #3498db;
         --accent-dark: #217dbb;
-        --text: #2c3e50;
-    }
-
-    * {
-        box-sizing: border-box;
     }
 
     body {
         margin: 0;
         padding: 0;
         font-family: Arial, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        display: flex;
-        justify-content: center;
+        background: #eef2f7;
+        color: #2c3e50;
+        line-height: 1.6;
     }
 
     .wrapper {
-        width: 100%;
         max-width: 900px;
+        margin: auto;
         padding: 16px;
     }
 
+    /* ANTET — compact pe mobil */
     header {
         text-align: center;
-        margin-bottom: 16px;
+        margin-bottom: 20px;
+        padding: 10px 0;
     }
 
     header h1 {
-        margin: 8px 0;
         font-size: 1.8rem;
+        margin: 6px 0;
     }
 
-    header h2 {
-        margin: 4px 0;
-        font-size: 1.1rem;
+    header h2, header h3 {
         font-weight: normal;
         color: #555;
+        margin: 2px 0;
+        font-size: 1rem;
     }
 
-    .step-card {
-        background: var(--card);
-        border-radius: 14px;
-        padding: 18px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        margin-bottom: 16px;
+    @media (max-width: 600px) {
+        header h1 { font-size: 1.4rem; }
+        header h2, header h3 { font-size: 0.85rem; }
     }
 
-    .step-title {
-        font-size: 1.3rem;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+    /* PAS */
+    .step {
+        display: none;
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        font-size: 1.15rem;
     }
 
-    .step-title span.badge {
-        background: var(--accent);
-        color: #fff;
-        border-radius: 999px;
-        padding: 4px 10px;
-        font-size: 0.8rem;
+    .step.active {
+        display: block;
     }
 
-    .step-content {
-        margin-top: 8px;
-        line-height: 1.5;
-        font-size: 0.98rem;
-    }
-
-    .highlight-box {
+    /* CARDURI VIZUALE */
+    .example-box {
         background: #f7f9fc;
         border-left: 4px solid var(--accent);
+        padding: 12px;
+        margin: 12px 0;
         border-radius: 8px;
-        padding: 10px 12px;
-        margin-top: 10px;
-        font-size: 0.95rem;
+        font-size: 1.2rem;
     }
 
-    .example-box {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 10px;
+    /* INPUT */
+    input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        border: 2px solid #ccc;
+        margin-top: 8px;
     }
 
-    .chip {
-        padding: 8px 12px;
-        border-radius: 999px;
-        background: #ecf5ff;
-        border: 1px solid #c9e2ff;
-        font-size: 0.9rem;
-    }
-
-    .nav-buttons {
-        display: flex;
-        justify-content: space-between;
-        gap: 8px;
-        margin-top: 16px;
-    }
-
+    /* BUTOANE */
     button {
         border: none;
         border-radius: 999px;
-        padding: 10px 16px;
-        font-size: 0.95rem;
+        padding: 14px 20px;
+        font-size: 1.1rem;
         cursor: pointer;
         background: var(--accent);
         color: #fff;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-    }
-
-    button.secondary {
-        background: #bdc3c7;
-    }
-
-    button:disabled {
-        opacity: 0.5;
-        cursor: default;
+        width: 100%;
+        margin-top: 20px;
     }
 
     button:hover:not(:disabled) {
         background: var(--accent-dark);
     }
 
-    .step-indicator {
-        text-align: center;
-        font-size: 0.9rem;
-        color: #555;
-        margin-bottom: 8px;
-    }
-
-    .dots {
+    /* NAVIGARE */
+    .nav-buttons {
         display: flex;
-        justify-content: center;
-        gap: 6px;
-        margin-top: 4px;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 20px;
     }
 
-    .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #d0d7de;
+    .nav-buttons button {
+        flex: 1;
+        font-size: 1rem;
+        padding: 12px;
     }
 
-    .dot.active {
-        background: var(--accent);
+    button.secondary {
+        background: #bdc3c7;
     }
 
-    .visual-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 10px;
-    }
-
-    .visual-card {
-        flex: 1 1 140px;
-        min-width: 120px;
-        background: #fdfefe;
-        border-radius: 10px;
-        border: 1px solid #dde4ec;
-        padding: 10px;
-        text-align: center;
-        font-size: 0.9rem;
-    }
-
-    .visual-symbol {
-        font-size: 1.8rem;
-        font-weight: bold;
-        margin-bottom: 4px;
-    }
-
-    .visual-name {
-        font-size: 0.95rem;
-        margin-bottom: 2px;
-    }
-
-    .visual-type {
-        font-size: 0.8rem;
-        color: #777;
-    }
-
-    .question-box {
-        margin-top: 10px;
-        padding: 10px;
-        border-radius: 10px;
-        background: #f7f9fc;
-        border: 1px dashed #c9d6e2;
-        font-size: 0.95rem;
-    }
-
-    .question-box input {
-        margin-top: 6px;
-        width: 100%;
-        padding: 8px;
-        border-radius: 8px;
-        border: 1px solid #c9d6e2;
-        font-size: 0.95rem;
-    }
-
-    .feedback {
-        margin-top: 6px;
-        font-weight: bold;
-        font-size: 0.9rem;
-    }
-
-    /* Popup pentru tabelul lui Mendeleev */
+    /* POPUP */
     #popup {
         position: fixed;
         inset: 0;
@@ -244,331 +141,194 @@
         padding: 12px;
     }
 
-    #popupContent h3 {
-        margin-top: 0;
-        text-align: center;
-    }
-
     #popupContent img {
         width: 100%;
         height: auto;
-        display: block;
-        margin-top: 8px;
     }
 
-    @media (max-width: 600px) {
-        header h1 {
-            font-size: 1.5rem;
-        }
-        .step-card {
-            padding: 14px;
-        }
-        button {
-            width: 100%;
-        }
-        .nav-buttons {
-            flex-direction: column-reverse;
-        }
-    }
+    .correct { background: #c8f7c5; }
+    .wrong { background: #f7c5c5; }
 </style>
 </head>
+
 <body>
 
 <div class="wrapper">
-   <header>
+
+<header>
     <h2>Școala Gimnazială „Gala Galaction”, Mangalia</h2>
-    <h3 style="margin-top:4px; font-weight:normal; color:#444;">
-        Prof. Dănuț Andronie – <span style="color:#217dbb;">danutmg@gmail.com</span>
-    </h3>
+    <h3>Prof. Dănuț Andronie</h3>
     <h1>Substanțe simple</h1>
-    <h2>Chimie – Clasa a VII-a</h2>
 </header>
 
-    <div class="step-indicator">
-        Pasul <span id="stepNumber">1</span> din <span id="stepTotal">4</span>
-        <div class="dots">
-            <div class="dot active" id="dot1"></div>
-            <div class="dot" id="dot2"></div>
-            <div class="dot" id="dot3"></div>
-            <div class="dot" id="dot4"></div>
-        </div>
-    </div>
+<!-- PASUL 1 -->
+<div class="step active" id="step1">
+    <h2>Pasul 1 – Ce este o substanță simplă?</h2>
 
-    <!-- PAS 1: Ce este o substanță simplă -->
-    <section class="step-card" id="step1">
-        <div class="step-title">
-            <span class="badge">Pasul 1</span>
-            <span>Ce este o substanță simplă?</span>
-        </div>
-        <div class="step-content">
-            <p>
-                O <b>substanță simplă</b> este formată din <b>atomi de același fel</b>.
-                Adică în toată substanța găsim <b>un singur element chimic</b>.
-            </p>
+    <p>O <b>substanță simplă</b> este formată din <b>atomi de același fel</b>. În toată substanța găsim un singur element chimic.</p>
 
-            <div class="highlight-box">
-                <b>Exemple de substanțe simple:</b><br>
-                – oxigenul <b>O₂</b><br>
-                – hidrogenul <b>H₂</b><br>
-                – fierul <b>Fe</b><br>
-                – cuprul <b>Cu</b>
-            </div>
+    <div class="example-box"><b>O₂</b> – Oxigen (gaz)</div>
+    <div class="example-box"><b>H₂</b> – Hidrogen (gaz)</div>
+    <div class="example-box"><b>Fe</b> – Fier (metal)</div>
 
-            <div class="visual-row">
-                <div class="visual-card">
-                    <div class="visual-symbol">O₂</div>
-                    <div class="visual-name">Oxigen</div>
-                    <div class="visual-type">substanță simplă, gaz</div>
-                </div>
-                <div class="visual-card">
-                    <div class="visual-symbol">H₂</div>
-                    <div class="visual-name">Hidrogen</div>
-                    <div class="visual-type">substanță simplă, gaz</div>
-                </div>
-                <div class="visual-card">
-                    <div class="visual-symbol">Fe</div>
-                    <div class="visual-name">Fier</div>
-                    <div class="visual-type">substanță simplă, metal</div>
-                </div>
-            </div>
+    <p><b>Scrie un exemplu de substanță simplă:</b></p>
+    <input id="ex1" type="text" placeholder="Simbolul unui element">
 
-            <div class="question-box">
-                <div>Scrie un exemplu de substanță simplă (simbol sau formulă):</div>
-                <input id="q1" type="text" placeholder="Ex: O2, H2, Fe, Cu">
-                <div class="feedback" id="f1"></div>
-            </div>
-
-            <div class="nav-buttons">
-                <button class="secondary" disabled>Înapoi</button>
-                <button onclick="checkQ1()">Verifică și mergi mai departe</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- PAS 2: Substanță simplă vs. substanță compusă -->
-    <section class="step-card" id="step2" style="display:none;">
-        <div class="step-title">
-            <span class="badge">Pasul 2</span>
-            <span>Substanță simplă vs. substanță compusă</span>
-        </div>
-        <div class="step-content">
-            <p>
-                <b>Substanță simplă:</b> atomi de <b>același fel</b>.<br>
-                <b>Substanță compusă:</b> atomi de <b>feluri diferite</b>.
-            </p>
-
-            <div class="visual-row">
-                <div class="visual-card">
-                    <div class="visual-symbol">O₂</div>
-                    <div class="visual-name">Oxigen</div>
-                    <div class="visual-type">substanță simplă</div>
-                </div>
-                <div class="visual-card">
-                    <div class="visual-symbol">H₂O</div>
-                    <div class="visual-name">Apă</div>
-                    <div class="visual-type">substanță compusă</div>
-                </div>
-                <div class="visual-card">
-                    <div class="visual-symbol">NaCl</div>
-                    <div class="visual-name">Clorură de sodiu</div>
-                    <div class="visual-type">substanță compusă</div>
-                </div>
-            </div>
-
-            <div class="highlight-box">
-                <b>Regulă vizuală:</b><br>
-                – dacă în formulă apare <b>un singur simbol de element</b> → substanță simplă<br>
-                – dacă apar <b>două sau mai multe simboluri</b> → substanță compusă
-            </div>
-
-            <div class="question-box">
-                <div>Bifează mental și apoi verifică:</div>
-                <ul style="text-align:left; margin-top:6px;">
-                    <li>Fe – substanță simplă sau compusă?</li>
-                    <li>CO₂ – substanță simplă sau compusă?</li>
-                    <li>Cl₂ – substanță simplă sau compusă?</li>
-                </ul>
-                <button type="button" onclick="showAnswers2()">Afișează răspunsurile</button>
-                <div class="feedback" id="f2"></div>
-            </div>
-
-            <div class="nav-buttons">
-                <button class="secondary" onclick="goStep(1)">Înapoi</button>
-                <button onclick="goStep(3)">Înainte</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- PAS 3: Legătura cu tabelul lui Mendeleev -->
-    <section class="step-card" id="step3" style="display:none;">
-        <div class="step-title">
-            <span class="badge">Pasul 3</span>
-            <span>Substanțele simple și tabelul lui Mendeleev</span>
-        </div>
-        <div class="step-content">
-            <p>
-                Fiecare pătrățel din <b>tabelul lui Mendeleev</b> reprezintă un <b>element chimic</b>.
-                Din fiecare element putem avea o <b>substanță simplă</b>.
-            </p>
-
-            <div class="highlight-box">
-                <b>Exemplu:</b><br>
-                – pătrățelul cu simbolul <b>Cu</b> → elementul cupru → substanță simplă: <b>Cu</b><br>
-                – pătrățelul cu simbolul <b>O</b> → elementul oxigen → substanță simplă: <b>O₂</b><br>
-                – pătrățelul cu simbolul <b>Cl</b> → elementul clor → substanță simplă: <b>Cl₂</b>
-            </div>
-
-            <button type="button" onclick="openPopup()">Deschide tabelul lui Mendeleev</button>
-
-            <div class="question-box">
-                <div>
-                    Alege un element din tabel (de exemplu, Na, Mg, Al) și scrie substanța simplă corespunzătoare:
-                </div>
-                <input id="q3" type="text" placeholder="Ex: Na, Mg, Al, Cl2, O2">
-                <div class="feedback" id="f3"></div>
-            </div>
-
-    <div class="nav-buttons">
-    <button class="secondary" onclick="window.location.href='../';">⟵ Înapoi la capitol</button>
-    <button onclick="window.location.href='../substante-compuse/';">Lecția următoare ⟶</button>
-    </div>
-
-        </div>
-    </section>
-
-    <!-- PAS 4: Recapitulare interactivă -->
-    <section class="step-card" id="step4" style="display:none;">
-        <div class="step-title">
-            <span class="badge">Pasul 4</span>
-            <span>Recapitulare: recunoaște substanțele simple</span>
-        </div>
-        <div class="step-content">
-            <p>
-                Pentru fiecare formulă, scrie <b>S</b> dacă este <b>substanță simplă</b> sau <b>C</b> dacă este <b>substanță compusă</b>.
-            </p>
-
-            <div class="question-box">
-                <div>1) O₂</div>
-                <input id="r1" type="text" placeholder="S sau C">
-                <div>2) H₂O</div>
-                <input id="r2" type="text" placeholder="S sau C">
-                <div>3) Fe</div>
-                <input id="r3" type="text" placeholder="S sau C">
-                <div>4) CO₂</div>
-                <input id="r4" type="text" placeholder="S sau C">
-                <div>5) Cl₂</div>
-                <input id="r5" type="text" placeholder="S sau C">
-                <div class="feedback" id="f4"></div>
-            </div>
-
-            <div class="nav-buttons">
-                <button class="secondary" onclick="goStep(3)">Înapoi</button>
-                <button onclick="checkRecap()">Verifică răspunsurile</button>
-            </div>
-        </div>
-    </section>
+    <button onclick="checkStep1()">Verifică și mergi mai departe</button>
 </div>
 
-<!-- POPUP TABEL MENDELEEV -->
+<!-- PASUL 2 -->
+<div class="step" id="step2">
+    <h2>Pasul 2 – Cum recunoaștem o substanță simplă?</h2>
+
+    <p>O substanță este simplă dacă:</p>
+
+    <ul>
+        <li>are <b>un singur simbol chimic</b></li>
+        <li>poate avea indice (ex: O₂, H₂), dar simbolul rămâne același</li>
+    </ul>
+
+    <p><b>Exemplu:</b></p>
+    <div class="example-box"><b>N₂</b> – Azot</div>
+
+    <p><b>Scrie dacă O₂ este substanță simplă (DA/NU):</b></p>
+    <input id="ex2" type="text">
+
+    <div class="nav-buttons">
+        <button class="secondary" onclick="goStep(1)">Înapoi</button>
+        <button onclick="checkStep2()">Înainte</button>
+    </div>
+</div>
+
+<!-- PASUL 3 -->
+<div class="step" id="step3">
+    <h2>Pasul 3 – Clasificare</h2>
+
+    <p>Substanțele simple pot fi:</p>
+
+    <ul>
+        <li><b>metale</b> – Fe, Cu, Al</li>
+        <li><b>nemetale</b> – O₂, H₂, N₂</li>
+        <li><b>gaze nobile</b> – He, Ne, Ar</li>
+    </ul>
+
+    <p><b>Scrie un metal simplu:</b></p>
+    <input id="ex3" type="text">
+
+    <div class="nav-buttons">
+        <button class="secondary" onclick="goStep(2)">Înapoi</button>
+        <button onclick="checkStep3()">Înainte</button>
+    </div>
+</div>
+
+<!-- PASUL 4 – RECAPITULARE -->
+<div class="step" id="step4">
+    <h2>Pasul 4 – Recapitulare</h2>
+
+    <p>Scrie <b>S</b> pentru substanță simplă și <b>C</b> pentru substanță compusă.</p>
+
+    <p>1) O₂ – <input id="r1" maxlength="1"></p>
+    <p>2) H₂O – <input id="r2" maxlength="1"></p>
+    <p>3) Fe – <input id="r3" maxlength="1"></p>
+    <p>4) CO₂ – <input id="r4" maxlength="1"></p>
+    <p>5) Cu – <input id="r5" maxlength="1"></p>
+
+    <button onclick="checkRecap()">Verifică</button>
+
+    <p id="scoreFinal" style="font-size:1.3rem; font-weight:bold; margin-top:20px;"></p>
+
+    <div class="nav-buttons">
+        <button class="secondary" onclick="goStep(3)">Înapoi</button>
+        <button onclick="window.location.href='../';">Înapoi la capitol</button>
+    </div>
+</div>
+
+</div>
+
+<!-- POPUP -->
 <div id="popup" onclick="closePopup(event)">
     <div id="popupContent" onclick="event.stopPropagation()">
-        <button class="secondary" onclick="closePopup(event)">Închide</button>
+        <button onclick="closePopup(event)">Închide</button>
         <img src="../tabel.png" alt="Tabelul periodic">
     </div>
 </div>
 
 <script>
-    let currentStep = 1;
-    const totalSteps = 4;
+/* ---------------------------
+   NAVIGARE
+----------------------------*/
+function goStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step' + n).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-    document.getElementById("stepTotal").innerText = totalSteps;
+/* ---------------------------
+   PASUL 1
+----------------------------*/
+function checkStep1() {
+    const val = document.getElementById("ex1").value.trim();
+    const simple = ["O2", "H2", "Fe", "Cu", "N2", "Cl2", "S8", "He", "Ne", "Ar"];
 
-    function updateDots() {
-        for (let i = 1; i <= totalSteps; i++) {
-            const dot = document.getElementById("dot" + i);
-            if (!dot) continue;
-            dot.classList.toggle("active", i === currentStep);
-        }
-        document.getElementById("stepNumber").innerText = currentStep;
-    }
+    if (simple.includes(val)) goStep(2);
+    else alert("Răspuns greșit. Scrie simbolul unui element.");
+}
 
-    function goStep(n) {
-        if (n < 1 || n > totalSteps) return;
-        document.getElementById("step" + currentStep).style.display = "none";
-        currentStep = n;
-        document.getElementById("step" + currentStep).style.display = "block";
-        updateDots();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+/* ---------------------------
+   PASUL 2
+----------------------------*/
+function checkStep2() {
+    const val = document.getElementById("ex2").value.trim().toUpperCase();
+    if (val === "DA") goStep(3);
+    else alert("Răspuns greșit. O₂ este substanță simplă.");
+}
 
-    function checkQ1() {
-        const val = document.getElementById("q1").value.trim().toUpperCase();
-        const fb = document.getElementById("f1");
-        if (!val) {
-            fb.style.color = "red";
-            fb.innerText = "Încearcă să scrii măcar un exemplu.";
-            return;
-        }
-        const simpleExamples = ["O2","H2","FE","CU","CL2","N2","O","H","NA","MG","AL"];
-        if (simpleExamples.includes(val)) {
-            fb.style.color = "green";
-            fb.innerText = "Foarte bine! Ai dat un exemplu de substanță simplă.";
-            setTimeout(() => goStep(2), 700);
+/* ---------------------------
+   PASUL 3
+----------------------------*/
+function checkStep3() {
+    const val = document.getElementById("ex3").value.trim();
+    const metale = ["Fe", "Cu", "Al", "Au", "Ag"];
+
+    if (metale.includes(val)) goStep(4);
+    else alert("Răspuns greșit. Scrie simbolul unui metal.");
+}
+
+/* ---------------------------
+   PASUL 4 – RECAPITULARE
+----------------------------*/
+function checkRecap() {
+    const correct = ["S", "C", "S", "C", "S"];
+    let score = 0;
+
+    for (let i = 1; i <= 5; i++) {
+        const input = document.getElementById("r" + i);
+        const val = input.value.toUpperCase();
+
+        if (val === correct[i - 1]) {
+            input.classList.add("correct");
+            input.classList.remove("wrong");
+            score++;
         } else {
-            fb.style.color = "orange";
-            fb.innerText = "Poate fi corect, dar verifică dacă este formată doar din atomi de același fel.";
+            input.classList.add("wrong");
+            input.classList.remove("correct");
         }
     }
 
-    function showAnswers2() {
-        const fb = document.getElementById("f2");
-        fb.style.color = "#2c3e50";
-        fb.innerHTML =
-            "Răspunsuri:<br>" +
-            "Fe – substanță simplă<br>" +
-            "CO₂ – substanță compusă<br>" +
-            "Cl₂ – substanță simplă";
-    }
+    document.getElementById("scoreFinal").innerText =
+        "Ai " + score + " răspunsuri corecte din 5.";
+}
 
-    function checkQ3() {
-        const val = document.getElementById("q3").value.trim().toUpperCase();
-        const fb = document.getElementById("f3");
-        if (!val) {
-            fb.style.color = "red";
-            fb.innerText = "Scrie un exemplu, chiar dacă nu ești sigur.";
-            return;
-        }
-        fb.style.color = "green";
-        fb.innerText = "Bine! Important este să legi substanța simplă de un element din tabel.";
-        setTimeout(() => goStep(4), 700);
-    }
+/* ---------------------------
+   POPUP
+----------------------------*/
+function openPopup() {
+    document.getElementById("popup").style.display = "flex";
+}
 
-    function checkRecap() {
-        const answers = {
-            r1: "S", // O2
-            r2: "C", // H2O
-            r3: "S", // Fe
-            r4: "C", // CO2
-            r5: "S"  // Cl2
-        };
-        let correct = 0;
-        for (let id in answers) {
-            const input = document.getElementById(id);
-            const val = input.value.trim().toUpperCase();
-            if (val === answers[id]) correct++;
-        }
-        const fb = document.getElementById("f4");
-        fb.style.color = correct === 5 ? "green" : "orange";
-        fb.innerText = `Ai ${correct} răspunsuri corecte din 5.`;
-    }
-
-    function openPopup() {
-        document.getElementById("popup").style.display = "flex";
-    }
-
-    function closePopup() {
-        document.getElementById("popup").style.display = "none";
-    }
+function closePopup(event) {
+    document.getElementById("popup").style.display = "none";
+}
 </script>
 
 </body>
