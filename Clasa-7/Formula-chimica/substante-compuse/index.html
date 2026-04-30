@@ -6,74 +6,120 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+    :root {
+        --accent: #3498db;
+        --accent-dark: #217dbb;
+    }
+
     body {
         margin: 0;
         padding: 0;
         font-family: Arial, sans-serif;
         background: #eef2f7;
         color: #2c3e50;
+        line-height: 1.6;
     }
 
     .wrapper {
         max-width: 900px;
         margin: auto;
-        padding: 20px;
+        padding: 16px;
     }
 
+    /* ANTET — compact pe mobil */
     header {
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
+        padding: 10px 0;
     }
 
     header h1 {
-        font-size: 2rem;
-        margin-bottom: 6px;
+        font-size: 1.8rem;
+        margin: 6px 0;
     }
 
     header h2, header h3 {
         font-weight: normal;
         color: #555;
-        margin: 4px 0;
+        margin: 2px 0;
+        font-size: 1rem;
     }
 
+    @media (max-width: 600px) {
+        header h1 { font-size: 1.4rem; }
+        header h2, header h3 { font-size: 0.85rem; }
+    }
+
+    /* PAS */
     .step {
         display: none;
         background: #fff;
         padding: 20px;
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        font-size: 1.15rem;
     }
 
     .step.active {
         display: block;
     }
 
-    .nav-buttons {
-        display: flex;
-        justify-content: space-between;
-        gap: 8px;
-        margin-top: 16px;
+    /* CARDURI VIZUALE */
+    .example-box {
+        background: #f7f9fc;
+        border-left: 4px solid var(--accent);
+        padding: 12px;
+        margin: 12px 0;
+        border-radius: 8px;
+        font-size: 1.2rem;
     }
 
+    /* INPUT */
+    input[type="text"], input[type="number"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        border: 2px solid #ccc;
+        margin-top: 8px;
+    }
+
+    /* BUTOANE */
     button {
         border: none;
         border-radius: 999px;
-        padding: 10px 16px;
-        font-size: 0.95rem;
+        padding: 14px 20px;
+        font-size: 1.1rem;
         cursor: pointer;
-        background: #3498db;
+        background: var(--accent);
         color: #fff;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    button:hover:not(:disabled) {
+        background: var(--accent-dark);
+    }
+
+    /* NAVIGARE */
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .nav-buttons button {
+        flex: 1;
+        font-size: 1rem;
+        padding: 12px;
     }
 
     button.secondary {
         background: #bdc3c7;
     }
 
-    button:hover:not(:disabled) {
-        background: #217dbb;
-    }
-
-    /* Popup */
+    /* POPUP */
     #popup {
         position: fixed;
         inset: 0;
@@ -94,6 +140,14 @@
         overflow-y: auto;
         padding: 12px;
     }
+
+    #popupContent img {
+        width: 100%;
+        height: auto;
+    }
+
+    .correct { background: #c8f7c5; }
+    .wrong { background: #f7c5c5; }
 </style>
 </head>
 
@@ -103,52 +157,49 @@
 
 <header>
     <h2>Școala Gimnazială „Gala Galaction”, Mangalia</h2>
-    <h3>Prof. Dănuț Andronie – <span style="color:#217dbb;">danutmg@gmail.com</span></h3>
+    <h3>Prof. Dănuț Andronie</h3>
     <h1>Substanțe compuse</h1>
 </header>
 
 <!-- PASUL 1 -->
 <div class="step active" id="step1">
     <h2>Pasul 1 – Ce sunt substanțele compuse?</h2>
+
     <p>O <b>substanță compusă</b> este formată din <b>două sau mai multe elemente chimice diferite</b> unite între ele.</p>
 
-    <p>Exemple:</p>
-    <ul>
-        <li><b>H<sub>2</sub>O</b> – apă (hidrogen + oxigen)</li>
-        <li><b>CO<sub>2</sub></b> – dioxid de carbon (carbon + oxigen)</li>
-        <li><b>NaCl</b> – sare de bucătărie (sodiu + clor)</li>
-    </ul>
+    <div class="example-box"><b>H₂O</b> – apă</div>
+    <div class="example-box"><b>CO₂</b> – dioxid de carbon</div>
+    <div class="example-box"><b>NaCl</b> – sare de bucătărie</div>
 
-    <button onclick="openPopup()">Deschide tabelul periodic</button>
+    <p><b>Scrie o substanță compusă:</b></p>
+    <input id="ex1" type="text" placeholder="Exemplu: formula unui compus">
 
-    <div class="nav-buttons">
-        <button class="secondary" disabled>Înapoi</button>
-        <button onclick="goStep(2)">Înainte</button>
-    </div>
+    <button onclick="checkStep1()">Verifică și mergi mai departe</button>
 </div>
 
 <!-- PASUL 2 -->
 <div class="step" id="step2">
     <h2>Pasul 2 – Cum recunoaștem o substanță compusă?</h2>
 
-    <p>O formulă chimică reprezintă o substanță compusă dacă:</p>
+    <p>O substanță este compusă dacă:</p>
 
     <ul>
-        <li>conține <b>cel puțin două simboluri diferite</b> de elemente</li>
-        <li>ex: <b>HCl</b>, <b>NaOH</b>, <b>CaCO<sub>3</sub></b></li>
+        <li>are <b>cel puțin două simboluri diferite</b></li>
+        <li>ex: HCl, NaOH, CaCO₃</li>
     </ul>
 
-    <button onclick="openPopup()">Deschide tabelul periodic</button>
+    <p><b>Este CO₂ o substanță compusă? (DA/NU)</b></p>
+    <input id="ex2" type="text">
 
     <div class="nav-buttons">
         <button class="secondary" onclick="goStep(1)">Înapoi</button>
-        <button onclick="goStep(3)">Înainte</button>
+        <button onclick="checkStep2()">Înainte</button>
     </div>
 </div>
 
 <!-- PASUL 3 -->
 <div class="step" id="step3">
-    <h2>Pasul 3 – Exemple și clasificare</h2>
+    <h2>Pasul 3 – Clasificare</h2>
 
     <p>Substanțele compuse pot fi:</p>
 
@@ -159,34 +210,29 @@
         <li><b>Săruri</b> – NaCl, CaCO₃</li>
     </ul>
 
-    <button onclick="openPopup()">Deschide tabelul periodic</button>
+    <p><b>Scrie un oxid:</b></p>
+    <input id="ex3" type="text">
 
     <div class="nav-buttons">
         <button class="secondary" onclick="goStep(2)">Înapoi</button>
-        <button onclick="goStep(4)">Înainte</button>
+        <button onclick="checkStep3()">Înainte</button>
     </div>
 </div>
 
 <!-- PASUL 4 – RECAPITULARE INTERACTIVĂ -->
 <div class="step" id="step4">
-    <h2>Pasul 4 – Recapitulare: recunoaște substanțele compuse</h2>
-    <p>Pentru fiecare formulă, scrie <b>C</b> dacă este substanță compusă sau <b>S</b> dacă este substanță simplă.</p>
+    <h2>Pasul 4 – Recapitulare</h2>
 
-    <div class="exercise">
-        <p>1) H₂O – <input id="q1" maxlength="1"></p>
-        <p>2) O₂ – <input id="q2" maxlength="1"></p>
-        <p>3) CO₂ – <input id="q3" maxlength="1"></p>
-        <p>4) Fe – <input id="q4" maxlength="1"></p>
-        <p>5) NaCl – <input id="q5" maxlength="1"></p>
-    </div>
+    <p>Scrie <b>C</b> pentru substanță compusă și <b>S</b> pentru substanță simplă.</p>
 
-    <button onclick="checkAnswers()">Verifică</button>
+    <div id="recapContainer"></div>
 
-    <p id="result" style="font-weight:bold; margin-top:15px;"></p>
+    <button onclick="checkRecap()">Verifică</button>
 
-    <!-- Navigare externă -->
+    <p id="scoreFinal" style="font-size:1.3rem; font-weight:bold; margin-top:20px;"></p>
+
     <div class="nav-buttons">
-        <button class="secondary" onclick="window.location.href='../';">⟵ Înapoi la capitol</button>
+        <button class="secondary" onclick="goStep(3)">Înapoi</button>
         <button onclick="window.location.href='../valenta/';">Lecția următoare ⟶</button>
     </div>
 </div>
@@ -196,17 +242,135 @@
 <!-- POPUP -->
 <div id="popup" onclick="closePopup(event)">
     <div id="popupContent" onclick="event.stopPropagation()">
-        <button class="secondary" onclick="closePopup(event)">Închide</button>
+        <button onclick="closePopup(event)">Închide</button>
         <img src="../tabel.png" alt="Tabelul periodic">
     </div>
 </div>
-
 <script>
+/* ---------------------------
+   NAVIGARE
+----------------------------*/
 function goStep(n) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     document.getElementById('step' + n).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+/* ---------------------------
+   PASUL 1 – EXERCIȚIU RANDOM
+----------------------------*/
+const compuseExamples = [
+    "H2O", "CO2", "NaCl", "HCl", "CaCO3", "NH3", "CH4", "KNO3", "MgO", "H2SO4"
+];
+
+let lastQ1 = "";
+
+function checkStep1() {
+    const val = document.getElementById("ex1").value.trim();
+
+    if (val === "") {
+        alert("Scrie o formulă chimică.");
+        return;
+    }
+
+    if (compuseExamples.includes(val)) {
+        goStep(2);
+    } else {
+        alert("Răspuns greșit. Scrie formula unei substanțe compuse.");
+    }
+}
+
+/* ---------------------------
+   PASUL 2 – DA/NU
+----------------------------*/
+function checkStep2() {
+    const val = document.getElementById("ex2").value.trim().toUpperCase();
+
+    if (val === "DA") goStep(3);
+    else alert("Răspuns greșit. CO₂ este substanță compusă.");
+}
+
+/* ---------------------------
+   PASUL 3 – EXERCIȚIU RANDOM
+----------------------------*/
+const oxizi = ["CO2", "SO2", "NO2", "Fe2O3", "CuO", "MgO"];
+let lastOxid = "";
+
+function checkStep3() {
+    const val = document.getElementById("ex3").value.trim();
+
+    if (oxizi.includes(val)) goStep(4);
+    else alert("Răspuns greșit. Scrie formula unui oxid.");
+}
+
+/* ---------------------------
+   PASUL 4 – RECAPITULARE RANDOM
+----------------------------*/
+const recapQuestions = [
+    { formula: "O2", type: "S" },
+    { formula: "H2O", type: "C" },
+    { formula: "Fe", type: "S" },
+    { formula: "CO2", type: "C" },
+    { formula: "NaCl", type: "C" },
+    { formula: "H2", type: "S" },
+    { formula: "CaCO3", type: "C" },
+    { formula: "Cu", type: "S" },
+    { formula: "NH3", type: "C" },
+    { formula: "Cl2", type: "S" }
+];
+
+let lastRecapSet = [];
+
+/* Generează 5 întrebări diferite de ultima serie */
+function loadRecap() {
+    const container = document.getElementById("recapContainer");
+    container.innerHTML = "";
+
+    let selected = [];
+
+    while (selected.length < 5) {
+        const q = recapQuestions[Math.floor(Math.random() * recapQuestions.length)];
+        if (!selected.includes(q) && !lastRecapSet.includes(q)) {
+            selected.push(q);
+        }
+    }
+
+    lastRecapSet = selected;
+
+    selected.forEach((q, i) => {
+        container.innerHTML += `
+            <p>${i + 1}) ${q.formula} – <input id="r${i}" maxlength="1"></p>
+        `;
+    });
+}
+
+loadRecap();
+
+/* Verificare recapitulare */
+function checkRecap() {
+    let score = 0;
+
+    lastRecapSet.forEach((q, i) => {
+        const input = document.getElementById("r" + i);
+        const val = input.value.toUpperCase();
+
+        if (val === q.type) {
+            input.classList.add("correct");
+            input.classList.remove("wrong");
+            score++;
+        } else {
+            input.classList.add("wrong");
+            input.classList.remove("correct");
+        }
+    });
+
+    document.getElementById("scoreFinal").innerText =
+        "Ai " + score + " răspunsuri corecte din 5.";
+}
+
+/* ---------------------------
+   POPUP
+----------------------------*/
 function openPopup() {
     document.getElementById("popup").style.display = "flex";
 }
@@ -214,27 +378,4 @@ function openPopup() {
 function closePopup(event) {
     document.getElementById("popup").style.display = "none";
 }
-
-function checkAnswers() {
-    const correct = ["C", "S", "C", "S", "C"];
-    let score = 0;
-
-    for (let i = 1; i <= 5; i++) {
-        const input = document.getElementById("q" + i);
-        const user = input.value.toUpperCase();
-
-        if (user === correct[i - 1]) {
-            input.style.background = "#c8f7c5"; // verde
-            score++;
-        } else {
-            input.style.background = "#f7c5c5"; // roșu
-        }
-    }
-
-    document.getElementById("result").textContent =
-        "Ai " + score + " răspunsuri corecte din 5.";
-}
 </script>
-
-</body>
-</html>
