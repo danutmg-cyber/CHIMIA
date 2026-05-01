@@ -406,6 +406,16 @@
           </div>
 
           <div class="field-row">
+            <label for="elevScoala">Școala:</label>
+            <input id="elevScoala" type="text" value="Școala Gimnazială „Gala Galaction”" />
+          </div>
+
+          <div class="field-row">
+            <label for="elevLocalitate">Localitatea:</label>
+            <input id="elevLocalitate" type="text" value="Mangalia" />
+          </div>
+
+          <div class="field-row">
             <label for="elevData">Data:</label>
             <input id="elevData" type="date" />
           </div>
@@ -462,7 +472,8 @@
 
       <div class="body">
         Elevul/eleva <b id="diplomaName">....................</b>,<br />
-        de la școala <b id="diplomaSchool">Școala Gimnazială „Gala Galaction” Mangalia</b>,
+        de la școala <b id="diplomaSchool">Școala Gimnazială „Gala Galaction”</b>,
+        localitatea <b id="diplomaLocality">Mangalia</b>,
         a dovedit că stăpânește cunoștințele privind <b>formula chimică</b>
         și a obținut punctajul mediu de <b id="diplomaAverage">0</b> din 100 puncte.
       </div>
@@ -920,7 +931,9 @@
         score,
         date: new Date().toISOString(),
         name: document.getElementById("elevNume").value.trim(),
-        className: document.getElementById("elevClasa").value.trim()
+        className: document.getElementById("elevClasa").value.trim(),
+        school: document.getElementById("elevScoala").value.trim(),
+        locality: document.getElementById("elevLocalitate").value.trim()
       });
 
       saveAttempts(attempts);
@@ -949,10 +962,18 @@
       }
 
       const nameInput = document.getElementById("elevNume").value.trim();
-      const lastName = [...attempts].reverse().find(a => a.name)?.name || "....................";
+      const schoolInput = document.getElementById("elevScoala").value.trim();
+      const localityInput = document.getElementById("elevLocalitate").value.trim();
+
+      const lastSaved = [...attempts].reverse();
+      const lastName = lastSaved.find(a => a.name)?.name || "....................";
+      const lastSchool = lastSaved.find(a => a.school)?.school || "Școala Gimnazială „Gala Galaction”";
+      const lastLocality = lastSaved.find(a => a.locality)?.locality || "Mangalia";
       const average = calculateAverage(attempts.slice(0, REQUIRED_ATTEMPTS));
 
       document.getElementById("diplomaName").innerText = nameInput || lastName;
+      document.getElementById("diplomaSchool").innerText = schoolInput || lastSchool;
+      document.getElementById("diplomaLocality").innerText = localityInput || lastLocality;
       document.getElementById("diplomaAverage").innerText = average;
 
       document.getElementById("worksheet").classList.add("hidden");
