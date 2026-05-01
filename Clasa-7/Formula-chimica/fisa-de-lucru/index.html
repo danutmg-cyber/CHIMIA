@@ -320,6 +320,16 @@
       padding-right: 60px;
     }
 
+    .page-footer {
+      max-width: 980px;
+      margin: 22px auto 10px;
+      padding: 14px 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
     #diplomaActions {
       text-align: center;
       margin-top: 14px;
@@ -390,8 +400,8 @@
 <body>
   <div id="worksheet">
     <div id="antet" class="card">
-      <h2>Școala Gimnazială „Gala Galaction”, Mangalia</h2>
-      <h3>Fișă de lucru – Chimie, clasa a VII-a</h3>
+      <h2>Fișă de lucru – Formula chimică</h2>
+      <h3>Chimie, clasa a VII-a</h3>
 
       <div class="top-grid">
         <div>
@@ -461,11 +471,17 @@
       <h2>Secțiunea 4 – Completează tabelul</h2>
       <div id="tabelContainer"></div>
     </div>
+
+    <footer class="page-footer">
+      Material realizat de <b>prof. Dănuț Andronie</b>.<br />
+      Pentru observații și propuneri: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+    </footer>
   </div>
 
   <div id="diplomaWrapper" class="hidden">
     <div id="diploma">
-      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="school" id="diplomaHeaderSchool">Școala Gimnazială „Gala Galaction”</div>
+      <div class="subtitle" id="diplomaHeaderLocality">Mangalia</div>
       <div class="subtitle">Chimie – clasa a VII-a</div>
 
       <div class="title">Diplomă</div>
@@ -971,9 +987,14 @@
       const lastLocality = lastSaved.find(a => a.locality)?.locality || "Mangalia";
       const average = calculateAverage(attempts.slice(0, REQUIRED_ATTEMPTS));
 
+      const finalSchool = schoolInput || lastSchool;
+      const finalLocality = localityInput || lastLocality;
+
       document.getElementById("diplomaName").innerText = nameInput || lastName;
-      document.getElementById("diplomaSchool").innerText = schoolInput || lastSchool;
-      document.getElementById("diplomaLocality").innerText = localityInput || lastLocality;
+      document.getElementById("diplomaSchool").innerText = finalSchool;
+      document.getElementById("diplomaLocality").innerText = finalLocality;
+      document.getElementById("diplomaHeaderSchool").innerText = finalSchool;
+      document.getElementById("diplomaHeaderLocality").innerText = finalLocality;
       document.getElementById("diplomaAverage").innerText = average;
 
       document.getElementById("worksheet").classList.add("hidden");
