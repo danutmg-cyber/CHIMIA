@@ -1,390 +1,1039 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
-<title>Fișă de lucru – Substanțe compuse</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fișă de lucru – Formula chimică</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #eef2f7;
-        margin: 0;
-        padding: 20px;
+  <style>
+    :root {
+      --blue: #3498db;
+      --blue-dark: #217dbb;
+      --green: #1e9b57;
+      --red: #c0392b;
+      --purple: #8e44ad;
+      --text: #243447;
+      --muted: #667085;
+      --bg: #eef2f7;
+      --card: #ffffff;
+      --soft: #f7f9fc;
+      --border: #d8e1ec;
     }
 
-    h1, h2 {
-        text-align: center;
-        color: #2c3e50;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 20px;
+      color: var(--text);
+    }
+
+    h1,
+    h2,
+    h3 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    h1 {
+      margin: 18px auto 10px;
+      font-size: 34px;
+    }
+
+    h2 {
+      margin-top: 0;
     }
 
     .card {
-        background: white;
-        padding: 20px;
-        margin: 20px auto;
-        border-radius: 12px;
-        max-width: 900px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      background: var(--card);
+      padding: 22px;
+      margin: 20px auto;
+      border-radius: 14px;
+      max-width: 980px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .field-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .field-row label {
+      min-width: 135px;
+      font-weight: bold;
+    }
+
+    input,
+    select {
+      padding: 9px 10px;
+      border: 1px solid #b8c3d0;
+      border-radius: 6px;
+      font-size: 15px;
+      max-width: 100%;
+    }
+
+    input[type="text"] {
+      width: min(420px, 100%);
+    }
+
+    .score-box {
+      text-align: center;
+    }
+
+    .score-number {
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .badge {
+      min-height: 28px;
+      font-size: 19px;
+      font-weight: bold;
+      color: var(--purple);
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
     }
 
     .question {
-        margin-bottom: 20px;
-        padding: 15px;
-        background: #f7f9fc;
-        border-left: 4px solid #3498db;
-        border-radius: 8px;
+      margin-bottom: 18px;
+      padding: 16px;
+      background: var(--soft);
+      border-left: 4px solid var(--blue);
+      border-radius: 9px;
+    }
+
+    .question p {
+      margin-top: 0;
+      line-height: 1.5;
+    }
+
+    .question-footer {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
     }
 
     button {
-        padding: 8px 14px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        background: #3498db;
-        color: white;
-        margin-top: 10px;
-        margin-right: 6px;
+      padding: 9px 14px;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      background: var(--blue);
+      color: white;
+      font-size: 14px;
+      transition: 0.15s ease;
     }
 
     button:hover {
-        background: #217dbb;
+      background: var(--blue-dark);
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      background: #a8b4c0;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .secondary-btn {
+      background: #667085;
+    }
+
+    .secondary-btn:hover {
+      background: #4f5968;
+    }
+
+    .success-btn {
+      background: var(--green);
+    }
+
+    .success-btn:hover {
+      background: #147a42;
+    }
+
+    .danger-btn {
+      background: var(--red);
+    }
+
+    .danger-btn:hover {
+      background: #962d22;
     }
 
     .feedback {
-        margin-top: 10px;
-        font-weight: bold;
+      margin-top: 10px;
+      font-weight: bold;
+      line-height: 1.45;
     }
 
-    /* Popup */
+    .formula {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 99px;
+      background: #e8f4ff;
+      border: 1px solid #cae6ff;
+      color: #1d5f8f;
+      font-size: 13px;
+      margin: 4px 3px 0 0;
+    }
+
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 12px auto;
+      max-width: 560px;
+    }
+
+    .attempt-pill {
+      padding: 10px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .attempt-pill.done {
+      background: #eafaf1;
+      border-color: #a9e7c1;
+      color: #176b3a;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: 10px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #edf6ff;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Popup tabel periodic */
     #popup {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.6);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        padding: 10px;
-        z-index: 1000;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 14px;
+      z-index: 1000;
     }
 
     #popupContent {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        max-width: 800px;
-        max-height: 90vh;
-        overflow-y: auto;
+      background: white;
+      padding: 18px;
+      border-radius: 12px;
+      max-width: 920px;
+      max-height: 92vh;
+      overflow-y: auto;
+      text-align: center;
     }
 
     #popupContent img {
-        max-width: 100%;
-        height: auto;
-        display: block;
-        margin-top: 10px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 12px auto 0;
     }
-</style>
+
+    /* Diplomă */
+    #diploma {
+      background: #fffdf5;
+      border: 10px double #b8872c;
+      padding: 42px;
+      margin: 24px auto;
+      max-width: 980px;
+      text-align: center;
+      color: #2d2d2d;
+    }
+
+    #diploma .school {
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    #diploma .subtitle {
+      font-size: 18px;
+      margin-top: 6px;
+    }
+
+    #diploma .title {
+      font-size: 56px;
+      font-weight: bold;
+      margin: 34px 0 20px;
+      color: #8a5a12;
+      text-transform: uppercase;
+    }
+
+    #diploma .body {
+      font-size: 24px;
+      line-height: 1.6;
+      margin: 20px auto;
+      max-width: 820px;
+    }
+
+    #diploma .signature {
+      margin-top: 50px;
+      font-size: 20px;
+      text-align: right;
+      padding-right: 60px;
+    }
+
+    #diplomaActions {
+      text-align: center;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .top-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field-row {
+        display: block;
+      }
+
+      .field-row label {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .progress-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      #diploma {
+        padding: 24px 16px;
+      }
+
+      #diploma .title {
+        font-size: 38px;
+      }
+
+      #diploma .body {
+        font-size: 18px;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      button,
+      #popup,
+      #diplomaActions,
+      .no-print {
+        display: none !important;
+      }
+
+      .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div id="worksheet">
+    <div id="antet" class="card">
+      <h2>Școala Gimnazială „Gala Galaction”, Mangalia</h2>
+      <h3>Fișă de lucru – Chimie, clasa a VII-a</h3>
 
-<!-- ANTET -->
-<div id="antet" class="card">
-    <h2>Școala Gimnazială „Gala Galaction”, Mangalia</h2>
-    <h3>Fișă de lucru – Chimie, clasa a VII‑a</h3>
+      <div class="top-grid">
+        <div>
+          <div class="field-row">
+            <label for="elevNume">Nume și prenume:</label>
+            <input id="elevNume" type="text" autocomplete="name" />
+          </div>
 
-    <label><b>Nume și prenume:</b></label>
-    <input id="elevNume" type="text" style="width:40%; padding:5px; margin-left:10px;"><br><br>
+          <div class="field-row">
+            <label for="elevClasa">Clasa:</label>
+            <input id="elevClasa" type="text" placeholder="ex: a VII-a A" />
+          </div>
 
-    <label><b>Clasa:</b></label>
-    <input id="elevClasa" type="text" style="width:15%; padding:5px; margin-left:10px;"><br><br>
+          <div class="field-row">
+            <label for="elevData">Data:</label>
+            <input id="elevData" type="date" />
+          </div>
+        </div>
 
-    <label><b>Data:</b></label>
-    <input id="elevData" type="date" style="padding:5px; margin-left:10px;">
-</div>
-
-<!-- Punctaj -->
-<div class="card" style="text-align:center;">
-    <h2>Punctajul tău</h2>
-    <p style="font-size:22px;"><b id="score">0</b> puncte</p>
-    <p id="badge" style="font-size:20px; color:#8e44ad;"></p>
-    <button onclick="resetTest()">Resetează testul</button>
-    <button onclick="exportPDF()">Exportă fișa ca PDF</button>
-</div>
-
-<h1>Fișă de lucru – Substanțe compuse</h1>
-
-<!-- SECȚIUNEA 1 -->
-<div class="card" id="exerciseContainer"></div>
-
-<!-- SECȚIUNEA 2 -->
-<div class="card" id="section2">
-    <h2>Secțiunea 2 – Calculează valența metalului</h2>
-    <div id="valentaContainer"></div>
-</div>
-
-<!-- SECȚIUNEA 3 -->
-<div class="card" id="section3">
-    <h2>Secțiunea 3 – Corectează formulele greșite</h2>
-    <div id="greseliContainer"></div>
-</div>
-
-<!-- SECȚIUNEA 4 -->
-<div class="card" id="section4">
-    <h2>Secțiunea 4 – Completează tabelul</h2>
-    <div id="tabelContainer"></div>
-</div>
-
-<!-- POPUP -->
-<div id="popup" onclick="closePopup(event)">
-    <div id="popupContent" onclick="event.stopPropagation()">
-        <button onclick="closePopup(event)">Închide</button>
-        <img src="../tabel.png" alt="Tabelul periodic">
+        <div class="small-note">
+          <b>Instrucțiuni:</b> completează răspunsurile, apoi apasă pe fiecare buton „Verifică”.
+          După ce ai verificat toate cerințele, apasă pe „Finalizează parcurgerea”.
+          Pentru diplomă sunt necesare 4 parcurgeri complete.
+        </div>
+      </div>
     </div>
-</div>
 
-<script>
-/* ---------------------------
-   SISTEM DE PUNCTAJ
-----------------------------*/
-let score = 0;
+    <div class="card score-box">
+      <h2>Punctajul tău</h2>
+      <p><span id="score" class="score-number">0</span> / 100 puncte</p>
+      <p id="badge" class="badge"></p>
 
-function addPoints(p) {
-    score += p;
-    document.getElementById("score").innerText = score;
-    updateBadge();
-}
+      <div class="progress-grid" id="attemptsProgress"></div>
 
-function updateBadge() {
-    const b = document.getElementById("badge");
-    if (score < 30) b.innerHTML = "🏅 Bronz – Continuă!";
-    else if (score < 60) b.innerHTML = "🥈 Argint – Foarte bine!";
-    else if (score < 90) b.innerHTML = "🥇 Aur – Excelent!";
-    else b.innerHTML = "💎 Diamant – Maestru al chimiei!";
-}
+      <button class="success-btn" onclick="finishAttempt()">Finalizează parcurgerea</button>
+      <button onclick="resetTest()">Generează altă variantă</button>
+      <button onclick="exportWorksheetPDF()">Exportă fișa ca PDF</button>
+      <button class="secondary-btn" onclick="showDiplomaIfReady()">Vezi diploma</button>
+      <button class="danger-btn" onclick="resetAllAttempts()">Resetează progresul elevului</button>
+    </div>
 
-function resetTest() {
-    score = 0;
-    document.getElementById("score").innerText = 0;
-    document.getElementById("badge").innerText = "";
-    loadAll();
-}
+    <h1>Fișă de lucru – Formula chimică</h1>
 
-/* ---------------------------
-   SECȚIUNEA 1 – FORMULE
-----------------------------*/
-const questions = [
-    { text: "Scrie formula chimică pentru acid sulfuric", answer: "H2SO4", explanation: "Acid ternar: H₂SO₄." },
-    { text: "Scrie formula chimică pentru oxid de fier(III)", answer: "Fe2O3", explanation: "Fe³⁺ + O²⁻ → Fe₂O₃." },
-    { text: "Scrie formula chimică pentru piatra iadului", answer: "AgNO3", explanation: "Azotat de argint: AgNO₃." },
-    { text: "Scrie formula chimică pentru clorură de bariu", answer: "BaCl2", explanation: "Ba²⁺ + 2Cl⁻ → BaCl₂." },
-    { text: "Scrie formula chimică pentru dioxid de sulf", answer: "SO2", explanation: "SO₂: dioxid = 2 oxigeni." },
-    { text: "Scrie formula chimică pentru acid clorhidric", answer: "HCl", explanation: "H⁺ + Cl⁻ → HCl." },
-    { text: "Scrie formula chimică pentru oxid de calciu", answer: "CaO", explanation: "Ca²⁺ + O²⁻ → CaO." },
-    { text: "Scrie formula chimică pentru hidroxid de sodiu", answer: "NaOH", explanation: "Na⁺ + OH⁻ → NaOH." }
-];
+    <div class="card" id="exerciseContainer"></div>
 
-function loadQuestions() {
-    const c = document.getElementById("exerciseContainer");
-    c.innerHTML = "";
+    <div class="card" id="section2">
+      <h2>Secțiunea 2 – Calculează valența metalului</h2>
+      <div id="valentaContainer"></div>
+    </div>
 
-    const selected = [...questions].sort(() => Math.random() - 0.5).slice(0, 5);
+    <div class="card" id="section3">
+      <h2>Secțiunea 3 – Corectează formulele greșite</h2>
+      <div id="greseliContainer"></div>
+    </div>
 
-    selected.forEach((q, i) => {
-        c.innerHTML += `
-        <div class="question">
-            <p><b>${i+1}. ${q.text}</b></p>
-            <input id="q${i}" type="text">
-            <button onclick="checkAnswer(${i}, '${q.answer}', '${q.explanation}')">Verifică</button>
-            <button onclick="openPopup()">Tabelul lui Mendeleev</button>
-            <div id="f${i}" class="feedback"></div>
-        </div>`;
-    });
-}
+    <div class="card" id="section4">
+      <h2>Secțiunea 4 – Completează tabelul</h2>
+      <div id="tabelContainer"></div>
+    </div>
+  </div>
 
-function checkAnswer(i, correct, exp) {
-    const val = document.getElementById("q"+i).value.trim();
-    const fb = document.getElementById("f"+i);
+  <div id="diplomaWrapper" class="hidden">
+    <div id="diploma">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="subtitle">Chimie – clasa a VII-a</div>
 
-    if (val === correct) {
-        fb.style.color = "green";
-        fb.innerHTML = "Corect!";
-        addPoints(10);
-    } else {
-        fb.style.color = "red";
-        fb.innerHTML = "Greșit. " + exp;
+      <div class="title">Diplomă</div>
+
+      <div class="body">
+        Elevul/eleva <b id="diplomaName">....................</b>,<br />
+        de la școala <b id="diplomaSchool">Școala Gimnazială „Gala Galaction” Mangalia</b>,
+        a dovedit că stăpânește cunoștințele privind <b>formula chimică</b>
+        și a obținut punctajul mediu de <b id="diplomaAverage">0</b> din 100 puncte.
+      </div>
+
+      <div class="signature">
+        Semnează,<br />
+        <b>prof. Dănuț Andronie</b>
+      </div>
+    </div>
+
+    <div id="diplomaActions">
+      <button onclick="exportDiplomaPDF()">Exportă diploma ca PDF</button>
+      <button class="secondary-btn" onclick="hideDiploma()">Înapoi la fișă</button>
+    </div>
+  </div>
+
+  <div id="popup" onclick="closePopup()">
+    <div id="popupContent" onclick="event.stopPropagation()">
+      <button onclick="closePopup()">Închide</button>
+      <p class="small-note">Tabel periodic orientativ. Folosește-l pentru simboluri și valențe uzuale.</p>
+      <img src="../tabel.png" alt="Tabelul periodic" />
+    </div>
+  </div>
+
+  <script>
+    /* =========================
+       CONFIGURAȚIE GENERALĂ
+    ========================== */
+
+    const STORAGE_KEY = "chimie_formula_chimica_attempts_v1";
+    const TOTAL_QUESTIONS = 20;
+    const POINTS_PER_QUESTION = 5;
+    const REQUIRED_ATTEMPTS = 4;
+
+    let score = 0;
+    let answeredQuestions = new Set();
+    let currentVariant = {
+      section1: [],
+      section2: [],
+      section3: [],
+      section4: []
+    };
+
+    /* =========================
+       DATE PENTRU ÎNTREBĂRI
+       Nivel: clasa a VII-a
+    ========================== */
+
+    const formulaQuestions = [
+      { text: "Scrie formula chimică pentru apă.", answer: "H2O", explanation: "Apa este formată din 2 atomi de hidrogen și 1 atom de oxigen: H₂O." },
+      { text: "Scrie formula chimică pentru dioxid de carbon.", answer: "CO2", explanation: "Dioxid înseamnă 2 atomi de oxigen: CO₂." },
+      { text: "Scrie formula chimică pentru monoxid de carbon.", answer: "CO", explanation: "Monoxid înseamnă 1 atom de oxigen: CO." },
+      { text: "Scrie formula chimică pentru clorură de sodiu.", answer: "NaCl", explanation: "Na are valența I, Cl are valența I: NaCl." },
+      { text: "Scrie formula chimică pentru oxid de magneziu.", answer: "MgO", explanation: "Mg are valența II, O are valența II: MgO." },
+      { text: "Scrie formula chimică pentru oxid de calciu.", answer: "CaO", explanation: "Ca are valența II, O are valența II: CaO." },
+      { text: "Scrie formula chimică pentru clorură de calciu.", answer: "CaCl2", explanation: "Ca are valența II, Cl are valența I: CaCl₂." },
+      { text: "Scrie formula chimică pentru clorură de magneziu.", answer: "MgCl2", explanation: "Mg are valența II, Cl are valența I: MgCl₂." },
+      { text: "Scrie formula chimică pentru oxid de aluminiu.", answer: "Al2O3", explanation: "Al are valența III, O are valența II: Al₂O₃." },
+      { text: "Scrie formula chimică pentru hidroxid de sodiu.", answer: "NaOH", explanation: "Na are valența I, grupa OH are valența I: NaOH." },
+      { text: "Scrie formula chimică pentru hidroxid de calciu.", answer: "Ca(OH)2", explanation: "Ca are valența II, grupa OH are valența I: Ca(OH)₂." },
+      { text: "Scrie formula chimică pentru acid clorhidric.", answer: "HCl", explanation: "H are valența I, Cl are valența I: HCl." },
+      { text: "Scrie formula chimică pentru acid sulfuric.", answer: "H2SO4", explanation: "H are valența I, radicalul SO₄ are valența II: H₂SO₄." },
+      { text: "Scrie formula chimică pentru carbonat de calciu.", answer: "CaCO3", explanation: "Ca are valența II, radicalul CO₃ are valența II: CaCO₃." },
+      { text: "Scrie formula chimică pentru sulfat de cupru(II).", answer: "CuSO4", explanation: "Cu are valența II, radicalul SO₄ are valența II: CuSO₄." },
+      { text: "Scrie formula chimică pentru oxid de fier(III).", answer: "Fe2O3", explanation: "Fe are valența III, O are valența II: Fe₂O₃." }
+    ];
+
+    const valentaQuestions = [
+      { formula: "NaCl", answer: "I", also: ["1"], explanation: "Cl are valența I, deci Na are valența I." },
+      { formula: "KCl", answer: "I", also: ["1"], explanation: "Cl are valența I, deci K are valența I." },
+      { formula: "CaO", answer: "II", also: ["2"], explanation: "Oxigenul are valența II, deci Ca are valența II." },
+      { formula: "MgO", answer: "II", also: ["2"], explanation: "Oxigenul are valența II, deci Mg are valența II." },
+      { formula: "CaCl2", answer: "II", also: ["2"], explanation: "Cl are valența I, iar indicele 2 arată că Ca are valența II." },
+      { formula: "MgCl2", answer: "II", also: ["2"], explanation: "Cl are valența I, deci Mg are valența II." },
+      { formula: "Al2O3", answer: "III", also: ["3"], explanation: "Oxigenul are valența II, iar aluminiul are valența III." },
+      { formula: "FeO", answer: "II", also: ["2"], explanation: "În FeO, O are valența II, deci Fe are valența II." },
+      { formula: "Fe2O3", answer: "III", also: ["3"], explanation: "În Fe₂O₃, fierul are valența III." },
+      { formula: "CuO", answer: "II", also: ["2"], explanation: "În CuO, oxigenul are valența II, deci Cu are valența II." },
+      { formula: "ZnCl2", answer: "II", also: ["2"], explanation: "Cl are valența I, deci Zn are valența II." },
+      { formula: "AlCl3", answer: "III", also: ["3"], explanation: "Cl are valența I, iar indicele 3 arată valența III pentru Al." }
+    ];
+
+    const greseliQuestions = [
+      { wrong: "NaO", correct: "Na2O", explanation: "Na are valența I, O are valența II, deci formula este Na₂O." },
+      { wrong: "MgCl", correct: "MgCl2", explanation: "Mg are valența II, Cl are valența I, deci MgCl₂." },
+      { wrong: "CaCl", correct: "CaCl2", explanation: "Ca are valența II, Cl are valența I, deci CaCl₂." },
+      { wrong: "AlO", correct: "Al2O3", explanation: "Al are valența III, O are valența II, deci Al₂O₃." },
+      { wrong: "NaS", correct: "Na2S", explanation: "Na are valența I, S are valența II, deci Na₂S." },
+      { wrong: "MgOH", correct: "Mg(OH)2", explanation: "Mg are valența II, grupa OH are valența I, deci Mg(OH)₂." },
+      { wrong: "CaOH", correct: "Ca(OH)2", explanation: "Ca are valența II, grupa OH are valența I, deci Ca(OH)₂." },
+      { wrong: "AlCl", correct: "AlCl3", explanation: "Al are valența III, Cl are valența I, deci AlCl₃." },
+      { wrong: "K2Cl", correct: "KCl", explanation: "K are valența I, Cl are valența I, deci KCl." },
+      { wrong: "FeO3", correct: "Fe2O3", explanation: "Pentru oxid de fier(III), formula corectă este Fe₂O₃." },
+      { wrong: "H2Cl", correct: "HCl", explanation: "H are valența I, Cl are valența I, deci HCl." },
+      { wrong: "CO", correct: "CO2", explanation: "Pentru dioxid de carbon formula corectă este CO₂." }
+    ];
+
+    const tabelQuestions = [
+      { formula: "H2O", name: "Apă", category: "oxid", explanation: "Apa poate fi privită ca oxid de hidrogen." },
+      { formula: "CO2", name: "Dioxid de carbon", category: "oxid", explanation: "Este un oxid nemetalic." },
+      { formula: "CaO", name: "Oxid de calciu", category: "oxid", explanation: "Este oxidul metalului calciu." },
+      { formula: "MgO", name: "Oxid de magneziu", category: "oxid", explanation: "Este oxidul metalului magneziu." },
+      { formula: "NaCl", name: "Clorură de sodiu", category: "sare", explanation: "Este o sare formată din Na și Cl." },
+      { formula: "CaCl2", name: "Clorură de calciu", category: "sare", explanation: "Este o sare formată din Ca și Cl." },
+      { formula: "HCl", name: "Acid clorhidric", category: "acid", explanation: "Este un acid binar." },
+      { formula: "H2SO4", name: "Acid sulfuric", category: "acid", explanation: "Este un acid care conține radicalul sulfat SO₄." },
+      { formula: "NaOH", name: "Hidroxid de sodiu", category: "bază", explanation: "Este o bază, deoarece conține grupa OH." },
+      { formula: "Ca(OH)2", name: "Hidroxid de calciu", category: "bază", explanation: "Este o bază, deoarece conține grupe OH." },
+      { formula: "CaCO3", name: "Carbonat de calciu", category: "sare", explanation: "Este o sare care conține radicalul carbonat CO₃." },
+      { formula: "CuSO4", name: "Sulfat de cupru(II)", category: "sare", explanation: "Este o sare care conține radicalul sulfat SO₄." }
+    ];
+
+    /* =========================
+       FUNCȚII UTILE
+    ========================== */
+
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
     }
-}
 
-/* ---------------------------
-   SECȚIUNEA 2 – VALENȚA
-----------------------------*/
-const valentaQuestions = [
-    { formula:"NaCl", valenta:1, explanation:"Cl are valența I → Na I." },
-    { formula:"NiCl2", valenta:2, explanation:"Cl I → Ni II." },
-    { formula:"CuSO4", valenta:2, explanation:"SO₄ II → Cu II." },
-    { formula:"Hg(NO3)2", valenta:2, explanation:"NO₃ I → Hg II." },
-    { formula:"Zn(OH)2", valenta:2, explanation:"OH I → Zn II." },
-    { formula:"Cr2(SO4)3", valenta:3, explanation:"SO₄ II → Cr III." },
-    { formula:"Fe2O3", valenta:3, explanation:"O II → Fe III." },
-    { formula:"K2CO3", valenta:1, explanation:"CO₃ II → K I." }
-];
-
-function loadValenta() {
-    const c = document.getElementById("valentaContainer");
-    c.innerHTML = "";
-
-    const selected = [...valentaQuestions].sort(() => Math.random() - 0.5).slice(0, 5);
-
-    selected.forEach((q, i) => {
-        c.innerHTML += `
-        <div class="question">
-            <p><b>${i+1}. Valența metalului în ${q.formula}</b></p>
-            <input id="v${i}" type="number">
-            <button onclick="checkValenta(${i}, ${q.valenta}, '${q.explanation}')">Verifică</button>
-            <button onclick="openPopup()">Tabelul lui Mendeleev</button>
-            <div id="vf${i}" class="feedback"></div>
-        </div>`;
-    });
-}
-
-function checkValenta(i, correct, exp) {
-    const val = document.getElementById("v"+i).value;
-    const fb = document.getElementById("vf"+i);
-
-    if (parseInt(val) === correct) {
-        fb.style.color = "green";
-        fb.innerHTML = "Corect!";
-        addPoints(10);
-    } else {
-        fb.style.color = "red";
-        fb.innerHTML = "Greșit. " + exp;
+    function normalizeFormula(value) {
+      return String(value)
+        .trim()
+        .replaceAll("₂", "2")
+        .replaceAll("₃", "3")
+        .replaceAll("₄", "4")
+        .replaceAll("₅", "5")
+        .replaceAll("₆", "6")
+        .replaceAll("₇", "7")
+        .replaceAll("₈", "8")
+        .replaceAll("₉", "9")
+        .replaceAll("₁", "1")
+        .replace(/\s+/g, "")
+        .toUpperCase();
     }
-}
 
-/* ---------------------------
-   SECȚIUNEA 3 – FORMULE GREȘITE
-----------------------------*/
-const greseliQuestions = [
-    { wrong:"NaS", correct:"Na2S", explanation:"Na I, S II → Na₂S." },
-    { wrong:"MgOH", correct:"Mg(OH)2", explanation:"Mg II, OH I → Mg(OH)₂." },
-    { wrong:"AgCl2", correct:"AgCl", explanation:"Ag I, Cl I → AgCl." },
-    { wrong:"AlO2", correct:"Al2O3", explanation:"Al III, O II → Al₂O₃." },
-    { wrong:"FeO2", correct:"Fe2O3", explanation:"Fe III, O II → Fe₂O₃." },
-    { wrong:"CaCl", correct:"CaCl2", explanation:"Ca II, Cl I → CaCl₂." }
-];
-
-function loadGreseli() {
-    const c = document.getElementById("greseliContainer");
-    c.innerHTML = "";
-
-    const selected = [...greseliQuestions].sort(() => Math.random() - 0.5).slice(0, 5);
-
-    selected.forEach((q, i) => {
-        c.innerHTML += `
-        <div class="question">
-            <p><b>${i+1}. Corectează formula: ${q.wrong}</b></p>
-            <input id="g${i}" type="text">
-            <button onclick="checkGreseli(${i}, '${q.correct}', '${q.explanation}')">Verifică</button>
-            <button onclick="openPopup()">Tabelul lui Mendeleev</button>
-            <div id="gf${i}" class="feedback"></div>
-        </div>`;
-    });
-}
-
-function checkGreseli(i, correct, exp) {
-    const val = document.getElementById("g"+i).value.trim();
-    const fb = document.getElementById("gf"+i);
-
-    if (val === correct) {
-        fb.style.color = "green";
-        fb.innerHTML = "Corect!";
-        addPoints(10);
-    } else {
-        fb.style.color = "red";
-        fb.innerHTML = `Greșit. Formula corectă este <b>${correct}</b>. ${exp}`;
+    function normalizeText(value) {
+      return String(value)
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/ă/g, "a")
+        .replace(/â/g, "a")
+        .replace(/î/g, "i")
+        .replace(/ș/g, "s")
+        .replace(/ş/g, "s")
+        .replace(/ț/g, "t")
+        .replace(/ţ/g, "t")
+        .replace(/\s+/g, " ");
     }
-}
 
-/* ---------------------------
-   SECȚIUNEA 4 – TABEL
-----------------------------*/
-const tabelQuestions = [
-    { formula:"H2SO4", name:"Acid sulfuric", category:"acid", explanation:"H⁺ + SO₄²⁻ → H₂SO₄." },
-    { formula:"Al(NO3)3", name:"Azotat de aluminiu", category:"sare", explanation:"Al³⁺ + NO₃⁻." },
-    { formula:"Na2O", name:"Oxid de sodiu", category:"oxid", explanation:"Na⁺ + O²⁻." },
-    { formula:"H3PO4", name:"Acid fosforic", category:"acid", explanation:"H⁺ + PO₄³⁻." },
-    { formula:"Ag2S", name:"Sulfură de argint(I)", category:"sare", explanation:"Ag⁺ + S²⁻." },
-    { formula:"Al(OH)3", name:"Hidroxid de aluminiu", category:"bază", explanation:"Al³⁺ + OH⁻." },
-    { formula:"CaCO3", name:"Carbonat de calciu", category:"sare", explanation:"Ca²⁺ + CO₃²⁻." },
-    { formula:"FeCl3", name:"Clorură de fier(III)", category:"sare", explanation:"Fe³⁺ + Cl⁻." }
-];
+    function normalizeValence(value) {
+      const v = normalizeText(value).toUpperCase().replaceAll(" ", "");
+      if (v === "1") return "I";
+      if (v === "2") return "II";
+      if (v === "3") return "III";
+      if (v === "4") return "IV";
+      return v;
+    }
 
-function loadTabel() {
-    const c = document.getElementById("tabelContainer");
-    c.innerHTML = "";
+    function prettyFormula(formula) {
+      return String(formula)
+        .replace(/([A-Za-z\)])(\d+)/g, (_, a, n) => a + "<sub>" + n + "</sub>");
+    }
 
-    const selected = [...tabelQuestions].sort(() => Math.random() - 0.5).slice(0, 5);
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
-    selected.forEach((q, i) => {
-        c.innerHTML += `
-        <div class="question">
-            <p><b>${i+1}. Completează datele pentru: ${q.name}</b></p>
-            <label>Formula:</label><br>
-            <input id="tf${i}" type="text"><br><br>
-            <label>Denumirea:</label><br>
-            <input id="tn${i}" type="text"><br><br>
-            <label>Categoria:</label><br>
-            <input id="tc${i}" type="text"><br><br>
-            <button onclick="checkTabel(${i}, '${q.formula}', '${q.name}', '${q.category}', '${q.explanation}')">Verifică</button>
-            <button onclick="openPopup()">Tabelul lui Mendeleev</button>
-            <div id="tfb${i}" class="feedback"></div>
-        </div>`;
-    });
-}
+    function todayIso() {
+      const d = new Date();
+      const offset = d.getTimezoneOffset();
+      const local = new Date(d.getTime() - offset * 60000);
+      return local.toISOString().slice(0, 10);
+    }
 
-function checkTabel(i, f, n, ccat, exp) {
-    const f1 = document.getElementById("tf"+i).value.trim();
-    const n1 = document.getElementById("tn"+i).value.trim();
-    const c1 = document.getElementById("tc"+i).value.trim().toLowerCase();
-    const fb = document.getElementById("tfb"+i);
+    function getAttempts() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch (error) {
+        return [];
+      }
+    }
 
-    if (f1 === f && n1.toLowerCase() === n.toLowerCase() && c1 === ccat) {
-        fb.style.color = "green";
-        fb.innerHTML = "Corect!";
-        addPoints(15);
-    } else {
-        fb.style.color = "red";
-        fb.innerHTML = `
-            Greșit.<br>
-            <b>Formula:</b> ${f}<br>
-            <b>Denumirea:</b> ${n}<br>
-            <b>Categoria:</b> ${ccat}<br><br>
-            ${exp}
+    function saveAttempts(attempts) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(attempts));
+      renderAttemptsProgress();
+    }
+
+    function updateScoreDisplay() {
+      document.getElementById("score").innerText = score;
+      updateBadge();
+    }
+
+    function updateBadge() {
+      const badge = document.getElementById("badge");
+
+      if (score < 40) {
+        badge.innerText = "Bronz – Continuă, ești pe drum!";
+      } else if (score < 70) {
+        badge.innerText = "Argint – Bun progres!";
+      } else if (score < 90) {
+        badge.innerText = "Aur – Foarte bine!";
+      } else {
+        badge.innerText = "Diamant – Stăpânești foarte bine formula chimică!";
+      }
+    }
+
+    function markAnswered(questionId, points) {
+      if (!answeredQuestions.has(questionId)) {
+        answeredQuestions.add(questionId);
+        score = Math.min(100, score + points);
+        updateScoreDisplay();
+      }
+    }
+
+    function renderAttemptsProgress() {
+      const attempts = getAttempts();
+      const container = document.getElementById("attemptsProgress");
+      container.innerHTML = "";
+
+      for (let i = 0; i < REQUIRED_ATTEMPTS; i++) {
+        const div = document.createElement("div");
+        div.className = "attempt-pill" + (attempts[i] ? " done" : "");
+        div.innerHTML = attempts[i]
+          ? `Parcurgere ${i + 1}<br>${attempts[i].score}/100`
+          : `Parcurgere ${i + 1}<br>nefinalizată`;
+        container.appendChild(div);
+      }
+    }
+
+    /* =========================
+       ÎNCĂRCARE VARIANTĂ
+    ========================== */
+
+    function loadAll() {
+      score = 0;
+      answeredQuestions = new Set();
+      updateScoreDisplay();
+
+      currentVariant.section1 = shuffle(formulaQuestions).slice(0, 5);
+      currentVariant.section2 = shuffle(valentaQuestions).slice(0, 5);
+      currentVariant.section3 = shuffle(greseliQuestions).slice(0, 5);
+      currentVariant.section4 = shuffle(tabelQuestions).slice(0, 5);
+
+      loadFormulaQuestions();
+      loadValentaQuestions();
+      loadGreseliQuestions();
+      loadTabelQuestions();
+      renderAttemptsProgress();
+    }
+
+    function loadFormulaQuestions() {
+      const container = document.getElementById("exerciseContainer");
+      container.innerHTML = "<h2>Secțiunea 1 – Scrie formula chimică</h2>";
+
+      currentVariant.section1.forEach((q, index) => {
+        container.innerHTML += `
+          <div class="question">
+            <p><b>${index + 1}. ${escapeHtml(q.text)}</b></p>
+            <input id="q${index}" type="text" placeholder="ex: H2O" />
+            <div class="question-footer">
+              <button onclick="checkFormulaQuestion(${index})">Verifică</button>
+              <button class="secondary-btn" onclick="openPopup()">Tabelul periodic</button>
+            </div>
+            <div id="f${index}" class="feedback"></div>
+          </div>
         `;
+      });
     }
-}
 
-/* ---------------------------
-   POPUP
-----------------------------*/
-function openPopup() {
-    document.getElementById("popup").style.display = "flex";
-}
+    function loadValentaQuestions() {
+      const container = document.getElementById("valentaContainer");
+      container.innerHTML = "";
 
-function closePopup(event) {
-    document.getElementById("popup").style.display = "none";
-}
+      currentVariant.section2.forEach((q, index) => {
+        container.innerHTML += `
+          <div class="question">
+            <p><b>${index + 1}. Ce valență are metalul în formula <span class="formula">${prettyFormula(q.formula)}</span>?</b></p>
+            <p class="small-note">Poți scrie cu cifre romane: I, II, III sau cu cifre: 1, 2, 3.</p>
+            <input id="v${index}" type="text" placeholder="ex: II" />
+            <div class="question-footer">
+              <button onclick="checkValentaQuestion(${index})">Verifică</button>
+              <button class="secondary-btn" onclick="openPopup()">Tabelul periodic</button>
+            </div>
+            <div id="vf${index}" class="feedback"></div>
+          </div>
+        `;
+      });
+    }
 
-/* ---------------------------
-   EXPORT PDF
-----------------------------*/
-function exportPDF() {
-    const clone = document.createElement("div");
-    clone.innerHTML = `
-        <div>${document.getElementById("antet").innerHTML}</div>
-        <hr>
-        <div>${document.body.innerHTML}</div>
-    `;
-    const opt = {
-        margin: 0.5,
-        filename:
+    function loadGreseliQuestions() {
+      const container = document.getElementById("greseliContainer");
+      container.innerHTML = "";
+
+      currentVariant.section3.forEach((q, index) => {
+        container.innerHTML += `
+          <div class="question">
+            <p><b>${index + 1}. Corectează formula greșită: <span class="formula">${prettyFormula(q.wrong)}</span></b></p>
+            <input id="g${index}" type="text" placeholder="scrie formula corectă" />
+            <div class="question-footer">
+              <button onclick="checkGreseliQuestion(${index})">Verifică</button>
+              <button class="secondary-btn" onclick="openPopup()">Tabelul periodic</button>
+            </div>
+            <div id="gf${index}" class="feedback"></div>
+          </div>
+        `;
+      });
+    }
+
+    function loadTabelQuestions() {
+      const container = document.getElementById("tabelContainer");
+      container.innerHTML = `
+        <p class="small-note">
+          Completează formula, denumirea și categoria. Categorii acceptate: acid, bază, sare, oxid.
+        </p>
+      `;
+
+      currentVariant.section4.forEach((q, index) => {
+        container.innerHTML += `
+          <div class="question">
+            <p><b>${index + 1}. Completează datele pentru: ${escapeHtml(q.name)}</b></p>
+
+            <label for="tf${index}">Formula:</label><br />
+            <input id="tf${index}" type="text" placeholder="ex: NaCl" /><br /><br />
+
+            <label for="tn${index}">Denumirea:</label><br />
+            <input id="tn${index}" type="text" placeholder="ex: Clorură de sodiu" /><br /><br />
+
+            <label for="tc${index}">Categoria:</label><br />
+            <select id="tc${index}">
+              <option value="">Alege categoria</option>
+              <option value="acid">acid</option>
+              <option value="bază">bază</option>
+              <option value="sare">sare</option>
+              <option value="oxid">oxid</option>
+            </select>
+
+            <div class="question-footer">
+              <button onclick="checkTabelQuestion(${index})">Verifică</button>
+              <button class="secondary-btn" onclick="openPopup()">Tabelul periodic</button>
+            </div>
+            <div id="tfb${index}" class="feedback"></div>
+          </div>
+        `;
+      });
+    }
+
+    /* =========================
+       VERIFICARE RĂSPUNSURI
+    ========================== */
+
+    function setFeedback(id, isCorrect, message) {
+      const feedback = document.getElementById(id);
+      feedback.style.color = isCorrect ? "#1e9b57" : "#c0392b";
+      feedback.innerHTML = message;
+    }
+
+    function checkFormulaQuestion(index) {
+      const q = currentVariant.section1[index];
+      const value = normalizeFormula(document.getElementById(`q${index}`).value);
+      const correct = normalizeFormula(q.answer);
+
+      if (value === correct) {
+        setFeedback(`f${index}`, true, `Corect! Formula este <b>${prettyFormula(q.answer)}</b>.`);
+        markAnswered(`s1-${index}`, POINTS_PER_QUESTION);
+      } else {
+        setFeedback(`f${index}`, false, `Greșit. Răspuns corect: <b>${prettyFormula(q.answer)}</b>. ${q.explanation}`);
+      }
+    }
+
+    function checkValentaQuestion(index) {
+      const q = currentVariant.section2[index];
+      const value = normalizeValence(document.getElementById(`v${index}`).value);
+      const accepted = [q.answer, ...(q.also || []).map(normalizeValence)];
+
+      if (accepted.includes(value)) {
+        setFeedback(`vf${index}`, true, `Corect! Valența metalului este <b>${q.answer}</b>.`);
+        markAnswered(`s2-${index}`, POINTS_PER_QUESTION);
+      } else {
+        setFeedback(`vf${index}`, false, `Greșit. ${q.explanation}`);
+      }
+    }
+
+    function checkGreseliQuestion(index) {
+      const q = currentVariant.section3[index];
+      const value = normalizeFormula(document.getElementById(`g${index}`).value);
+      const correct = normalizeFormula(q.correct);
+
+      if (value === correct) {
+        setFeedback(`gf${index}`, true, `Corect! Formula corectă este <b>${prettyFormula(q.correct)}</b>.`);
+        markAnswered(`s3-${index}`, POINTS_PER_QUESTION);
+      } else {
+        setFeedback(`gf${index}`, false, `Greșit. Formula corectă este <b>${prettyFormula(q.correct)}</b>. ${q.explanation}`);
+      }
+    }
+
+    function checkTabelQuestion(index) {
+      const q = currentVariant.section4[index];
+      const formula = normalizeFormula(document.getElementById(`tf${index}`).value);
+      const name = normalizeText(document.getElementById(`tn${index}`).value);
+      const category = normalizeText(document.getElementById(`tc${index}`).value);
+
+      const correctFormula = normalizeFormula(q.formula);
+      const correctName = normalizeText(q.name);
+      const correctCategory = normalizeText(q.category);
+
+      if (formula === correctFormula && name === correctName && category === correctCategory) {
+        setFeedback(`tfb${index}`, true, `Corect! ${prettyFormula(q.formula)} – ${q.name} – ${q.category}.`);
+        markAnswered(`s4-${index}`, POINTS_PER_QUESTION);
+      } else {
+        setFeedback(
+          `tfb${index}`,
+          false,
+          `Greșit.<br>
+           <b>Formula:</b> ${prettyFormula(q.formula)}<br>
+           <b>Denumirea:</b> ${q.name}<br>
+           <b>Categoria:</b> ${q.category}<br>
+           ${q.explanation}`
+        );
+      }
+    }
+
+    /* =========================
+       PARCURGERI ȘI DIPLOMĂ
+    ========================== */
+
+    function finishAttempt() {
+      if (answeredQuestions.size < TOTAL_QUESTIONS) {
+        const missing = TOTAL_QUESTIONS - answeredQuestions.size;
+        const confirmFinish = confirm(`Mai ai ${missing} cerințe neverificate corect. Vrei să finalizezi parcurgerea cu punctajul actual?`);
+        if (!confirmFinish) return;
+      }
+
+      const attempts = getAttempts();
+
+      if (attempts.length >= REQUIRED_ATTEMPTS) {
+        alert("Ai deja 4 parcurgeri salvate. Poți vedea sau exporta diploma.");
+        showDiplomaIfReady();
+        return;
+      }
+
+      attempts.push({
+        score,
+        date: new Date().toISOString(),
+        name: document.getElementById("elevNume").value.trim(),
+        className: document.getElementById("elevClasa").value.trim()
+      });
+
+      saveAttempts(attempts);
+
+      if (attempts.length >= REQUIRED_ATTEMPTS) {
+        alert("Felicitări! Ai parcurs fișa de 4 ori. Diploma este pregătită.");
+        showDiplomaIfReady();
+      } else {
+        alert(`Parcurgerea ${attempts.length} a fost salvată. Se generează o variantă nouă.`);
+        resetTest();
+      }
+    }
+
+    function calculateAverage(attempts) {
+      if (!attempts.length) return 0;
+      const total = attempts.reduce((sum, attempt) => sum + Number(attempt.score || 0), 0);
+      return Math.round(total / attempts.length);
+    }
+
+    function showDiplomaIfReady() {
+      const attempts = getAttempts();
+
+      if (attempts.length < REQUIRED_ATTEMPTS) {
+        alert(`Diploma apare după 4 parcurgeri complete. Momentan ai ${attempts.length}/4.`);
+        return;
+      }
+
+      const nameInput = document.getElementById("elevNume").value.trim();
+      const lastName = [...attempts].reverse().find(a => a.name)?.name || "....................";
+      const average = calculateAverage(attempts.slice(0, REQUIRED_ATTEMPTS));
+
+      document.getElementById("diplomaName").innerText = nameInput || lastName;
+      document.getElementById("diplomaAverage").innerText = average;
+
+      document.getElementById("worksheet").classList.add("hidden");
+      document.getElementById("diplomaWrapper").classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function hideDiploma() {
+      document.getElementById("diplomaWrapper").classList.add("hidden");
+      document.getElementById("worksheet").classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function resetAllAttempts() {
+      const ok = confirm("Sigur vrei să ștergi cele 4 parcurgeri salvate pentru acest browser?");
+      if (!ok) return;
+      localStorage.removeItem(STORAGE_KEY);
+      renderAttemptsProgress();
+      alert("Progresul a fost resetat.");
+    }
+
+    /* =========================
+       POPUP ȘI PDF
+    ========================== */
+
+    function openPopup() {
+      document.getElementById("popup").style.display = "flex";
+    }
+
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+
+    function exportWorksheetPDF() {
+      const element = document.getElementById("worksheet");
+      const name = document.getElementById("elevNume").value.trim() || "elev";
+
+      const options = {
+        margin: 0.35,
+        filename: `fisa-formula-chimica-${name}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+      };
+
+      html2pdf().set(options).from(element).save();
+    }
+
+    function exportDiplomaPDF() {
+      const attempts = getAttempts();
+      if (attempts.length < REQUIRED_ATTEMPTS) {
+        alert("Diploma poate fi exportată doar după 4 parcurgeri.");
+        return;
+      }
+
+      const element = document.getElementById("diploma");
+      const name = document.getElementById("diplomaName").innerText.trim() || "elev";
+
+      const options = {
+        margin: 0.25,
+        filename: `diploma-formula-chimica-${name}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "in", format: "a4", orientation: "landscape" }
+      };
+
+      html2pdf().set(options).from(element).save();
+    }
+
+    function resetTest() {
+      loadAll();
+    }
+
+    /* =========================
+       PORNIRE
+    ========================== */
+
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("elevData").value = todayIso();
+      loadAll();
+    });
+  </script>
+</body>
+</html>
