@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Compuși binari – Clasa a VII-a</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
     :root {
@@ -11,10 +11,18 @@
         --card: #ffffff;
         --accent: #3498db;
         --accent-dark: #217dbb;
+        --green: #1e9b57;
+        --orange: #f39c12;
+        --red: #c0392b;
         --text: #2c3e50;
+        --muted: #667085;
+        --border: #d8e1ec;
+        --soft: #f7f9fc;
     }
 
-    * { box-sizing: border-box; }
+    * {
+        box-sizing: border-box;
+    }
 
     body {
         margin: 0;
@@ -28,124 +36,203 @@
 
     .wrapper {
         width: 100%;
-        max-width: 900px;
+        max-width: 980px;
         padding: 16px;
     }
 
     header {
         text-align: center;
         margin-bottom: 16px;
+        background: var(--card);
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
     header h1 {
         margin: 8px 0;
-        font-size: 1.8rem;
+        font-size: 2rem;
+        color: var(--text);
     }
 
-    header h2 {
+    header h2,
+    header h3 {
         margin: 4px 0;
-        font-size: 1.1rem;
         font-weight: normal;
         color: #555;
     }
 
-    .step-card {
+    header a,
+    footer a {
+        color: var(--accent-dark);
+        font-weight: bold;
+    }
+
+    .lesson-card,
+    .example-card,
+    .recap-card {
         background: var(--card);
-        border-radius: 14px;
-        padding: 18px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        margin-bottom: 16px;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        margin-bottom: 18px;
     }
 
-    .step-title {
-        font-size: 1.3rem;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+    h2 {
+        margin-top: 0;
+        color: var(--text);
     }
 
-    .step-title span.badge {
-        background: var(--accent);
-        color: #fff;
-        border-radius: 999px;
-        padding: 4px 10px;
-        font-size: 0.8rem;
+    h3 {
+        color: var(--text);
     }
 
-    .step-content {
-        margin-top: 8px;
-        line-height: 1.5;
-        font-size: 0.98rem;
+    p,
+    li {
+        line-height: 1.6;
+        font-size: 1rem;
+    }
+
+    .lead {
+        font-size: 1.05rem;
     }
 
     .highlight-box {
-        background: #f7f9fc;
-        border-left: 4px solid var(--accent);
-        border-radius: 8px;
-        padding: 10px 12px;
-        margin-top: 10px;
-        font-size: 0.95rem;
+        background: var(--soft);
+        border-left: 5px solid var(--accent);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin: 14px 0;
     }
 
-    .visual-row {
+    .warning-box {
+        background: #fff7e6;
+        border-left: 5px solid var(--orange);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin: 14px 0;
+    }
+
+    .rule-box {
+        background: #ecfdf3;
+        border-left: 5px solid var(--green);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin: 14px 0;
+    }
+
+    .formula-line {
+        text-align: center;
+        font-size: 1.35rem;
+        font-weight: bold;
+        margin: 12px 0;
+    }
+
+    .symbol {
+        display: inline-block;
+        min-width: 38px;
+        padding: 3px 7px;
+        border-radius: 8px;
+        background: #edf6ff;
+        border: 1px solid #cce6ff;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .valence {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #ecfdf3;
+        color: #176b3a;
+        font-weight: bold;
+        border: 1px solid #b7e5c7;
+    }
+
+    .type-badge {
+        display: inline-block;
+        background: var(--accent);
+        color: white;
+        padding: 6px 11px;
+        border-radius: 999px;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    .example-header {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 10px;
-    }
-
-    .visual-card {
-        flex: 1 1 140px;
-        min-width: 120px;
-        background: #fdfefe;
-        border-radius: 10px;
-        border: 1px solid #dde4ec;
-        padding: 10px;
-        text-align: center;
-        font-size: 0.9rem;
-    }
-
-    .visual-symbol {
-        font-size: 1.8rem;
-        font-weight: bold;
-        margin-bottom: 4px;
-    }
-
-    .visual-type {
-        font-size: 0.8rem;
-        color: #777;
-    }
-
-    .question-box {
-        margin-top: 10px;
-        padding: 10px;
-        border-radius: 10px;
-        background: #f7f9fc;
-        border: 1px dashed #c9d6e2;
-        font-size: 0.95rem;
-    }
-
-    .question-box input {
-        margin-top: 6px;
-        width: 100%;
-        padding: 8px;
-        border-radius: 8px;
-        border: 1px solid #c9d6e2;
-        font-size: 0.95rem;
-    }
-
-    .feedback {
-        margin-top: 6px;
-        font-weight: bold;
-        font-size: 0.9rem;
-    }
-
-    .nav-buttons {
-        display: flex;
+        align-items: center;
         justify-content: space-between;
-        gap: 8px;
-        margin-top: 16px;
+        gap: 12px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 10px;
+        margin-bottom: 12px;
+    }
+
+    .steps {
+        counter-reset: step;
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .steps li {
+        position: relative;
+        margin: 10px 0;
+        padding-left: 42px;
+    }
+
+    .steps li::before {
+        counter-increment: step;
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 2px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: white;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+    .mini-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    .mini-card {
+        background: var(--soft);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .formula-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 14px 0;
+    }
+
+    .formula-card {
+        background: var(--soft);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .formula-card .big {
+        font-size: 1.45rem;
+        font-weight: bold;
+        margin-bottom: 6px;
     }
 
     button {
@@ -156,236 +243,598 @@
         cursor: pointer;
         background: var(--accent);
         color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: 0.15s ease;
+    }
+
+    button:hover {
+        background: var(--accent-dark);
+        transform: translateY(-1px);
     }
 
     button.secondary {
-        background: #bdc3c7;
+        background: #667085;
     }
 
-    button:hover:not(:disabled) {
-        background: var(--accent-dark);
+    button.secondary:hover {
+        background: #4f5968;
     }
 
-    /* Popup */
+    button.success {
+        background: var(--green);
+    }
+
+    button.success:hover {
+        background: #147a42;
+    }
+
+    .question-box {
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: 12px;
+        background: var(--soft);
+        border: 1px dashed #b9c6d4;
+    }
+
+    .question-box input,
+    .question-box select {
+        margin: 8px 0 12px;
+        width: 100%;
+        max-width: 380px;
+        padding: 9px;
+        border-radius: 8px;
+        border: 1px solid #c9d6e2;
+        font-size: 0.95rem;
+        background: white;
+    }
+
+    .feedback {
+        margin-top: 8px;
+        font-weight: bold;
+        line-height: 1.45;
+    }
+
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        background: white;
+    }
+
+    th,
+    td {
+        border: 1px solid var(--border);
+        padding: 10px;
+        vertical-align: top;
+    }
+
+    th {
+        background: #edf6ff;
+    }
+
+    footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+        padding: 18px 8px 26px;
+        line-height: 1.5;
+    }
+
+    /* Popup tabel Mendeleev */
     #popup {
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.6);
+        background: rgba(0, 0, 0, 0.65);
         display: none;
         justify-content: center;
         align-items: center;
-        padding: 10px;
+        padding: 14px;
         z-index: 1000;
     }
 
     #popupContent {
+        position: relative;
         background: #fff;
-        border-radius: 12px;
-        max-width: 900px;
+        border-radius: 14px;
+        max-width: 1100px;
         width: 100%;
-        max-height: 90vh;
+        max-height: 92vh;
         overflow-y: auto;
-        padding: 12px;
+        padding: 18px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.30);
+    }
+
+    #popupContent h3 {
+        text-align: center;
+        margin: 6px 42px 12px;
     }
 
     #popupContent img {
         width: 100%;
         height: auto;
+        display: block;
+        margin: 10px auto 0;
+        border-radius: 8px;
+        border: 1px solid var(--border);
     }
 
-    @media (max-width: 600px) {
-        button { width: 100%; }
-        .nav-buttons { flex-direction: column-reverse; }
+    .close-x {
+        position: absolute;
+        top: 10px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        padding: 0;
+        font-size: 22px;
+        line-height: 1;
+        background: var(--red);
+    }
+
+    .close-x:hover {
+        background: #962d22;
+    }
+
+    .popup-note {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.92rem;
+        margin: 0 0 8px;
+    }
+
+    @media (max-width: 700px) {
+        .wrapper {
+            padding: 10px;
+        }
+
+        header h1 {
+            font-size: 1.55rem;
+        }
+
+        .lesson-card,
+        .example-card,
+        .recap-card {
+            padding: 15px;
+        }
+
+        .mini-grid,
+        .formula-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .nav-buttons {
+            flex-direction: column-reverse;
+        }
+
+        button {
+            width: 100%;
+        }
+
+        .example-header {
+            align-items: stretch;
+        }
+
+        .example-header button {
+            width: 100%;
+        }
+
+        th,
+        td {
+            font-size: 0.9rem;
+            padding: 8px;
+        }
     }
 </style>
 </head>
 <body>
 
 <div class="wrapper">
+    <header>
+        <h1>Compuși binari</h1>
+        <h2>Chimie – Clasa a VII-a</h2>
+        <h3>Material realizat de prof. Dănuț Andronie – <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></h3>
+    </header>
 
-<header>
-    <h2>Școala Gimnazială „Gala Galaction”, Mangalia</h2>
-    <h3 style="margin-top:4px; font-weight:normal; color:#444;">
-        Prof. Dănuț Andronie – <span style="color:#217dbb;">danutmg@gmail.com</span>
-    </h3>
-    <h1>Compuși binari</h1>
-    <h2>Chimie – Clasa a VII-a</h2>
-</header>
-
-<!-- Indicator pași -->
-<div class="step-indicator" style="text-align:center; margin-bottom:10px;">
-    Pasul <span id="stepNumber">1</span> din 4
-</div>
-
-<!-- PAS 1 -->
-<section class="step-card" id="step1">
-    <div class="step-title">
-        <span class="badge">Pasul 1</span>
-        <span>Ce sunt compușii binari?</span>
-    </div>
-
-    <div class="step-content">
-        <p>
-            <b>Compușii binari</b> sunt substanțe formate din <b>două elemente chimice diferite</b>.
+    <section class="lesson-card">
+        <h2>1. Ce sunt compușii binari?</h2>
+        <p class="lead">
+            <b>Compușii binari</b> sunt substanțe compuse formate din <b>două elemente chimice diferite</b>.
+            Cuvântul „binar” vine de la ideea de „doi”.
         </p>
 
         <div class="highlight-box">
-            Exemple:
-            <br>– <b>NaCl</b> (sodiu + clor)
-            <br>– <b>MgO</b> (magneziu + oxigen)
-            <br>– <b>HCl</b> (hidrogen + clor)
+            <b>Regula de recunoaștere:</b> dacă formula conține simbolurile a două elemente chimice diferite, substanța este compus binar.
         </div>
 
-        <div class="visual-row">
-            <div class="visual-card">
-                <div class="visual-symbol">NaCl</div>
-                <div class="visual-type">sare de bucătărie</div>
+        <div class="formula-grid">
+            <div class="formula-card">
+                <div class="big">NaCl</div>
+                <div><span class="symbol">Na</span> sodiu + <span class="symbol">Cl</span> clor</div>
+                <div><b>2 elemente</b> → compus binar</div>
             </div>
-            <div class="visual-card">
-                <div class="visual-symbol">MgO</div>
-                <div class="visual-type">oxid de magneziu</div>
+            <div class="formula-card">
+                <div class="big">MgO</div>
+                <div><span class="symbol">Mg</span> magneziu + <span class="symbol">O</span> oxigen</div>
+                <div><b>2 elemente</b> → compus binar</div>
             </div>
-            <div class="visual-card">
-                <div class="visual-symbol">HCl</div>
-                <div class="visual-type">acid clorhidric</div>
+            <div class="formula-card">
+                <div class="big">CO<sub>2</sub></div>
+                <div><span class="symbol">C</span> carbon + <span class="symbol">O</span> oxigen</div>
+                <div><b>2 elemente</b> → compus binar</div>
             </div>
         </div>
 
-        <div class="nav-buttons">
-            <button class="secondary" disabled>Înapoi</button>
-            <button onclick="goStep(2)">Înainte</button>
+        <div class="warning-box">
+            <b>Atenție:</b> indicele nu schimbă numărul de elemente. În CO<sub>2</sub> avem 1 atom de carbon și 2 atomi de oxigen,
+            dar sunt doar <b>două elemente diferite</b>: carbon și oxigen. Deci CO<sub>2</sub> este compus binar.
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- PAS 2 -->
-<section class="step-card" id="step2" style="display:none;">
-    <div class="step-title">
-        <span class="badge">Pasul 2</span>
-        <span>Tipuri de compuși binari</span>
-    </div>
-
-    <div class="step-content">
-        <p>Compușii binari se împart în:</p>
-
-        <div class="highlight-box">
-            <b>1. Oxizi</b> – metal + oxigen (ex: MgO, CaO)<br>
-            <b>2. Acizi hidracizi</b> – hidrogen + nemetal (ex: HCl, H₂S)<br>
-            <b>3. Săruri binare</b> – metal + nemetal (ex: NaCl, KBr)
-        </div>
-
-        <button onclick="openPopup()">Deschide tabelul lui Mendeleev</button>
-
-        <div class="nav-buttons">
-            <button class="secondary" onclick="goStep(1)">Înapoi</button>
-            <button onclick="goStep(3)">Înainte</button>
-        </div>
-    </div>
-</section>
-
-<!-- PAS 3 -->
-<section class="step-card" id="step3" style="display:none;">
-    <div class="step-title">
-        <span class="badge">Pasul 3</span>
-        <span>Scrierea formulelor – valența</span>
-    </div>
-
-    <div class="step-content">
+    <section class="lesson-card">
+        <h2>2. Tipuri simple de compuși binari</h2>
         <p>
-            Pentru a scrie formula unui compus binar, folosim <b>valențele</b> celor două elemente.
+            La clasa a VII-a, este util să recunoaștem câteva tipuri de compuși binari după elementele din formulă.
         </p>
 
-        <div class="highlight-box">
-            <b>Regula produselor:</b><br>
-            valența A × indice = valența B × indice
+        <table>
+            <thead>
+                <tr>
+                    <th>Tip de compus binar</th>
+                    <th>Din ce este format?</th>
+                    <th>Exemple</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>Oxizi</b></td>
+                    <td>un element + oxigen <span class="symbol">O</span> oxigen</td>
+                    <td>MgO, CaO, CO<sub>2</sub>, Al<sub>2</sub>O<sub>3</sub></td>
+                </tr>
+                <tr>
+                    <td><b>Hidracizi</b></td>
+                    <td>hidrogen <span class="symbol">H</span> hidrogen + nemetal</td>
+                    <td>HCl, H<sub>2</sub>S</td>
+                </tr>
+                <tr>
+                    <td><b>Săruri binare</b></td>
+                    <td>metal + nemetal</td>
+                    <td>NaCl, KBr, CaCl<sub>2</sub></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="rule-box">
+            <b>Întrebare de control:</b> Câte elemente diferite apar în formulă? Dacă răspunsul este „două”, atunci avem compus binar.
+        </div>
+    </section>
+
+    <section class="lesson-card">
+        <h2>3. Cum scriem formula unui compus binar?</h2>
+        <p>
+            Pentru a scrie formula, folosim <b>valențele</b> elementelor. Ideea este ca totalul valențelor din stânga
+            să fie egal cu totalul valențelor din dreapta.
+        </p>
+
+        <div class="rule-box">
+            <b>Pași de lucru:</b><br />
+            1. Scriem simbolurile elementelor.<br />
+            2. Scriem valențele deasupra sau lângă simboluri.<br />
+            3. Trecem valențele încrucișat ca indici.<br />
+            4. Dacă indicii se pot simplifica, îi simplificăm.<br />
+            5. Indicele 1 nu se scrie.
+        </div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="type-badge">Sare binară</span> Exemplu: NaCl</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
         </div>
 
+        <p>Vrem să scriem formula compusului dintre <span class="symbol">Na</span> <b>sodiu</b> și <span class="symbol">Cl</span> <b>clor</b>.</p>
+        <ol class="steps">
+            <li>Scriem simbolurile: <span class="symbol">Na</span> <b>sodiu</b> și <span class="symbol">Cl</span> <b>clor</b>.</li>
+            <li>Stabilim valențele: <span class="symbol">Na</span> <b>sodiu</b> are valența <span class="valence">I</span>, iar <span class="symbol">Cl</span> <b>clor</b> are valența <span class="valence">I</span>.</li>
+            <li>Trecem valențele încrucișat: Na<sub>1</sub>Cl<sub>1</sub>.</li>
+            <li>Indicele 1 nu se scrie.</li>
+            <li>Formula finală este <b>NaCl</b>.</li>
+        </ol>
+        <div class="formula-line">NaCl = clorură de sodiu</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="type-badge">Oxid metalic</span> Exemplu: MgO</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să scriem formula compusului dintre <span class="symbol">Mg</span> <b>magneziu</b> și <span class="symbol">O</span> <b>oxigen</b>.</p>
+        <ol class="steps">
+            <li>Scriem simbolurile: <span class="symbol">Mg</span> <b>magneziu</b> și <span class="symbol">O</span> <b>oxigen</b>.</li>
+            <li>Stabilim valențele: <span class="symbol">Mg</span> <b>magneziu</b> are valența <span class="valence">II</span>, iar <span class="symbol">O</span> <b>oxigen</b> are valența <span class="valence">II</span>.</li>
+            <li>Trecem valențele încrucișat: Mg<sub>2</sub>O<sub>2</sub>.</li>
+            <li>Simplificăm indicii 2 și 2 prin 2: Mg<sub>1</sub>O<sub>1</sub>.</li>
+            <li>Indicele 1 nu se scrie. Formula finală este <b>MgO</b>.</li>
+        </ol>
+        <div class="formula-line">MgO = oxid de magneziu</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="type-badge">Sare binară</span> Exemplu: CaCl<sub>2</sub></h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să scriem formula compusului dintre <span class="symbol">Ca</span> <b>calciu</b> și <span class="symbol">Cl</span> <b>clor</b>.</p>
+        <ol class="steps">
+            <li>Scriem simbolurile: <span class="symbol">Ca</span> <b>calciu</b> și <span class="symbol">Cl</span> <b>clor</b>.</li>
+            <li>Stabilim valențele: <span class="symbol">Ca</span> <b>calciu</b> are valența <span class="valence">II</span>, iar <span class="symbol">Cl</span> <b>clor</b> are valența <span class="valence">I</span>.</li>
+            <li>Trecem valențele încrucișat: Ca<sub>1</sub>Cl<sub>2</sub>.</li>
+            <li>Indicele 1 de la calciu nu se scrie.</li>
+            <li>Formula finală este <b>CaCl<sub>2</sub></b>.</li>
+        </ol>
+        <div class="formula-line">CaCl<sub>2</sub> = clorură de calciu</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="type-badge">Oxid metalic</span> Exemplu: Al<sub>2</sub>O<sub>3</sub></h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să scriem formula compusului dintre <span class="symbol">Al</span> <b>aluminiu</b> și <span class="symbol">O</span> <b>oxigen</b>.</p>
+        <ol class="steps">
+            <li>Scriem simbolurile: <span class="symbol">Al</span> <b>aluminiu</b> și <span class="symbol">O</span> <b>oxigen</b>.</li>
+            <li>Stabilim valențele: <span class="symbol">Al</span> <b>aluminiu</b> are valența <span class="valence">III</span>, iar <span class="symbol">O</span> <b>oxigen</b> are valența <span class="valence">II</span>.</li>
+            <li>Trecem valențele încrucișat: Al<sub>2</sub>O<sub>3</sub>.</li>
+            <li>Indicii 2 și 3 nu se mai pot simplifica.</li>
+            <li>Formula finală este <b>Al<sub>2</sub>O<sub>3</sub></b>.</li>
+        </ol>
+        <div class="formula-line">Al<sub>2</sub>O<sub>3</sub> = oxid de aluminiu</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="type-badge">Oxid nemetalic</span> Exemplu: CO<sub>2</sub></h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să înțelegem formula compusului dintre <span class="symbol">C</span> <b>carbon</b> și <span class="symbol">O</span> <b>oxigen</b>.</p>
+        <ol class="steps">
+            <li>Scriem simbolurile: <span class="symbol">C</span> <b>carbon</b> și <span class="symbol">O</span> <b>oxigen</b>.</li>
+            <li>Folosim valențele obișnuite: <span class="symbol">C</span> <b>carbon</b> are valența <span class="valence">IV</span>, iar <span class="symbol">O</span> <b>oxigen</b> are valența <span class="valence">II</span>.</li>
+            <li>Trecem valențele încrucișat: C<sub>2</sub>O<sub>4</sub>.</li>
+            <li>Simplificăm indicii 2 și 4 prin 2: C<sub>1</sub>O<sub>2</sub>.</li>
+            <li>Indicele 1 nu se scrie. Formula finală este <b>CO<sub>2</sub></b>.</li>
+        </ol>
+        <div class="formula-line">CO<sub>2</sub> = dioxid de carbon</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="type-badge">Hidracid</span> Exemplu: HCl</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să scriem formula compusului dintre <span class="symbol">H</span> <b>hidrogen</b> și <span class="symbol">Cl</span> <b>clor</b>.</p>
+        <ol class="steps">
+            <li>Scriem simbolurile: <span class="symbol">H</span> <b>hidrogen</b> și <span class="symbol">Cl</span> <b>clor</b>.</li>
+            <li>Stabilim valențele: <span class="symbol">H</span> <b>hidrogen</b> are valența <span class="valence">I</span>, iar <span class="symbol">Cl</span> <b>clor</b> are valența <span class="valence">I</span>.</li>
+            <li>Trecem valențele încrucișat: H<sub>1</sub>Cl<sub>1</sub>.</li>
+            <li>Indicele 1 nu se scrie.</li>
+            <li>Formula finală este <b>HCl</b>.</li>
+        </ol>
+        <div class="formula-line">HCl = acid clorhidric</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="type-badge">Hidracid</span> Exemplu: H<sub>2</sub>S</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să scriem formula compusului dintre <span class="symbol">H</span> <b>hidrogen</b> și <span class="symbol">S</span> <b>sulf</b>.</p>
+        <ol class="steps">
+            <li>Scriem simbolurile: <span class="symbol">H</span> <b>hidrogen</b> și <span class="symbol">S</span> <b>sulf</b>.</li>
+            <li>Stabilim valențele: <span class="symbol">H</span> <b>hidrogen</b> are valența <span class="valence">I</span>, iar <span class="symbol">S</span> <b>sulf</b> are valența <span class="valence">II</span>.</li>
+            <li>Trecem valențele încrucișat: H<sub>2</sub>S<sub>1</sub>.</li>
+            <li>Indicele 1 de la sulf nu se scrie.</li>
+            <li>Formula finală este <b>H<sub>2</sub>S</b>.</li>
+        </ol>
+        <div class="formula-line">H<sub>2</sub>S = acid sulfhidric</div>
+    </section>
+
+    <section class="lesson-card">
+        <h2>4. Cum denumim simplu compușii binari?</h2>
+        <p>
+            La nivel introductiv, folosim formule simple de denumire. Important este să recunoaștem elementele și tipul compusului.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tip</th>
+                    <th>Model de denumire</th>
+                    <th>Exemple</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Oxid</td>
+                    <td>oxid de + numele elementului</td>
+                    <td>MgO = oxid de magneziu; CaO = oxid de calciu</td>
+                </tr>
+                <tr>
+                    <td>Oxid nemetalic</td>
+                    <td>mono-, di-, tri- + oxid de + numele nemetalului</td>
+                    <td>CO = monoxid de carbon; CO<sub>2</sub> = dioxid de carbon</td>
+                </tr>
+                <tr>
+                    <td>Sare binară</td>
+                    <td>numele nemetalului cu terminație specifică + de + metal</td>
+                    <td>NaCl = clorură de sodiu; CaCl<sub>2</sub> = clorură de calciu</td>
+                </tr>
+                <tr>
+                    <td>Hidracid</td>
+                    <td>acid + numele nemetalului</td>
+                    <td>HCl = acid clorhidric; H<sub>2</sub>S = acid sulfhidric</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="recap-card">
+        <h2>5. Verificare rapidă</h2>
+        <p>Completează răspunsurile. Poți folosi butonul pentru tabel dacă ai nevoie să recunoști simbolurile.</p>
+
         <div class="question-box">
-            Scrie formula compusului dintre:
-            <br>– Na(I) și Cl(I)
-            <br>– Ca(II) și O(II)
-            <input id="q3" placeholder="Ex: NaCl, CaO">
-            <div class="feedback" id="f3"></div>
+            <p>1) Este CO<sub>2</sub> compus binar? Scrie DA sau NU.</p>
+            <input id="q1" type="text" placeholder="DA / NU" />
+
+            <p>2) Scrie formula compusului dintre <span class="symbol">Na</span> <b>sodiu</b> și <span class="symbol">Cl</span> <b>clor</b>.</p>
+            <input id="q2" type="text" placeholder="ex: NaCl" />
+
+            <p>3) Scrie formula compusului dintre <span class="symbol">Mg</span> <b>magneziu</b> și <span class="symbol">O</span> <b>oxigen</b>.</p>
+            <input id="q3" type="text" placeholder="ex: MgO" />
+
+            <p>4) Scrie formula compusului dintre <span class="symbol">Ca</span> <b>calciu</b> și <span class="symbol">Cl</span> <b>clor</b>.</p>
+            <input id="q4" type="text" placeholder="ex: CaCl2" />
+
+            <p>5) Ce tip de compus este MgO: oxid, hidracid sau sare binară?</p>
+            <select id="q5">
+                <option value="">Alege răspunsul</option>
+                <option value="oxid">oxid</option>
+                <option value="hidracid">hidracid</option>
+                <option value="sare binară">sare binară</option>
+            </select>
+
+            <br />
+            <button type="button" class="success" onclick="checkRecap()">Verifică răspunsurile</button>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+            <div class="feedback" id="recapFeedback"></div>
         </div>
 
         <div class="nav-buttons">
-            <button class="secondary" onclick="goStep(2)">Înapoi</button>
-            <button onclick="checkQ3()">Verifică și mergi mai departe</button>
+            <button class="secondary" onclick="window.location.href='../';">⟵ Înapoi la capitol</button>
+            <button onclick="window.location.href='../compusi-ternari/';">Lecția următoare ⟶</button>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- PAS 4 -->
-<section class="step-card" id="step4" style="display:none;">
-    <div class="step-title">
-        <span class="badge">Pasul 4</span>
-        <span>Recapitulare</span>
-    </div>
-
-    <div class="step-content">
-        <p>Spune dacă următoarele sunt compuși binari (B) sau nu (N):</p>
-
-        <div class="question-box">
-            1) H₂O <input id="r1">
-            2) NaCl <input id="r2">
-            3) CO₂ <input id="r3">
-            4) MgO <input id="r4">
-            <div class="feedback" id="f4"></div>
-        </div>
-
-        <div class="nav-buttons">
-        <button class="secondary" onclick="window.location.href='../';">⟵ Înapoi la capitol</button>
-        <button onclick="window.location.href='../compusi-ternari/';">Lecția următoare ⟶</button>
-        </div>
-    </div>
-</section>
-
+    <footer>
+        Material realizat de <b>prof. Dănuț Andronie</b>.<br />
+        Pentru observații și propuneri: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+    </footer>
 </div>
 
-<!-- POPUP -->
-<div id="popup" onclick="closePopup(event)">
-    <div id="popupContent" onclick="event.stopPropagation()">
-        <button class="secondary" onclick="closePopup(event)">Închide</button>
-        <img src="../tabel.png" alt="Tabelul periodic">
+<!-- POPUP TABEL MENDELEEV -->
+<div id="popup" onclick="closeMendeleev()" aria-hidden="true">
+    <div id="popupContent" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Tabelul lui Mendeleev">
+        <button class="close-x" type="button" onclick="closeMendeleev()" aria-label="Închide tabelul">×</button>
+        <h3>Tabelul lui Mendeleev</h3>
+        <p class="popup-note">Apasă pe X sau fă click lângă imagine pentru a reveni la lecție.</p>
+        <img src="../tabel.png" alt="Tabelul lui Mendeleev" />
     </div>
 </div>
 
 <script>
-function goStep(n){
-    for(let i=1;i<=4;i++){
-        document.getElementById("step"+i).style.display="none";
+    function openMendeleev() {
+        const popup = document.getElementById("popup");
+        popup.style.display = "flex";
+        popup.setAttribute("aria-hidden", "false");
     }
-    document.getElementById("step"+n).style.display="block";
-    document.getElementById("stepNumber").innerText=n;
-}
 
-function openPopup(){ document.getElementById("popup").style.display="flex"; }
-function closePopup(){ document.getElementById("popup").style.display="none"; }
-
-function checkQ3(){
-    const v=document.getElementById("q3").value.toUpperCase().replace(/\s/g,"");
-    const fb=document.getElementById("f3");
-    if(v.includes("NACL") && v.includes("CAO")){
-        fb.style.color="green";
-        fb.innerText="Corect!";
-        setTimeout(()=>goStep(4),700);
-    } else {
-        fb.style.color="orange";
-        fb.innerText="Verifică valențele: Na(I)-Cl(I), Ca(II)-O(II).";
+    function closeMendeleev() {
+        const popup = document.getElementById("popup");
+        popup.style.display = "none";
+        popup.setAttribute("aria-hidden", "true");
     }
-}
 
-function checkRecap(){
-    const ans={r1:"N",r2:"B",r3:"N",r4:"B"};
-    let ok=0;
-    for(let id in ans){
-        const v=document.getElementById(id).value.toUpperCase();
-        if(v===ans[id]) ok++;
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            closeMendeleev();
+        }
+    });
+
+    function normalizeFormula(value) {
+        return String(value)
+            .trim()
+            .replaceAll("₂", "2")
+            .replaceAll("₃", "3")
+            .replaceAll("₄", "4")
+            .replaceAll("₅", "5")
+            .replaceAll("₆", "6")
+            .replaceAll("₇", "7")
+            .replaceAll("₈", "8")
+            .replaceAll("₉", "9")
+            .replaceAll("₁", "1")
+            .replace(/\s+/g, "")
+            .toUpperCase();
     }
-    const fb=document.getElementById("f4");
-    fb.style.color=ok===4?"green":"orange";
-    fb.innerText=`Ai ${ok} răspunsuri corecte din 4.`;
-}
+
+    function normalizeText(value) {
+        return String(value)
+            .trim()
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/ă/g, "a")
+            .replace(/â/g, "a")
+            .replace(/î/g, "i")
+            .replace(/ș/g, "s")
+            .replace(/ş/g, "s")
+            .replace(/ț/g, "t")
+            .replace(/ţ/g, "t")
+            .replace(/\s+/g, " ");
+    }
+
+    function markInput(input, ok) {
+        input.style.borderColor = ok ? "#1e9b57" : "#c0392b";
+    }
+
+    function checkRecap() {
+        const q1 = normalizeText(document.getElementById("q1").value);
+        const q2 = normalizeFormula(document.getElementById("q2").value);
+        const q3 = normalizeFormula(document.getElementById("q3").value);
+        const q4 = normalizeFormula(document.getElementById("q4").value);
+        const q5 = normalizeText(document.getElementById("q5").value);
+
+        const checks = [
+            { id: "q1", ok: q1 === "da" },
+            { id: "q2", ok: q2 === "NACL" },
+            { id: "q3", ok: q3 === "MGO" },
+            { id: "q4", ok: q4 === "CACL2" },
+            { id: "q5", ok: q5 === "oxid" }
+        ];
+
+        let correct = 0;
+        checks.forEach(item => {
+            const input = document.getElementById(item.id);
+            if (item.ok) correct++;
+            markInput(input, item.ok);
+        });
+
+        const details = [
+            "1) CO₂ este compus binar, deoarece are două elemente: C – carbon și O – oxigen.",
+            "2) Na – sodiu + Cl – clor → NaCl.",
+            "3) Mg – magneziu + O – oxigen → MgO, deoarece II și II se simplifică.",
+            "4) Ca – calciu + Cl – clor → CaCl₂.",
+            "5) MgO este oxid, deoarece conține oxigen și magneziu."
+        ];
+
+        const feedback = document.getElementById("recapFeedback");
+        feedback.style.color = correct === 5 ? "#1e9b57" : "#f39c12";
+        feedback.innerHTML = `Ai ${correct} răspunsuri corecte din 5.<br>${details.join("<br>")}`;
+    }
 </script>
 
 </body>
