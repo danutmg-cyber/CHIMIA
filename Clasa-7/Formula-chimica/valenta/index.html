@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
-<title>Valența – Clasa a VII-a</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<title>Valența elementelor – Clasa a VII-a</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
     :root {
@@ -11,10 +11,18 @@
         --card: #ffffff;
         --accent: #3498db;
         --accent-dark: #217dbb;
+        --green: #1e9b57;
+        --orange: #f39c12;
+        --red: #c0392b;
         --text: #2c3e50;
+        --muted: #667085;
+        --border: #d8e1ec;
+        --soft: #f7f9fc;
     }
 
-    * { box-sizing: border-box; }
+    * {
+        box-sizing: border-box;
+    }
 
     body {
         margin: 0;
@@ -28,86 +36,176 @@
 
     .wrapper {
         width: 100%;
-        max-width: 900px;
+        max-width: 980px;
         padding: 16px;
     }
 
     header {
         text-align: center;
         margin-bottom: 16px;
+        background: var(--card);
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
     header h1 {
         margin: 8px 0;
-        font-size: 1.8rem;
+        font-size: 2rem;
+        color: var(--text);
     }
 
-    header h2 {
+    header h2,
+    header h3 {
         margin: 4px 0;
-        font-size: 1.1rem;
         font-weight: normal;
         color: #555;
     }
 
-    .step-card {
+    .lesson-card,
+    .example-card,
+    .recap-card {
         background: var(--card);
-        border-radius: 14px;
-        padding: 18px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        margin-bottom: 16px;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        margin-bottom: 18px;
     }
 
-    .step-title {
-        font-size: 1.3rem;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+    h2 {
+        margin-top: 0;
+        color: var(--text);
     }
 
-    .step-title span.badge {
-        background: var(--accent);
-        color: #fff;
-        border-radius: 999px;
-        padding: 4px 10px;
-        font-size: 0.8rem;
+    h3 {
+        color: var(--text);
     }
 
-    .step-content {
-        margin-top: 8px;
-        line-height: 1.5;
-        font-size: 0.98rem;
+    p,
+    li {
+        line-height: 1.6;
+        font-size: 1rem;
+    }
+
+    .lead {
+        font-size: 1.05rem;
     }
 
     .highlight-box {
-        background: #f7f9fc;
-        border-left: 4px solid var(--accent);
-        border-radius: 8px;
-        padding: 10px 12px;
-        margin-top: 10px;
-        font-size: 0.95rem;
+        background: var(--soft);
+        border-left: 5px solid var(--accent);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin: 14px 0;
     }
 
-    .example-box {
+    .warning-box {
+        background: #fff7e6;
+        border-left: 5px solid var(--orange);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin: 14px 0;
+    }
+
+    .rule-box {
+        background: #ecfdf3;
+        border-left: 5px solid var(--green);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin: 14px 0;
+    }
+
+    .formula-line {
+        text-align: center;
+        font-size: 1.35rem;
+        font-weight: bold;
+        margin: 12px 0;
+    }
+
+    .symbol {
+        display: inline-block;
+        min-width: 38px;
+        padding: 3px 7px;
+        border-radius: 8px;
+        background: #edf6ff;
+        border: 1px solid #cce6ff;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .valence {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #ecfdf3;
+        color: #176b3a;
+        font-weight: bold;
+        border: 1px solid #b7e5c7;
+    }
+
+    .example-header {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 10px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 10px;
+        margin-bottom: 12px;
     }
 
-    .chip {
-        padding: 8px 12px;
+    .group-badge {
+        display: inline-block;
+        background: var(--accent);
+        color: white;
+        padding: 6px 11px;
         border-radius: 999px;
-        background: #ecf5ff;
-        border: 1px solid #c9e2ff;
+        font-weight: bold;
         font-size: 0.9rem;
     }
 
-    .nav-buttons {
-        display: flex;
-        justify-content: space-between;
-        gap: 8px;
-        margin-top: 16px;
+    .steps {
+        counter-reset: step;
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .steps li {
+        position: relative;
+        margin: 10px 0;
+        padding-left: 42px;
+    }
+
+    .steps li::before {
+        counter-increment: step;
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 2px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: white;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+    .mini-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    .mini-card {
+        background: var(--soft);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
     }
 
     button {
@@ -122,433 +220,585 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
+        transition: 0.15s ease;
+    }
+
+    button:hover {
+        background: var(--accent-dark);
+        transform: translateY(-1px);
     }
 
     button.secondary {
-        background: #bdc3c7;
+        background: #667085;
     }
 
-    button:disabled {
-        opacity: 0.5;
-        cursor: default;
+    button.secondary:hover {
+        background: #4f5968;
     }
 
-    button:hover:not(:disabled) {
-        background: var(--accent-dark);
+    button.success {
+        background: var(--green);
     }
 
-    .step-indicator {
-        text-align: center;
-        font-size: 0.9rem;
-        color: #555;
-        margin-bottom: 8px;
-    }
-
-    .dots {
-        display: flex;
-        justify-content: center;
-        gap: 6px;
-        margin-top: 4px;
-    }
-
-    .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #d0d7de;
-    }
-
-    .dot.active {
-        background: var(--accent);
-    }
-
-    .visual-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 10px;
-    }
-
-    .visual-card {
-        flex: 1 1 140px;
-        min-width: 120px;
-        background: #fdfefe;
-        border-radius: 10px;
-        border: 1px solid #dde4ec;
-        padding: 10px;
-        text-align: center;
-        font-size: 0.9rem;
-    }
-
-    .visual-symbol {
-        font-size: 1.8rem;
-        font-weight: bold;
-        margin-bottom: 4px;
-    }
-
-    .visual-name {
-        font-size: 0.95rem;
-        margin-bottom: 2px;
-    }
-
-    .visual-type {
-        font-size: 0.8rem;
-        color: #777;
+    button.success:hover {
+        background: #147a42;
     }
 
     .question-box {
-        margin-top: 10px;
-        padding: 10px;
-        border-radius: 10px;
-        background: #f7f9fc;
-        border: 1px dashed #c9d6e2;
-        font-size: 0.95rem;
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: 12px;
+        background: var(--soft);
+        border: 1px dashed #b9c6d4;
     }
 
     .question-box input {
-        margin-top: 6px;
+        margin-top: 8px;
         width: 100%;
-        padding: 8px;
+        max-width: 360px;
+        padding: 9px;
         border-radius: 8px;
         border: 1px solid #c9d6e2;
         font-size: 0.95rem;
     }
 
     .feedback {
-        margin-top: 6px;
+        margin-top: 8px;
         font-weight: bold;
+        line-height: 1.45;
+    }
+
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        background: white;
+    }
+
+    th,
+    td {
+        border: 1px solid var(--border);
+        padding: 10px;
+        vertical-align: top;
+    }
+
+    th {
+        background: #edf6ff;
+    }
+
+    footer {
+        text-align: center;
+        color: var(--muted);
         font-size: 0.9rem;
+        padding: 18px 8px 26px;
+        line-height: 1.5;
+    }
+
+    footer a {
+        color: var(--accent-dark);
+        font-weight: bold;
     }
 
     /* Popup tabel Mendeleev */
     #popup {
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.6);
+        background: rgba(0, 0, 0, 0.65);
         display: none;
         justify-content: center;
         align-items: center;
-        padding: 10px;
+        padding: 14px;
         z-index: 1000;
     }
 
     #popupContent {
+        position: relative;
         background: #fff;
-        border-radius: 12px;
-        max-width: 900px;
+        border-radius: 14px;
+        max-width: 1100px;
         width: 100%;
-        max-height: 90vh;
+        max-height: 92vh;
         overflow-y: auto;
-        padding: 12px;
+        padding: 18px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.30);
     }
 
     #popupContent h3 {
-        margin-top: 0;
         text-align: center;
+        margin: 6px 42px 12px;
     }
 
     #popupContent img {
         width: 100%;
         height: auto;
         display: block;
-        margin-top: 8px;
+        margin: 10px auto 0;
+        border-radius: 8px;
+        border: 1px solid var(--border);
     }
 
-    @media (max-width: 600px) {
-        header h1 { font-size: 1.5rem; }
-        .step-card { padding: 14px; }
-        button { width: 100%; }
-        .nav-buttons { flex-direction: column-reverse; }
+    .close-x {
+        position: absolute;
+        top: 10px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        padding: 0;
+        font-size: 22px;
+        line-height: 1;
+        background: var(--red);
+    }
+
+    .close-x:hover {
+        background: #962d22;
+    }
+
+    .popup-note {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.92rem;
+        margin: 0 0 8px;
+    }
+
+    @media (max-width: 700px) {
+        .wrapper {
+            padding: 10px;
+        }
+
+        header h1 {
+            font-size: 1.55rem;
+        }
+
+        .lesson-card,
+        .example-card,
+        .recap-card {
+            padding: 15px;
+        }
+
+        .mini-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .nav-buttons {
+            flex-direction: column-reverse;
+        }
+
+        button {
+            width: 100%;
+        }
+
+        .example-header {
+            align-items: stretch;
+        }
+
+        .example-header button {
+            width: 100%;
+        }
+
+        th,
+        td {
+            font-size: 0.9rem;
+            padding: 8px;
+        }
     }
 </style>
 </head>
 <body>
 
 <div class="wrapper">
-  <header>
-    <h2>Școala Gimnazială „Gala Galaction”, Mangalia</h2>
-    <h3 style="margin-top:4px; font-weight:normal; color:#444;">
-        Prof. Dănuț Andronie – <span style="color:#217dbb;">danutmg@gmail.com</span>
-    </h3>
-    <h1>Valența</h1>
-    <h2>Chimie – Clasa a VII-a</h2>
-</header>
+    <header>
+        <h1>Valența elementelor chimice</h1>
+        <h2>Chimie – Clasa a VII-a</h2>
+        <h3>Material realizat de prof. Dănuț Andronie – <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></h3>
+    </header>
 
-    <div class="step-indicator">
-        Pasul <span id="stepNumber">1</span> din <span id="stepTotal">4</span>
-        <div class="dots">
-            <div class="dot active" id="dot1"></div>
-            <div class="dot" id="dot2"></div>
-            <div class="dot" id="dot3"></div>
-            <div class="dot" id="dot4"></div>
+    <section class="lesson-card">
+        <h2>1. Ce este valența?</h2>
+        <p class="lead">
+            <b>Valența</b> arată <b>capacitatea unui atom de a se combina</b> cu alți atomi.
+            La nivel de clasa a VII-a, o putem înțelege ca pe un „număr de legături” pe care atomul le poate face într-un compus.
+        </p>
+
+        <div class="highlight-box">
+            <b>Ideea de bază:</b> hidrogenul, <span class="symbol">H</span> <b>hidrogen</b>, are valența <span class="valence">I</span>.
+            De aceea, valența altor elemente se poate explica prin comparație cu hidrogenul.
         </div>
-    </div>
 
-    <!-- PAS 1: Ce este valența -->
-    <section class="step-card" id="step1">
-        <div class="step-title">
-            <span class="badge">Pasul 1</span>
-            <span>Ce este valența?</span>
+        <div class="mini-grid">
+            <div class="mini-card">
+                <b>Exemplu:</b> în H<sub>2</sub>O, oxigenul <span class="symbol">O</span> <b>oxigen</b>
+                se combină cu 2 atomi de hidrogen <span class="symbol">H</span> <b>hidrogen</b>.
+                Deci oxigenul are valența <span class="valence">II</span>.
+            </div>
+            <div class="mini-card">
+                <b>Exemplu:</b> în NH<sub>3</sub>, azotul <span class="symbol">N</span> <b>azot</b>
+                se combină cu 3 atomi de hidrogen <span class="symbol">H</span> <b>hidrogen</b>.
+                Deci azotul are valența <span class="valence">III</span>.
+            </div>
         </div>
-        <div class="step-content">
-            <p>
-                <b>Valența</b> este <b>capacitatea unui atom de a se combina</b> cu alți atomi.
-                Ea arată cu câți atomi de hidrogen se poate combina un atom al elementului respectiv.
-            </p>
 
-            <div class="highlight-box">
-                <b>Exemple simple:</b><br>
-                – H are valența I (se leagă cu 1 atom de H – el însuși)<br>
-                – O are valența II (în H₂O, un atom de O se leagă cu 2 atomi de H)<br>
-                – N are valența III (în NH₃, un atom de N se leagă cu 3 atomi de H)
-            </div>
-
-            <div class="visual-row">
-                <div class="visual-card">
-                    <div class="visual-symbol">H</div>
-                    <div class="visual-name">Hidrogen</div>
-                    <div class="visual-type">valența I</div>
-                </div>
-                <div class="visual-card">
-                    <div class="visual-symbol">O</div>
-                    <div class="visual-name">Oxigen</div>
-                    <div class="visual-type">valența II</div>
-                </div>
-                <div class="visual-card">
-                    <div class="visual-symbol">N</div>
-                    <div class="visual-name">Azot</div>
-                    <div class="visual-type">valența III</div>
-                </div>
-            </div>
-
-            <div class="question-box">
-                <div>Scrie cu cuvintele tale ce înseamnă „valență” (răspuns scurt):</div>
-                <input id="q1" type="text" placeholder="Ex: capacitatea unui atom de a se combina">
-                <div class="feedback" id="f1"></div>
-            </div>
-
-            <div class="nav-buttons">
-                <button class="secondary" disabled>Înapoi</button>
-                <button onclick="checkQ1()">Verifică și mergi mai departe</button>
-            </div>
+        <div class="warning-box">
+            <b>Atenție:</b> unele elemente pot avea mai multe valențe. De exemplu, fierul <span class="symbol">Fe</span> <b>fier</b>
+            poate avea valența II sau III. În această lecție învățăm întâi regulile simple, apoi vedem și cazurile variabile.
         </div>
     </section>
 
-    <!-- PAS 2: Valența din tabelul lui Mendeleev (grupe) -->
-    <section class="step-card" id="step2" style="display:none;">
-        <div class="step-title">
-            <span class="badge">Pasul 2</span>
-            <span>Valența și tabelul lui Mendeleev</span>
+    <section class="lesson-card">
+        <h2>2. Cum folosim grupele din tabelul lui Mendeleev?</h2>
+        <p>
+            În tabelul periodic, elementele sunt așezate pe <b>grupe</b>. Pentru multe elemente din grupele principale,
+            putem afla valența obișnuită folosind grupa în care se află elementul.
+        </p>
+
+        <div class="rule-box">
+            <b>Regulă simplificată pentru gimnaziu:</b><br />
+            grupele I A, II A, III A și IV A au, de obicei, valența egală cu numărul grupei;<br />
+            grupele V A, VI A și VII A au, de obicei, valența calculată astfel: <b>8 − numărul grupei</b>.
         </div>
-        <div class="step-content">
-            <p>
-                În <b>tabelul periodic</b>, elementele sunt aranjate pe <b>grupe</b>.
-                Pentru grupele principale (A), putem aproxima valența astfel:
-            </p>
 
-            <div class="highlight-box">
-                <b>Reguli simple (gimnaziu):</b><br>
-                – grupa I A → valența I (H, Li, Na, K)<br>
-                – grupa II A → valența II (Mg, Ca)<br>
-                – grupa III A → valența III (Al)<br>
-                – grupa IV A → valența IV (C, Si)<br>
-                – grupa V A → valența III (N, P)<br>
-                – grupa VI A → valența II (O, S)<br>
-                – grupa VII A → valența I (F, Cl, Br, I)
-            </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Grupa</th>
+                    <th>Exemplu de element</th>
+                    <th>Valență obișnuită</th>
+                    <th>Idee rapidă</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>I A</td>
+                    <td><span class="symbol">Na</span> sodiu</td>
+                    <td>I</td>
+                    <td>Grupa I A → valența I</td>
+                </tr>
+                <tr>
+                    <td>II A</td>
+                    <td><span class="symbol">Mg</span> magneziu</td>
+                    <td>II</td>
+                    <td>Grupa II A → valența II</td>
+                </tr>
+                <tr>
+                    <td>III A</td>
+                    <td><span class="symbol">Al</span> aluminiu</td>
+                    <td>III</td>
+                    <td>Grupa III A → valența III</td>
+                </tr>
+                <tr>
+                    <td>IV A</td>
+                    <td><span class="symbol">C</span> carbon</td>
+                    <td>IV</td>
+                    <td>Grupa IV A → valența IV</td>
+                </tr>
+                <tr>
+                    <td>V A</td>
+                    <td><span class="symbol">N</span> azot</td>
+                    <td>III</td>
+                    <td>8 − 5 = 3 → valența III</td>
+                </tr>
+                <tr>
+                    <td>VI A</td>
+                    <td><span class="symbol">O</span> oxigen</td>
+                    <td>II</td>
+                    <td>8 − 6 = 2 → valența II</td>
+                </tr>
+                <tr>
+                    <td>VII A</td>
+                    <td><span class="symbol">Cl</span> clor</td>
+                    <td>I</td>
+                    <td>8 − 7 = 1 → valența I</td>
+                </tr>
+                <tr>
+                    <td>VIII A / 18</td>
+                    <td><span class="symbol">Ne</span> neon</td>
+                    <td>0</td>
+                    <td>Gazele nobile nu se combină ușor în compuși obișnuiți</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
 
-            <button type="button" onclick="openPopup()">Deschide tabelul lui Mendeleev</button>
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="group-badge">Grupa I A</span> Exemplu: Na – sodiu</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
 
-            <div class="question-box">
-                <div>Ce valență are oxigenul (O) în majoritatea compușilor obișnuiți?</div>
-                <input id="q2" type="text" placeholder="Scrie un număr roman sau arab: II sau 2">
-                <div class="feedback" id="f2"></div>
-            </div>
+        <p>Vrem să stabilim valența pentru <span class="symbol">Na</span> <b>sodiu</b>.</p>
+        <ol class="steps">
+            <li>Căutăm elementul <span class="symbol">Na</span> <b>sodiu</b> în tabelul lui Mendeleev.</li>
+            <li>Observăm că <span class="symbol">Na</span> <b>sodiu</b> este în <b>grupa I A</b>.</li>
+            <li>Pentru grupa I A, valența obișnuită este <span class="valence">I</span>.</li>
+            <li>Verificăm printr-o formulă simplă: NaCl. Clorul <span class="symbol">Cl</span> <b>clor</b> are valența I, deci sodiul <span class="symbol">Na</span> <b>sodiu</b> are valența I.</li>
+        </ol>
+        <div class="formula-line">NaCl = clorură de sodiu</div>
+    </section>
 
-            <div class="nav-buttons">
-                <button class="secondary" onclick="goStep(1)">Înapoi</button>
-                <button onclick="checkQ2()">Verifică și mergi mai departe</button>
-            </div>
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="group-badge">Grupa II A</span> Exemplu: Mg – magneziu</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
 
+        <p>Vrem să stabilim valența pentru <span class="symbol">Mg</span> <b>magneziu</b>.</p>
+        <ol class="steps">
+            <li>Căutăm elementul <span class="symbol">Mg</span> <b>magneziu</b> în tabelul lui Mendeleev.</li>
+            <li>Observăm că <span class="symbol">Mg</span> <b>magneziu</b> este în <b>grupa II A</b>.</li>
+            <li>Pentru grupa II A, valența obișnuită este <span class="valence">II</span>.</li>
+            <li>Verificăm în MgO: oxigenul <span class="symbol">O</span> <b>oxigen</b> are valența II, iar formula este 1 la 1, deci magneziul <span class="symbol">Mg</span> <b>magneziu</b> are valența II.</li>
+        </ol>
+        <div class="formula-line">MgO = oxid de magneziu</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="group-badge">Grupa III A</span> Exemplu: Al – aluminiu</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să stabilim valența pentru <span class="symbol">Al</span> <b>aluminiu</b>.</p>
+        <ol class="steps">
+            <li>Căutăm elementul <span class="symbol">Al</span> <b>aluminiu</b> în tabelul lui Mendeleev.</li>
+            <li>Observăm că <span class="symbol">Al</span> <b>aluminiu</b> este în <b>grupa III A</b>.</li>
+            <li>Pentru grupa III A, valența obișnuită este <span class="valence">III</span>.</li>
+            <li>Verificăm în Al<sub>2</sub>O<sub>3</sub>: oxigenul <span class="symbol">O</span> <b>oxigen</b> are valența II. Pentru ca totalurile să fie egale, aluminiul <span class="symbol">Al</span> <b>aluminiu</b> are valența III.</li>
+        </ol>
+        <div class="formula-line">Al<sub>2</sub>O<sub>3</sub> = oxid de aluminiu</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="group-badge">Grupa IV A</span> Exemplu: C – carbon</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să stabilim valența pentru <span class="symbol">C</span> <b>carbon</b>.</p>
+        <ol class="steps">
+            <li>Căutăm elementul <span class="symbol">C</span> <b>carbon</b> în tabelul lui Mendeleev.</li>
+            <li>Observăm că <span class="symbol">C</span> <b>carbon</b> este în <b>grupa IV A</b>.</li>
+            <li>Pentru grupa IV A, valența obișnuită este <span class="valence">IV</span>.</li>
+            <li>Verificăm în CO<sub>2</sub>: oxigenul <span class="symbol">O</span> <b>oxigen</b> are valența II, iar sunt 2 atomi de oxigen. Totalul este 2 × II = IV, deci carbonul <span class="symbol">C</span> <b>carbon</b> are valența IV.</li>
+        </ol>
+        <div class="formula-line">CO<sub>2</sub> = dioxid de carbon</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="group-badge">Grupa V A</span> Exemplu: N – azot</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să stabilim valența pentru <span class="symbol">N</span> <b>azot</b>.</p>
+        <ol class="steps">
+            <li>Căutăm elementul <span class="symbol">N</span> <b>azot</b> în tabelul lui Mendeleev.</li>
+            <li>Observăm că <span class="symbol">N</span> <b>azot</b> este în <b>grupa V A</b>.</li>
+            <li>Pentru grupa V A aplicăm regula: 8 − 5 = 3.</li>
+            <li>Deci valența obișnuită pentru azot <span class="symbol">N</span> <b>azot</b> este <span class="valence">III</span>.</li>
+            <li>Verificăm în NH<sub>3</sub>: azotul <span class="symbol">N</span> <b>azot</b> se combină cu 3 atomi de hidrogen <span class="symbol">H</span> <b>hidrogen</b>.</li>
+        </ol>
+        <div class="formula-line">NH<sub>3</sub> = amoniac</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="group-badge">Grupa VI A</span> Exemplu: O – oxigen</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să stabilim valența pentru <span class="symbol">O</span> <b>oxigen</b>.</p>
+        <ol class="steps">
+            <li>Căutăm elementul <span class="symbol">O</span> <b>oxigen</b> în tabelul lui Mendeleev.</li>
+            <li>Observăm că <span class="symbol">O</span> <b>oxigen</b> este în <b>grupa VI A</b>.</li>
+            <li>Pentru grupa VI A aplicăm regula: 8 − 6 = 2.</li>
+            <li>Deci oxigenul <span class="symbol">O</span> <b>oxigen</b> are, de obicei, valența <span class="valence">II</span>.</li>
+            <li>Verificăm în H<sub>2</sub>O: oxigenul <span class="symbol">O</span> <b>oxigen</b> se combină cu 2 atomi de hidrogen <span class="symbol">H</span> <b>hidrogen</b>.</li>
+        </ol>
+        <div class="formula-line">H<sub>2</sub>O = apă</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="group-badge">Grupa VII A</span> Exemplu: Cl – clor</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să stabilim valența pentru <span class="symbol">Cl</span> <b>clor</b>.</p>
+        <ol class="steps">
+            <li>Căutăm elementul <span class="symbol">Cl</span> <b>clor</b> în tabelul lui Mendeleev.</li>
+            <li>Observăm că <span class="symbol">Cl</span> <b>clor</b> este în <b>grupa VII A</b>.</li>
+            <li>Pentru grupa VII A aplicăm regula: 8 − 7 = 1.</li>
+            <li>Deci clorul <span class="symbol">Cl</span> <b>clor</b> are, de obicei, valența <span class="valence">I</span>.</li>
+            <li>Verificăm în HCl: clorul <span class="symbol">Cl</span> <b>clor</b> se combină cu 1 atom de hidrogen <span class="symbol">H</span> <b>hidrogen</b>.</li>
+        </ol>
+        <div class="formula-line">HCl = acid clorhidric</div>
+    </section>
+
+    <section class="example-card">
+        <div class="example-header">
+            <h2><span class="group-badge">Grupa VIII A / 18</span> Exemplu: Ne – neon</h2>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să stabilim comportarea pentru <span class="symbol">Ne</span> <b>neon</b>.</p>
+        <ol class="steps">
+            <li>Căutăm elementul <span class="symbol">Ne</span> <b>neon</b> în tabelul lui Mendeleev.</li>
+            <li>Observăm că <span class="symbol">Ne</span> <b>neon</b> este în grupa gazelor nobile.</li>
+            <li>Gazele nobile au stratul exterior stabil și nu se combină ușor în compuși obișnuiți.</li>
+            <li>De aceea, la nivel de gimnaziu spunem că au valența <span class="valence">0</span> sau nu formează compuși obișnuiți.</li>
+        </ol>
+    </section>
+
+    <section class="lesson-card">
+        <h2>3. Cum aflăm valența dintr-o formulă?</h2>
+        <p>
+            Uneori nu folosim doar grupa, ci și formula substanței. Pentru compușii binari, folosim regula produselor.
+        </p>
+
+        <div class="rule-box">
+            <b>Regula produselor:</b><br />
+            valența primului element × indicele primului element = valența celui de-al doilea element × indicele celui de-al doilea element.
+        </div>
+
+        <div class="example-header">
+            <h3>Exemplu: FeCl<sub>3</sub></h3>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+        </div>
+
+        <p>Vrem să aflăm valența fierului <span class="symbol">Fe</span> <b>fier</b> în FeCl<sub>3</sub>.</p>
+        <ol class="steps">
+            <li>Știm că <span class="symbol">Cl</span> <b>clor</b> are valența I.</li>
+            <li>În formula FeCl<sub>3</sub>, clorul <span class="symbol">Cl</span> <b>clor</b> are indicele 3.</li>
+            <li>Notăm valența fierului <span class="symbol">Fe</span> <b>fier</b> cu x.</li>
+            <li>Aplicăm regula produselor: x × 1 = I × 3.</li>
+            <li>Rezultă x = III. Deci fierul <span class="symbol">Fe</span> <b>fier</b> are valența <span class="valence">III</span> în FeCl<sub>3</sub>.</li>
+        </ol>
+
+        <div class="warning-box">
+            <b>Observație:</b> fierul <span class="symbol">Fe</span> <b>fier</b> poate avea valențe diferite. În FeCl<sub>2</sub> are valența II, iar în FeCl<sub>3</sub> are valența III.
         </div>
     </section>
 
-    <!-- PAS 3: Valența din formulă (regula produselor) -->
-    <section class="step-card" id="step3" style="display:none;">
-        <div class="step-title">
-            <span class="badge">Pasul 3</span>
-            <span>Determinarea valenței din formulă</span>
+    <section class="recap-card">
+        <h2>4. Verificare rapidă</h2>
+        <p>Completează valența. Poți scrie cu cifre romane sau arabe: I/1, II/2, III/3, IV/4.</p>
+
+        <div class="question-box">
+            <p>1) În H<sub>2</sub>O, ce valență are <span class="symbol">O</span> <b>oxigen</b>?</p>
+            <input id="q1" type="text" placeholder="ex: II sau 2" />
+
+            <p>2) În NH<sub>3</sub>, ce valență are <span class="symbol">N</span> <b>azot</b>?</p>
+            <input id="q2" type="text" placeholder="ex: III sau 3" />
+
+            <p>3) În CO<sub>2</sub>, ce valență are <span class="symbol">C</span> <b>carbon</b>?</p>
+            <input id="q3" type="text" placeholder="ex: IV sau 4" />
+
+            <p>4) În NaCl, ce valență are <span class="symbol">Na</span> <b>sodiu</b>?</p>
+            <input id="q4" type="text" placeholder="ex: I sau 1" />
+
+            <p>5) În MgO, ce valență are <span class="symbol">Mg</span> <b>magneziu</b>?</p>
+            <input id="q5" type="text" placeholder="ex: II sau 2" />
+
+            <br /><br />
+            <button type="button" class="success" onclick="checkRecap()">Verifică răspunsurile</button>
+            <button type="button" onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+            <div class="feedback" id="recapFeedback"></div>
         </div>
-        <div class="step-content">
-            <p>
-                Dacă știm formula unui compus și valența unuia dintre elemente, putem afla valența celuilalt
-                folosind <b>regula produselor</b>:
-            </p>
 
-            <div class="highlight-box">
-                <b>Regula produselor:</b><br>
-                valența elementului A × indicele lui = valența elementului B × indicele lui
-            </div>
-
-            <div class="example-box">
-                <div class="chip"><b>Exemplu: FeCl₂</b> – Cl(I) → Fe(II)</div>
-                <div class="chip"><b>Exemplu: SO₃</b> – O(II) → S(VI)</div>
-            </div>
-
-            <div class="question-box">
-                <div>
-                    În compusul <b>FeCl₃</b>, Cl are valența I. Care este valența fierului (Fe)?
-                </div>
-                <input id="q3" type="text" placeholder="Scrie un număr roman sau arab: III sau 3">
-                <div class="feedback" id="f3"></div>
-            </div>
-
-            <div class="nav-buttons">
-                <button class="secondary" onclick="goStep(2)">Înapoi</button>
-                <button onclick="checkQ3()">Verifică și mergi mai departe</button>
-            </div>
+        <div class="nav-buttons">
+            <button class="secondary" onclick="window.location.href='../';">⟵ Înapoi la capitol</button>
+            <button onclick="window.location.href='../compusi-binari/';">Lecția următoare ⟶</button>
         </div>
     </section>
 
-    <!-- PAS 4: Recapitulare – recunoaște valența -->
-    <section class="step-card" id="step4" style="display:none;">
-        <div class="step-title">
-            <span class="badge">Pasul 4</span>
-            <span>Recapitulare: valența în formule</span>
-        </div>
-        <div class="step-content">
-            <p>
-                Pentru fiecare element din formulă, scrie valența lui (la nivel de gimnaziu).
-            </p>
-
-            <div class="question-box">
-                <div>1) H₂O – valența lui O:</div>
-                <input id="r1" type="text" placeholder="Ex: II sau 2">
-                <div>2) NH₃ – valența lui N:</div>
-                <input id="r2" type="text" placeholder="Ex: III sau 3">
-                <div>3) CO₂ – valența lui C:</div>
-                <input id="r3" type="text" placeholder="Ex: IV sau 4">
-                <div>4) NaCl – valența lui Na:</div>
-                <input id="r4" type="text" placeholder="Ex: I sau 1">
-                <div>5) CaO – valența lui Ca:</div>
-                <input id="r5" type="text" placeholder="Ex: II sau 2">
-                <div class="feedback" id="f4"></div>
-            </div>
-
-            <div class="nav-buttons">
-                <button class="secondary" onclick="window.location.href='../';">⟵ Înapoi la capitol</button>
-                <button onclick="window.location.href='../compusi-binari/';">Lecția următoare ⟶</button>
-            </div>
-        </div>
-    </section>
+    <footer>
+        Material realizat de <b>prof. Dănuț Andronie</b>.<br />
+        Pentru observații și propuneri: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+    </footer>
 </div>
 
 <!-- POPUP TABEL MENDELEEV -->
-<div id="popup" onclick="closePopup(event)">
-    <div id="popupContent" onclick="event.stopPropagation()">
-        <button class="secondary" onclick="closePopup(event)">Închide</button>
-        <img src="../tabel.png" alt="Tabelul periodic">
+<div id="popup" onclick="closeMendeleev()" aria-hidden="true">
+    <div id="popupContent" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Tabelul lui Mendeleev">
+        <button class="close-x" type="button" onclick="closeMendeleev()" aria-label="Închide tabelul">×</button>
+        <h3>Tabelul lui Mendeleev</h3>
+        <p class="popup-note">Apasă pe X sau fă click lângă imagine pentru a reveni la lecție.</p>
+        <img src="../tabel.png" alt="Tabelul lui Mendeleev" />
     </div>
 </div>
 
 <script>
-    let currentStep = 1;
-    const totalSteps = 4;
-
-    document.getElementById("stepTotal").innerText = totalSteps;
-
-    function updateDots() {
-        for (let i = 1; i <= totalSteps; i++) {
-            const dot = document.getElementById("dot" + i);
-            if (!dot) continue;
-            dot.classList.toggle("active", i === currentStep);
-        }
-        document.getElementById("stepNumber").innerText = currentStep;
+    function openMendeleev() {
+        const popup = document.getElementById("popup");
+        popup.style.display = "flex";
+        popup.setAttribute("aria-hidden", "false");
     }
 
-    function goStep(n) {
-        if (n < 1 || n > totalSteps) return;
-        document.getElementById("step" + currentStep).style.display = "none";
-        currentStep = n;
-        document.getElementById("step" + currentStep).style.display = "block";
-        updateDots();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+    function closeMendeleev() {
+        const popup = document.getElementById("popup");
+        popup.style.display = "none";
+        popup.setAttribute("aria-hidden", "true");
     }
 
-    function checkQ1() {
-        const val = document.getElementById("q1").value.trim();
-        const fb = document.getElementById("f1");
-        if (!val) {
-            fb.style.color = "red";
-            fb.innerText = "Încearcă să scrii o definiție, chiar dacă nu e perfectă.";
-            return;
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            closeMendeleev();
         }
-        fb.style.color = "green";
-        fb.innerText = "Bine! Important este să reții ideea de „capacitate de combinare”.";
-        setTimeout(() => goStep(2), 700);
-    }
+    });
 
-    function checkQ2() {
-        const val = document.getElementById("q2").value.trim().toUpperCase();
-        const fb = document.getElementById("f2");
-        if (!val) {
-            fb.style.color = "red";
-            fb.innerText = "Scrie o valență pentru oxigen.";
-            return;
-        }
-        if (val === "II" || val === "2") {
-            fb.style.color = "green";
-            fb.innerText = "Corect! Oxigenul are, de obicei, valența II.";
-            setTimeout(() => goStep(3), 700);
-        } else {
-            fb.style.color = "orange";
-            fb.innerText = "Verifică în tabel: oxigenul este în grupa a VI-a A → valența II.";
-        }
-    }
-
-    function checkQ3() {
-        const val = document.getElementById("q3").value.trim().toUpperCase();
-        const fb = document.getElementById("f3");
-        if (!val) {
-            fb.style.color = "red";
-            fb.innerText = "Scrie o valență pentru fier în FeCl₃.";
-            return;
-        }
-        if (val === "III" || val === "3") {
-            fb.style.color = "green";
-            fb.innerText = "Corect! Fe are valența III în FeCl₃.";
-            setTimeout(() => goStep(4), 700);
-        } else {
-            fb.style.color = "orange";
-            fb.innerText = "Aplică regula produselor: x·1 = 1·3 → x = 3.";
-        }
+    function normalizeValence(value) {
+        return String(value)
+            .trim()
+            .toUpperCase()
+            .replace(/\s+/g, "")
+            .replace("1", "I")
+            .replace("2", "II")
+            .replace("3", "III")
+            .replace("4", "IV")
+            .replace("0", "0");
     }
 
     function checkRecap() {
-        const fb = document.getElementById("f4");
-        const vals = {
-            r1: ["II","2"],
-            r2: ["III","3"],
-            r3: ["IV","4"],
-            r4: ["I","1"],
-            r5: ["II","2"]
+        const answers = {
+            q1: "II",
+            q2: "III",
+            q3: "IV",
+            q4: "I",
+            q5: "II"
         };
+
         let correct = 0;
-        for (let id in vals) {
+        let details = [];
+
+        for (const id in answers) {
             const input = document.getElementById(id);
-            const v = input.value.trim().toUpperCase();
-            if (vals[id].includes(v)) correct++;
+            const value = normalizeValence(input.value);
+            const expected = answers[id];
+
+            if (value === expected) {
+                correct++;
+                input.style.borderColor = "#1e9b57";
+            } else {
+                input.style.borderColor = "#c0392b";
+            }
         }
-        fb.style.color = correct === 5 ? "green" : "orange";
-        fb.innerText = `Ai ${correct} răspunsuri corecte din 5.`;
-    }
 
-    function openPopup() {
-        document.getElementById("popup").style.display = "flex";
-    }
+        details.push("1) O – oxigen: II");
+        details.push("2) N – azot: III");
+        details.push("3) C – carbon: IV");
+        details.push("4) Na – sodiu: I");
+        details.push("5) Mg – magneziu: II");
 
-    function closePopup() {
-        document.getElementById("popup").style.display = "none";
+        const feedback = document.getElementById("recapFeedback");
+        feedback.style.color = correct === 5 ? "#1e9b57" : "#f39c12";
+        feedback.innerHTML = `Ai ${correct} răspunsuri corecte din 5.<br>${details.join("<br>")}`;
     }
 </script>
 
