@@ -2,12 +2,12 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
-<title>Valența elementelor – Lecție completă</title>
+<title>Valența elementelor – Lecție interactivă pentru clasa a 7‑a</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body {
     font-family: Arial, sans-serif;
-    background: #f0f4ff;
+    background: #eef3ff;
     margin: 0;
     padding: 0;
 }
@@ -42,11 +42,32 @@ h1, h2, h3 {
     font-size: 1.2rem;
     margin-top: 30px;
 }
-p {
-    font-size: 1rem;
-    line-height: 1.55;
+.exercise {
+    background: #e8f5e9;
+    border-left: 5px solid #43a047;
+    padding: 12px;
+    margin: 15px 0;
+    border-radius: 6px;
 }
-ul {
+input {
+    padding: 6px;
+    font-size: 1rem;
+    width: 120px;
+}
+button {
+    padding: 6px 12px;
+    font-size: 1rem;
+    background: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover {
+    background: #0d47a1;
+}
+.feedback {
+    font-weight: bold;
     margin-top: 5px;
 }
 </style>
@@ -55,7 +76,7 @@ ul {
 
 <div class="container">
 
-<h1>📘 Lecție completă: Valența elementelor din grupele 1–18</h1>
+<h1>📘 Lecție interactivă: Valența elementelor (grupele 1–18)</h1>
 <p>
 Această lecție este creată special pentru elevii de clasa a 7‑a: colorată, prietenoasă, logică și ușor de înțeles.  
 Valența nu trebuie memorată mecanic — ea se înțelege!
@@ -77,8 +98,9 @@ Dacă are 2 mânuțe → valența II.
 <!-- GRUPELE 1–8 -->
 <!-- ========================= -->
 
-<h2>🔵 GRUPELE 1–8 (valențe simple și stabile)</h2>
+<h2>🔵 GRUPELE 1–8 (sistemul vechi – valențe simple și stabile)</h2>
 
+<!-- GRUPA 1 -->
 <div class="group-title">🟩 Grupa 1 – Valența I</div>
 <p><strong>Elemente:</strong> H (hidrogen), Li (litiu), Na (sodiu), K (potasiu)</p>
 <p>Toate au <strong>o singură mânuță</strong>.</p>
@@ -86,6 +108,13 @@ Dacă are 2 mânuțe → valența II.
 Na⁺ + Cl⁻ → <strong>NaCl</strong> (clorură de sodiu)
 </div>
 
+<div class="exercise">
+<p><strong>Exercițiu:</strong> Scrie valența sodiului (Na):</p>
+<input id="ex1"><button onclick="check1()">Verifică</button>
+<p id="rez1" class="feedback"></p>
+</div>
+
+<!-- GRUPA 2 -->
 <div class="group-title">🟩 Grupa 2 – Valența II</div>
 <p><strong>Elemente:</strong> Mg (magneziu), Ca (calciu), Ba (bariu)</p>
 <p>Toate au <strong>două mânuțe</strong>.</p>
@@ -93,47 +122,93 @@ Na⁺ + Cl⁻ → <strong>NaCl</strong> (clorură de sodiu)
 Ca²⁺ + O²⁻ → <strong>CaO</strong> (oxid de calciu)
 </div>
 
+<div class="exercise">
+<p><strong>Exercițiu:</strong> Scrie valența calciului (Ca):</p>
+<input id="ex2"><button onclick="check2()">Verifică</button>
+<p id="rez2" class="feedback"></p>
+</div>
+
+<!-- GRUPA 3 -->
 <div class="group-title">🟧 Grupa 3 – Valența III</div>
 <p><strong>Elemente:</strong> Sc (scandiu), Y (ytriu)</p>
 <div class="example-box">
 Sc₂O₃ → oxid de scandiu(III)
 </div>
 
+<div class="exercise">
+<p><strong>Exercițiu:</strong> Scrie valența scandiu­lui (Sc):</p>
+<input id="ex3"><button onclick="check3()">Verifică</button>
+<p id="rez3" class="feedback"></p>
+</div>
+
+<!-- GRUPA 4 -->
 <div class="group-title">🟧 Grupa 4 – Valența IV</div>
 <p><strong>Elemente:</strong> Ti (titan), Zr (zirconiu)</p>
 <div class="example-box">
 TiO₂ → oxid de titan(IV)
 </div>
 
+<div class="exercise">
+<p><strong>Exercițiu:</strong> Scrie valența titanului (Ti):</p>
+<input id="ex4"><button onclick="check4()">Verifică</button>
+<p id="rez4" class="feedback"></p>
+</div>
+
+<!-- GRUPA 5 -->
 <div class="group-title">🟧 Grupa 5 – Valențele III și V</div>
 <p><strong>Elemente:</strong> V (vanadiu), Nb (niobiu)</p>
 <div class="example-box">
 V₂O₅ → oxid de vanadiu(V)
 </div>
 
+<div class="exercise">
+<p><strong>Exercițiu:</strong> Scrie valența vanadiului (V) în compusul V₂O₅:</p>
+<input id="ex5"><button onclick="check5()">Verifică</button>
+<p id="rez5" class="feedback"></p>
+</div>
+
+<!-- GRUPA 6 -->
 <div class="group-title">🟧 Grupa 6 – Valențele II, III, VI</div>
 <p><strong>Elemente:</strong> Cr (crom), Mo (molibden)</p>
 <div class="example-box">
 Cr₂O₃ → oxid de crom(III)
 </div>
 
-<div class="group-title">🟧 Grupa 7 – Valențele II, IV, VII</div>
-<p><strong>Elemente:</strong> Mn (mangan)</p>
-<div class="example-box">
-KMnO₄ → permanganat de potasiu (Mn are VII)
+<div class="exercise">
+<p><strong>Exercițiu:</strong> Scrie valența cromului (Cr) în Cr₂O₃:</p>
+<input id="ex6"><button onclick="check6()">Verifică</button>
+<p id="rez6" class="feedback"></p>
 </div>
 
-<div class="group-title">🟧 Grupa 8 – Valențele II și III</div>
-<p><strong>Elemente:</strong> Fe (fier), Ru (ruteniu)</p>
+<!-- GRUPA 7 -->
+<div class="group-title">🟧 Grupa 7 – Valența I (la gimnaziu)</div>
+<p><strong>Elemente:</strong> F (fluor), Cl (clor), Br (brom), I (iod)</p>
 <div class="example-box">
-FeCl₃ → clorură de fier(III)
+HCl → acid clorhidric (Cl are valența I)
+</div>
+
+<div class="exercise">
+<p><strong>Exercițiu:</strong> Scrie valența clorului (Cl) în HCl:</p>
+<input id="ex7"><button onclick="check7()">Verifică</button>
+<p id="rez7" class="feedback"></p>
+</div>
+
+<!-- GRUPA 8 -->
+<div class="group-title">🟧 Grupa 8 – Valența 0</div>
+<p><strong>Elemente:</strong> He (heliu), Ne (neon), Ar (argon)</p>
+<p>Nu formează compuși la nivel gimnazial.</p>
+
+<div class="exercise">
+<p><strong>Exercițiu:</strong> Scrie valența neonului (Ne):</p>
+<input id="ex8"><button onclick="check8()">Verifică</button>
+<p id="rez8" class="feedback"></p>
 </div>
 
 <!-- ========================= -->
 <!-- GRUPELE 9–18 -->
 <!-- ========================= -->
 
-<h2>🟣 GRUPELE 9–18 (valențe variabile, dar logice)</h2>
+<h2>🟣 GRUPELE 9–18 (sistem modern – explicate simplu)</h2>
 
 <div class="group-title">🟧 Grupa 9 – Valențele II și III</div>
 <p><strong>Elemente:</strong> Co (cobalt), Rh (rodium)</p>
@@ -148,9 +223,9 @@ NiO → oxid de nichel(II)
 </div>
 
 <div class="group-title">🟧 Grupa 11 – Metale nobile</div>
-<p><strong>Cu (cupru):</strong> I, II  
-<br><strong>Ag (argint):</strong> I  
-<br><strong>Au (aur):</strong> I, III</p>
+<p><strong>Cu (cupru):</strong> I, II  <br>
+<strong>Ag (argint):</strong> I  <br>
+<strong>Au (aur):</strong> I, III</p>
 <div class="example-box">
 CuCl₂ → clorură de cupru(II)
 </div>
@@ -176,7 +251,7 @@ CO₂ → dioxid de carbon
 <div class="group-title">🟩 Grupa 15 – Valențele III și V</div>
 <p><strong>Elemente:</strong> N (azot), P (fosfor)</p>
 <div class="example-box">
-NH₃ → amoniac (N are III)
+NH₃ → amoniac (N are valența III)
 </div>
 
 <div class="group-title">🟩 Grupa 16 – Valențele II, IV, VI</div>
@@ -186,21 +261,104 @@ SO₃ → trioxid de sulf (VI)
 </div>
 
 <div class="group-title">🟩 Grupa 17 – Halogeni (I, III, V, VII)</div>
-<p><strong>Elemente:</strong> F (fluor), Cl (clor), Br (brom)</p>
+<p><strong>Elemente:</strong> F (fluor), Cl (clor), Br (brom), I (iod)</p>
 <div class="example-box">
-HCl → acid clorhidric (Cl are I)
+HClO₄ → acid percloric (Cl are valența VII)
 </div>
 
 <div class="group-title">🟩 Grupa 18 – Valența 0</div>
 <p><strong>Elemente:</strong> He (heliu), Ne (neon), Ar (argon)</p>
-<p>Nu formează compuși la nivel gimnazial.</p>
+
+<!-- ========================= -->
+<!-- EXERCIȚII FINALE -->
+<!-- ========================= -->
+
+<h2>📝 Exerciții finale – Grupele 9–18</h2>
+
+<div class="exercise">
+<p><strong>Scrie valența cobaltului (Co):</strong></p>
+<input id="ex9"><button onclick="check9()">Verifică</button>
+<p id="rez9" class="feedback"></p>
+</div>
+
+<div class="exercise">
+<p><strong>Scrie valența nichelului (Ni):</strong></p>
+<input id="ex10"><button onclick="check10()">Verifică</button>
+<p id="rez10" class="feedback"></p>
+</div>
+
+<div class="exercise">
+<p><strong>Scrie valența aluminiului (Al):</strong></p>
+<input id="ex11"><button onclick="check11()">Verifică</button>
+<p id="rez11" class="feedback"></p>
+</div>
+
+<div class="exercise">
+<p><strong>Scrie valența carbonului (C) în CO₂:</strong></p>
+<input id="ex12"><button onclick="check12()">Verifică</button>
+<p id="rez12" class="feedback"></p>
+</div>
+
+<div class="exercise">
+<p><strong>Scrie valența azotului (N) în NH₃:</strong></p>
+<input id="ex13"><button onclick="check13()">Verifică</button>
+<p id="rez13" class="feedback"></p>
+</div>
+
+<div class="exercise">
+<p><strong>Scrie valența sulfului (S) în SO₃:</strong></p>
+<input id="ex14"><button onclick="check14()">Verifică</button>
+<p id="rez14" class="feedback"></p>
+</div>
+
+<div class="exercise">
+<p><strong>Scrie valența clorului (Cl) în HClO₄:</strong></p>
+<input id="ex15"><button onclick="check15()">Verifică</button>
+<p id="rez15" class="feedback"></p>
+</div>
 
 <div class="section-box">
 <h2>🌟 REGULA DE AUR</h2>
 <p><strong>Orice atom vrea să devină stabil.</strong>  
-De aceea își folosește „mânuțele” (valența) ca să se lege de alți atomi.</p>
+De aceea își folosește „mânuțele” (valența) ca să se lege de alți atomi.
+</p>
 </div>
 
 </div>
+
+<script>
+// GRUPELE 1–8
+function check1(){check('ex1','rez1',['1','I'],'Sodiul (Na) are valența I.');}
+function check2(){check('ex2','rez2',['2','II'],'Calciul (Ca) are valența II.');}
+function check3(){check('ex3','rez3',['3','III'],'Scandiul (Sc) are valența III.');}
+function check4(){check('ex4','rez4',['4','IV'],'Titanul (Ti) are valența IV.');}
+function check5(){check('ex5','rez5',['5','V'],'Vanadiul (V) are valența V în V₂O₅.');}
+function check6(){check('ex6','rez6',['3','III'],'Cromul (Cr) are valența III în Cr₂O₃.');}
+function check7(){check('ex7','rez7',['1','I'],'Clorul (Cl) are valența I în HCl.');}
+function check8(){check('ex8','rez8',['0'],'Neonul (Ne) are valența 0.');}
+
+// GRUPELE 9–18
+function check9(){check('ex9','rez9',['2','II','3','III'],'Cobaltul (Co) are valențele II și III.');}
+function check10(){check('ex10','rez10',['2','II','4','IV'],'Nichelul (Ni) are valențele II și IV.');}
+function check11(){check('ex11','rez11',['3','III'],'Aluminiul (Al) are valența III.');}
+function check12(){check('ex12','rez12',['4','IV'],'Carbonul (C) are valența IV în CO₂.');}
+function check13(){check('ex13','rez13',['3','III'],'Azotul (N) are valența III în NH₃.');}
+function check14(){check('ex14','rez14',['6','VI'],'Sulful (S) are valența VI în SO₃.');}
+function check15(){check('ex15','rez15',['7','VII'],'Clorul (Cl) are valența VII în HClO₄.');}
+
+// GENERIC CHECK FUNCTION
+function check(inputId, rezId, correctValues, message){
+    let r = document.getElementById(inputId).value.trim().toUpperCase();
+    let rez = document.getElementById(rezId);
+    if(correctValues.includes(r)){
+        rez.innerHTML = '✔️ Corect! ' + message;
+        rez.style.color = 'green';
+    } else {
+        rez.innerHTML = '❌ Mai încearcă! ' + message;
+        rez.style.color = 'red';
+    }
+}
+</script>
+
 </body>
 </html>
