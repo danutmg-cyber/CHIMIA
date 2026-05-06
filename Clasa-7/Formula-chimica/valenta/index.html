@@ -2,9 +2,11 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
-<title>Valența elementelor – Lecție interactivă pentru clasa a 7‑a</title>
+<title>Valența elementelor – Lecție interactivă</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
+/* ---------- GENERAL ---------- */
 body {
     font-family: Arial, sans-serif;
     background: #eef3ff;
@@ -28,19 +30,19 @@ h1, h2, h3 {
     margin: 20px 0;
     border-radius: 6px;
 }
-.example-box {
-    background: #fff8e1;
-    border-left: 5px solid #ffb300;
-    padding: 12px;
-    margin: 12px 0;
-    border-radius: 6px;
-}
 .group-title {
     background: #bbdefb;
     padding: 10px;
     border-radius: 6px;
     font-size: 1.2rem;
     margin-top: 30px;
+}
+.example-box {
+    background: #fff8e1;
+    border-left: 5px solid #ffb300;
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 6px;
 }
 .exercise {
     background: #e8f5e9;
@@ -70,6 +72,55 @@ button:hover {
     font-weight: bold;
     margin-top: 5px;
 }
+
+/* ---------- MODAL ---------- */
+#modal-bg {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+#modal {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 95%;
+    max-height: 90%;
+    overflow: auto;
+    position: relative;
+}
+#modal img {
+    width: 100%;
+    height: auto;
+}
+#close-modal {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: #d32f2f;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 4px;
+}
+#close-modal:hover {
+    background: #b71c1c;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+    button, input {
+        width: 100%;
+        margin-top: 5px;
+    }
+}
 </style>
 </head>
 <body>
@@ -77,20 +128,13 @@ button:hover {
 <div class="container">
 
 <h1>📘 Lecție interactivă: Valența elementelor (grupele 1–18)</h1>
-<p>
-Această lecție este creată special pentru elevii de clasa a 7‑a: colorată, prietenoasă, logică și ușor de înțeles.  
-Valența nu trebuie memorată mecanic — ea se înțelege!
-</p>
+
+<button onclick="openModal()">📊 Deschide Tabelul lui Mendeleev</button>
 
 <div class="section-box">
-<h2>🧠 Ce este valența?</h2>
+<h2>Ce este valența?</h2>
 <p>
-Valența este <strong>numărul de „mânuțe”</strong> cu care un atom se poate prinde de alți atomi pentru a forma compuși.
-</p>
-<p>
-Dacă un atom are 1 mânuță → valența I.  
-Dacă are 2 mânuțe → valența II.  
-Și așa mai departe.
+Valența reprezintă <strong>numărul de legături</strong> pe care un atom le poate forma cu alte elemente pentru a deveni stabil.
 </p>
 </div>
 
@@ -98,266 +142,211 @@ Dacă are 2 mânuțe → valența II.
 <!-- GRUPELE 1–8 -->
 <!-- ========================= -->
 
-<h2>🔵 GRUPELE 1–8 (sistemul vechi – valențe simple și stabile)</h2>
+<h2>🔵 Grupele 1–8 (sistemul vechi – valențe simple)</h2>
 
-<!-- GRUPA 1 -->
 <div class="group-title">🟩 Grupa 1 – Valența I</div>
 <p><strong>Elemente:</strong> H (hidrogen), Li (litiu), Na (sodiu), K (potasiu)</p>
-<p>Toate au <strong>o singură mânuță</strong>.</p>
-<div class="example-box">
-Na⁺ + Cl⁻ → <strong>NaCl</strong> (clorură de sodiu)
-</div>
+<div class="example-box">NaCl – clorură de sodiu</div>
 
-<div class="exercise">
-<p><strong>Exercițiu:</strong> Scrie valența sodiului (Na):</p>
-<input id="ex1"><button onclick="check1()">Verifică</button>
-<p id="rez1" class="feedback"></p>
-</div>
-
-<!-- GRUPA 2 -->
 <div class="group-title">🟩 Grupa 2 – Valența II</div>
 <p><strong>Elemente:</strong> Mg (magneziu), Ca (calciu), Ba (bariu)</p>
-<p>Toate au <strong>două mânuțe</strong>.</p>
-<div class="example-box">
-Ca²⁺ + O²⁻ → <strong>CaO</strong> (oxid de calciu)
-</div>
+<div class="example-box">CaO – oxid de calciu</div>
 
-<div class="exercise">
-<p><strong>Exercițiu:</strong> Scrie valența calciului (Ca):</p>
-<input id="ex2"><button onclick="check2()">Verifică</button>
-<p id="rez2" class="feedback"></p>
-</div>
-
-<!-- GRUPA 3 -->
 <div class="group-title">🟧 Grupa 3 – Valența III</div>
 <p><strong>Elemente:</strong> Sc (scandiu), Y (ytriu)</p>
-<div class="example-box">
-Sc₂O₃ → oxid de scandiu(III)
-</div>
+<div class="example-box">Sc₂O₃ – oxid de scandiu(III)</div>
 
-<div class="exercise">
-<p><strong>Exercițiu:</strong> Scrie valența scandiu­lui (Sc):</p>
-<input id="ex3"><button onclick="check3()">Verifică</button>
-<p id="rez3" class="feedback"></p>
-</div>
-
-<!-- GRUPA 4 -->
 <div class="group-title">🟧 Grupa 4 – Valența IV</div>
 <p><strong>Elemente:</strong> Ti (titan), Zr (zirconiu)</p>
-<div class="example-box">
-TiO₂ → oxid de titan(IV)
-</div>
+<div class="example-box">TiO₂ – oxid de titan(IV)</div>
 
-<div class="exercise">
-<p><strong>Exercițiu:</strong> Scrie valența titanului (Ti):</p>
-<input id="ex4"><button onclick="check4()">Verifică</button>
-<p id="rez4" class="feedback"></p>
-</div>
-
-<!-- GRUPA 5 -->
 <div class="group-title">🟧 Grupa 5 – Valențele III și V</div>
 <p><strong>Elemente:</strong> V (vanadiu), Nb (niobiu)</p>
-<div class="example-box">
-V₂O₅ → oxid de vanadiu(V)
-</div>
+<div class="example-box">V₂O₅ – oxid de vanadiu(V)</div>
 
-<div class="exercise">
-<p><strong>Exercițiu:</strong> Scrie valența vanadiului (V) în compusul V₂O₅:</p>
-<input id="ex5"><button onclick="check5()">Verifică</button>
-<p id="rez5" class="feedback"></p>
-</div>
-
-<!-- GRUPA 6 -->
 <div class="group-title">🟧 Grupa 6 – Valențele II, III, VI</div>
 <p><strong>Elemente:</strong> Cr (crom), Mo (molibden)</p>
-<div class="example-box">
-Cr₂O₃ → oxid de crom(III)
-</div>
+<div class="example-box">Cr₂O₃ – oxid de crom(III)</div>
 
-<div class="exercise">
-<p><strong>Exercițiu:</strong> Scrie valența cromului (Cr) în Cr₂O₃:</p>
-<input id="ex6"><button onclick="check6()">Verifică</button>
-<p id="rez6" class="feedback"></p>
-</div>
-
-<!-- GRUPA 7 -->
 <div class="group-title">🟧 Grupa 7 – Valența I (la gimnaziu)</div>
 <p><strong>Elemente:</strong> F (fluor), Cl (clor), Br (brom), I (iod)</p>
-<div class="example-box">
-HCl → acid clorhidric (Cl are valența I)
-</div>
+<div class="example-box">HCl – acid clorhidric</div>
 
-<div class="exercise">
-<p><strong>Exercițiu:</strong> Scrie valența clorului (Cl) în HCl:</p>
-<input id="ex7"><button onclick="check7()">Verifică</button>
-<p id="rez7" class="feedback"></p>
-</div>
-
-<!-- GRUPA 8 -->
 <div class="group-title">🟧 Grupa 8 – Valența 0</div>
 <p><strong>Elemente:</strong> He (heliu), Ne (neon), Ar (argon)</p>
-<p>Nu formează compuși la nivel gimnazial.</p>
 
-<div class="exercise">
-<p><strong>Exercițiu:</strong> Scrie valența neonului (Ne):</p>
-<input id="ex8"><button onclick="check8()">Verifică</button>
-<p id="rez8" class="feedback"></p>
-</div>
+<!-- ========================= -->
+<!-- EXERCIȚII ALEATORII 1–8 -->
+<!-- ========================= -->
+
+<h2>📝 Exerciții pentru grupele 1–8</h2>
+<button onclick="genereazaExercitii18()">🔄 Generează alte exerciții</button>
+<div id="exercitii18"></div>
 
 <!-- ========================= -->
 <!-- GRUPELE 9–18 -->
 <!-- ========================= -->
 
-<h2>🟣 GRUPELE 9–18 (sistem modern – explicate simplu)</h2>
+<h2>🟣 Grupele 9–18 (sistem modern)</h2>
 
 <div class="group-title">🟧 Grupa 9 – Valențele II și III</div>
-<p><strong>Elemente:</strong> Co (cobalt), Rh (rodium)</p>
-<div class="example-box">
-CoO → oxid de cobalt(II)
-</div>
+<p>Co (cobalt), Rh (rodium)</p>
 
 <div class="group-title">🟧 Grupa 10 – Valențele II și IV</div>
-<p><strong>Elemente:</strong> Ni (nichel), Pd (paladiu)</p>
-<div class="example-box">
-NiO → oxid de nichel(II)
-</div>
+<p>Ni (nichel), Pd (paladiu)</p>
 
 <div class="group-title">🟧 Grupa 11 – Metale nobile</div>
-<p><strong>Cu (cupru):</strong> I, II  <br>
-<strong>Ag (argint):</strong> I  <br>
-<strong>Au (aur):</strong> I, III</p>
-<div class="example-box">
-CuCl₂ → clorură de cupru(II)
-</div>
+<p>Cu (cupru), Ag (argint), Au (aur)</p>
 
 <div class="group-title">🟧 Grupa 12 – Valența II</div>
-<p><strong>Elemente:</strong> Zn (zinc), Cd (cadmiu), Hg (mercur)</p>
-<div class="example-box">
-ZnO → oxid de zinc
-</div>
+<p>Zn (zinc), Cd (cadmiu), Hg (mercur)</p>
 
 <div class="group-title">🟩 Grupa 13 – Valența III</div>
-<p><strong>Elemente:</strong> B (bor), Al (aluminiu)</p>
-<div class="example-box">
-AlCl₃ → clorură de aluminiu
-</div>
+<p>B (bor), Al (aluminiu)</p>
 
 <div class="group-title">🟩 Grupa 14 – Valența IV (și II la Sn, Pb)</div>
-<p><strong>Elemente:</strong> C (carbon), Si (siliciu), Sn (staniu)</p>
-<div class="example-box">
-CO₂ → dioxid de carbon
-</div>
+<p>C (carbon), Si (siliciu), Sn (staniu)</p>
 
 <div class="group-title">🟩 Grupa 15 – Valențele III și V</div>
-<p><strong>Elemente:</strong> N (azot), P (fosfor)</p>
-<div class="example-box">
-NH₃ → amoniac (N are valența III)
-</div>
+<p>N (azot), P (fosfor)</p>
 
 <div class="group-title">🟩 Grupa 16 – Valențele II, IV, VI</div>
-<p><strong>Elemente:</strong> O (oxigen), S (sulf)</p>
-<div class="example-box">
-SO₃ → trioxid de sulf (VI)
-</div>
+<p>O (oxigen), S (sulf)</p>
 
-<div class="group-title">🟩 Grupa 17 – Halogeni (I, III, V, VII)</div>
-<p><strong>Elemente:</strong> F (fluor), Cl (clor), Br (brom), I (iod)</p>
-<div class="example-box">
-HClO₄ → acid percloric (Cl are valența VII)
-</div>
+<div class="group-title">🟩 Grupa 17 – Halogeni</div>
+<p>F (fluor), Cl (clor), Br (brom), I (iod)</p>
 
 <div class="group-title">🟩 Grupa 18 – Valența 0</div>
-<p><strong>Elemente:</strong> He (heliu), Ne (neon), Ar (argon)</p>
+<p>He (heliu), Ne (neon), Ar (argon)</p>
 
 <!-- ========================= -->
-<!-- EXERCIȚII FINALE -->
+<!-- EXERCIȚII ALEATORII 9–18 -->
 <!-- ========================= -->
 
-<h2>📝 Exerciții finale – Grupele 9–18</h2>
-
-<div class="exercise">
-<p><strong>Scrie valența cobaltului (Co):</strong></p>
-<input id="ex9"><button onclick="check9()">Verifică</button>
-<p id="rez9" class="feedback"></p>
-</div>
-
-<div class="exercise">
-<p><strong>Scrie valența nichelului (Ni):</strong></p>
-<input id="ex10"><button onclick="check10()">Verifică</button>
-<p id="rez10" class="feedback"></p>
-</div>
-
-<div class="exercise">
-<p><strong>Scrie valența aluminiului (Al):</strong></p>
-<input id="ex11"><button onclick="check11()">Verifică</button>
-<p id="rez11" class="feedback"></p>
-</div>
-
-<div class="exercise">
-<p><strong>Scrie valența carbonului (C) în CO₂:</strong></p>
-<input id="ex12"><button onclick="check12()">Verifică</button>
-<p id="rez12" class="feedback"></p>
-</div>
-
-<div class="exercise">
-<p><strong>Scrie valența azotului (N) în NH₃:</strong></p>
-<input id="ex13"><button onclick="check13()">Verifică</button>
-<p id="rez13" class="feedback"></p>
-</div>
-
-<div class="exercise">
-<p><strong>Scrie valența sulfului (S) în SO₃:</strong></p>
-<input id="ex14"><button onclick="check14()">Verifică</button>
-<p id="rez14" class="feedback"></p>
-</div>
-
-<div class="exercise">
-<p><strong>Scrie valența clorului (Cl) în HClO₄:</strong></p>
-<input id="ex15"><button onclick="check15()">Verifică</button>
-<p id="rez15" class="feedback"></p>
-</div>
+<h2>📝 Exerciții pentru grupele 9–18</h2>
+<button onclick="genereazaExercitii918()">🔄 Generează alte exerciții</button>
+<div id="exercitii918"></div>
 
 <div class="section-box">
-<h2>🌟 REGULA DE AUR</h2>
-<p><strong>Orice atom vrea să devină stabil.</strong>  
-De aceea își folosește „mânuțele” (valența) ca să se lege de alți atomi.
+<h2>🌟 Regula de aur</h2>
+<p>
+Valența unui element arată câte legături poate forma pentru a deveni stabil.
 </p>
 </div>
 
 </div>
 
+<!-- ========================= -->
+<!-- MODAL TABEL MENDELEEV -->
+<!-- ========================= -->
+
+<div id="modal-bg" onclick="closeModal()">
+    <div id="modal" onclick="event.stopPropagation()">
+        <button id="close-modal" onclick="closeModal()">X</button>
+        <img src="https://raw.githubusercontent.com/danutmg-cyber/CHIMIA/main/Clasa-7/Formula-chimica/tabel.png">
+    </div>
+</div>
+
+<!-- ========================= -->
+<!-- JAVASCRIPT -->
+<!-- ========================= -->
+
 <script>
-// GRUPELE 1–8
-function check1(){check('ex1','rez1',['1','I'],'Sodiul (Na) are valența I.');}
-function check2(){check('ex2','rez2',['2','II'],'Calciul (Ca) are valența II.');}
-function check3(){check('ex3','rez3',['3','III'],'Scandiul (Sc) are valența III.');}
-function check4(){check('ex4','rez4',['4','IV'],'Titanul (Ti) are valența IV.');}
-function check5(){check('ex5','rez5',['5','V'],'Vanadiul (V) are valența V în V₂O₅.');}
-function check6(){check('ex6','rez6',['3','III'],'Cromul (Cr) are valența III în Cr₂O₃.');}
-function check7(){check('ex7','rez7',['1','I'],'Clorul (Cl) are valența I în HCl.');}
-function check8(){check('ex8','rez8',['0'],'Neonul (Ne) are valența 0.');}
+/* ---------- MODAL ---------- */
+function openModal() {
+    document.getElementById("modal-bg").style.display = "flex";
+}
+function closeModal() {
+    document.getElementById("modal-bg").style.display = "none";
+}
 
-// GRUPELE 9–18
-function check9(){check('ex9','rez9',['2','II','3','III'],'Cobaltul (Co) are valențele II și III.');}
-function check10(){check('ex10','rez10',['2','II','4','IV'],'Nichelul (Ni) are valențele II și IV.');}
-function check11(){check('ex11','rez11',['3','III'],'Aluminiul (Al) are valența III.');}
-function check12(){check('ex12','rez12',['4','IV'],'Carbonul (C) are valența IV în CO₂.');}
-function check13(){check('ex13','rez13',['3','III'],'Azotul (N) are valența III în NH₃.');}
-function check14(){check('ex14','rez14',['6','VI'],'Sulful (S) are valența VI în SO₃.');}
-function check15(){check('ex15','rez15',['7','VII'],'Clorul (Cl) are valența VII în HClO₄.');}
+/* ---------- EXERCIȚII 1–8 ---------- */
+const lista18 = [
+  { e: "Na (sodiu)", v: "1" },
+  { e: "K (potasiu)", v: "1" },
+  { e: "Ca (calciu)", v: "2" },
+  { e: "Mg (magneziu)", v: "2" },
+  { e: "Sc (scandiu)", v: "3" },
+  { e: "Ti (titan)", v: "4" },
+  { e: "V (vanadiu)", v: "5" },
+  { e: "Cr (crom)", v: "3" },
+  { e: "Cl (clor)", v: "1" },
+  { e: "Ne (neon)", v: "0" }
+];
 
-// GENERIC CHECK FUNCTION
-function check(inputId, rezId, correctValues, message){
-    let r = document.getElementById(inputId).value.trim().toUpperCase();
-    let rez = document.getElementById(rezId);
-    if(correctValues.includes(r)){
-        rez.innerHTML = '✔️ Corect! ' + message;
-        rez.style.color = 'green';
+function genereazaExercitii18() {
+    let zona = document.getElementById("exercitii18");
+    zona.innerHTML = "";
+    let alese = lista18.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+    alese.forEach((x, i) => {
+        zona.innerHTML += `
+        <div class="exercise">
+            <p><strong>Scrie valența elementului ${x.e}:</strong></p>
+            <input id="g18_${i}">
+            <button onclick="verifica18('${i}','${x.v}')">Verifică</button>
+            <p id="rez18_${i}" class="feedback"></p>
+        </div>`;
+    });
+}
+
+function verifica18(id, corect) {
+    let r = document.getElementById("g18_" + id).value.trim();
+    let rez = document.getElementById("rez18_" + id);
+    if (r === corect || r.toUpperCase() === corect) {
+        rez.innerHTML = "✔️ Corect!";
+        rez.style.color = "green";
     } else {
-        rez.innerHTML = '❌ Mai încearcă! ' + message;
-        rez.style.color = 'red';
+        rez.innerHTML = "❌ Mai încearcă!";
+        rez.style.color = "red";
     }
 }
+
+/* ---------- EXERCIȚII 9–18 ---------- */
+const lista918 = [
+  { e: "Co (cobalt)", v: "2 sau 3" },
+  { e: "Ni (nichel)", v: "2 sau 4" },
+  { e: "Cu (cupru)", v: "1 sau 2" },
+  { e: "Zn (zinc)", v: "2" },
+  { e: "Al (aluminiu)", v: "3" },
+  { e: "C (carbon)", v: "4" },
+  { e: "N (azot)", v: "3 sau 5" },
+  { e: "S (sulf)", v: "2, 4 sau 6" },
+  { e: "Cl (clor)", v: "1, 3, 5 sau 7" },
+  { e: "He (heliu)", v: "0" }
+];
+
+function genereazaExercitii918() {
+    let zona = document.getElementById("exercitii918");
+    zona.innerHTML = "";
+    let alese = lista918.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+    alese.forEach((x, i) => {
+        zona.innerHTML += `
+        <div class="exercise">
+            <p><strong>Scrie valența elementului ${x.e}:</strong></p>
+            <input id="g918_${i}">
+            <button onclick="verifica918('${i}','${x.v}')">Verifică</button>
+            <p id="rez918_${i}" class="feedback"></p>
+        </div>`;
+    });
+}
+
+function verifica918(id, corect) {
+    let r = document.getElementById("g918_" + id).value.trim();
+    let rez = document.getElementById("rez918_" + id);
+    if (corect.includes(r)) {
+        rez.innerHTML = "✔️ Corect!";
+        rez.style.color = "green";
+    } else {
+        rez.innerHTML = "❌ Mai încearcă!";
+        rez.style.color = "red";
+    }
+}
+
+/* ---------- PORNIRE AUTOMATĂ ---------- */
+genereazaExercitii18();
+genereazaExercitii918();
 </script>
 
 </body>
