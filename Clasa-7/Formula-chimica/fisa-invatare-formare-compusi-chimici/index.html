@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Fișă de învățare – Formarea compușilor chimici</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #020617;
+      --accent: #38bdf8;
+      --accent-soft: #0ea5e9;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --code-bg: #020617;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .page {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem 3rem;
+    }
+    .container {
+      width: 100%;
+      max-width: 960px;
+      background: linear-gradient(145deg, rgba(15,23,42,0.98), rgba(2,6,23,0.98));
+      border-radius: 1.5rem;
+      border: 1px solid rgba(148,163,184,0.25);
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,0.9),
+        0 22px 60px rgba(15,23,42,0.9),
+        0 0 120px rgba(56,189,248,0.12);
+      padding: 2.5rem 2.25rem 2.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .container::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.12), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(59,130,246,0.10), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
+    }
+    header {
+      margin-bottom: 2.25rem;
+      border-bottom: 1px solid rgba(148,163,184,0.25);
+      padding-bottom: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.5rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .title-block {
+      max-width: 640px;
+    }
+    h1 {
+      margin: 0 0 0.4rem;
+      font-size: clamp(1.9rem, 3vw, 2.2rem);
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    h1 span.emoji {
+      font-size: 1.6rem;
+      filter: drop-shadow(0 0 10px rgba(56,189,248,0.7));
+    }
+    .subtitle {
+      margin: 0;
+      font-size: 0.98rem;
+      color: var(--muted);
+    }
+    .pill {
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.18), transparent 55%);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(56,189,248,0.9);
+    }
+    .intro {
+      margin-bottom: 2rem;
+      padding: 1rem 1.1rem;
+      border-radius: 0.9rem;
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.12), rgba(15,23,42,0.9));
+      border: 1px solid rgba(56,189,248,0.35);
+      font-size: 0.95rem;
+    }
+    .intro strong {
+      color: #f9fafb;
+    }
+    h2 {
+      margin: 1.8rem 0 0.6rem;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      letter-spacing: 0.03em;
+    }
+    h2 span.section-icon {
+      font-size: 1.2rem;
+    }
+    h3 {
+      margin: 1.1rem 0 0.4rem;
+      font-size: 1.05rem;
+    }
+    h4 {
+      margin: 0.8rem 0 0.3rem;
+      font-size: 0.98rem;
+    }
+    p {
+      margin: 0.25rem 0 0.4rem;
+      font-size: 0.95rem;
+    }
+    ul {
+      margin: 0.25rem 0 0.6rem 1.2rem;
+      padding: 0;
+      font-size: 0.95rem;
+    }
+    li { margin: 0.15rem 0; }
+    .examples {
+      margin-top: 0.4rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 0.7rem;
+      background: rgba(15,23,42,0.9);
+      border: 1px dashed rgba(148,163,184,0.5);
+      font-size: 0.92rem;
+    }
+    .examples strong {
+      color: #e5e7eb;
+    }
+    .gold-rule {
+      margin-top: 2rem;
+      padding: 1rem 1.1rem;
+      border-radius: 1rem;
+      background: radial-gradient(circle at top, rgba(250,204,21,0.16), rgba(15,23,42,0.96));
+      border: 1px solid rgba(250,204,21,0.55);
+    }
+    .gold-rule h2 {
+      margin-top: 0;
+    }
+    .gold-rule strong {
+      color: #fef9c3;
+    }
+    .formula {
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      background: var(--code-bg);
+      padding: 0.05rem 0.25rem;
+      border-radius: 0.35rem;
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 0.9rem;
+    }
+    .footer-note {
+      margin-top: 1.8rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: right;
+    }
+    @media (max-width: 720px) {
+      .container {
+        padding: 1.7rem 1.3rem 2.1rem;
+        border-radius: 1.1rem;
+      }
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .pill { margin-top: 0.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="container">
+      <header>
+        <div class="title-block">
+          <h1><span class="emoji">📘</span>Fișă de învățare – Formarea compușilor chimici</h1>
+          <p class="subtitle">
+            Reguli clare, scurte și logice pentru oxizi, acizi, baze și săruri – fără memorare mecanică.
+          </p>
+        </div>
+        <div class="pill">
+          <span class="pill-dot"></span>
+          CHIMIE · VALENȚE · GIMNAZIU
+        </div>
+      </header>
+
+      <section class="intro">
+        <p>
+          Perfect, andronie — îți fac <strong>cea mai utilă fișă de învățare</strong> pe care o poate avea un elev de gimnaziu:
+          <strong>reguli clare, scurte, logice</strong>, astfel încât să nu mai fie nevoie să memorezi formulele.
+        </p>
+        <p>
+          Totul se bazează pe <strong>valențe</strong> și pe <strong>neutralitatea electrică</strong> a compușilor.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="section-icon">1️⃣</span>OXIZII</h2>
+        <p><strong>Formă generală:</strong></p>
+        <ul>
+          <li><strong>Metal + oxigen → oxid de metal</strong></li>
+          <li><strong>Nemetal + oxigen → oxid de nemetal</strong></li>
+        </ul>
+
+        <h3>Regula de formare</h3>
+        <ol>
+          <li>Scrii ionii:
+            <ul>
+              <li>Metalul are valența lui obișnuită (ex.: <span class="formula">Ca²⁺</span>, <span class="formula">Fe³⁺</span>).</li>
+              <li>Oxigenul are <strong>valența II</strong> (<span class="formula">O²⁻</span>).</li>
+            </ul>
+          </li>
+          <li>Încrucișezi valențele.</li>
+        </ol>
+
+        <div class="examples">
+          <strong>Exemple:</strong><br>
+          <span class="formula">Ca²⁺ + O²⁻ → CaO</span><br>
+          <span class="formula">Fe³⁺ + O²⁻ → Fe₂O₃</span><br>
+          <span class="formula">SO₂</span> – oxid de nemetal
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="section-icon">2️⃣</span>ACIZII</h2>
+        <p>Există două tipuri principale de acizi:</p>
+
+        <h3>A) Hidracizi (H + nemetal)</h3>
+        <p><strong>Formă:</strong> <span class="formula">HCl</span>, <span class="formula">H₂S</span>, <span class="formula">HBr</span></p>
+        <ul>
+          <li>Hidrogenul are valența <strong>I</strong>.</li>
+          <li>Nemetalul își păstrează valența.</li>
+        </ul>
+        <div class="examples">
+          <strong>Exemplu:</strong><br>
+          <span class="formula">H⁺ + Cl⁻ → HCl</span> (acid clorhidric)
+        </div>
+
+        <h3>B) Oxoacizi (H + radical + O)</h3>
+        <p><strong>Formă:</strong> <span class="formula">H₂SO₄</span>, <span class="formula">HNO₃</span>, <span class="formula">H₃PO₄</span></p>
+        <ul>
+          <li>Radicalul are valența lui (<span class="formula">SO₄²⁻</span>, <span class="formula">NO₃⁻</span>, <span class="formula">PO₄³⁻</span>).</li>
+          <li>Numărul de H se pune astfel încât să compenseze sarcina radicalului.</li>
+        </ul>
+        <div class="examples">
+          <strong>Exemplu:</strong><br>
+          <span class="formula">(SO₄)²⁻</span> → ai nevoie de 2 <span class="formula">H⁺</span> → <span class="formula">H₂SO₄</span>
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="section-icon">3️⃣</span>BAZELE (HIDROXIZII)</h2>
+        <p><strong>Formă generală:</strong> <br>
+          <strong>Metal + gruparea OH⁻ → hidroxid de metal</strong>
+        </p>
+
+        <h3>Regula de formare</h3>
+        <ul>
+          <li>Metalul își păstrează valența.</li>
+          <li>Gruparea <span class="formula">OH⁻</span> are valența <strong>I</strong>.</li>
+          <li>Încrucișezi valențele.</li>
+        </ul>
+
+        <div class="examples">
+          <strong>Exemple:</strong><br>
+          <span class="formula">Na⁺ + OH⁻ → NaOH</span><br>
+          <span class="formula">Ca²⁺ + 2×OH⁻ → Ca(OH)₂</span><br>
+          <span class="formula">Al³⁺ + 3×OH⁻ → Al(OH)₃</span>
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="section-icon">4️⃣</span>SĂRURILE</h2>
+        <p>Aici intră <strong>cloruri, sulfuri, nitrați, sulfați, carbonați, fosfați</strong> etc.</p>
+
+        <h3>A) Săruri binare (metal + nemetal)</h3>
+        <p>Exemple: <span class="formula">NaCl</span>, <span class="formula">CaS</span>, <span class="formula">Al₂S₃</span></p>
+        <ul>
+          <li>Metalul își păstrează valența.</li>
+          <li>Nemetalul are valența lui (ex.: Cl = I, S = II).</li>
+          <li>Încrucișezi valențele.</li>
+        </ul>
+
+        <h3>B) Săruri ternare (metal + radical)</h3>
+        <p>Exemple: <span class="formula">Na₂SO₄</span>, <span class="formula">Cu(NO₃)₂</span>, <span class="formula">Fe₂(SO₄)₃</span></p>
+        <ol>
+          <li>Scrii ionii:
+            <ul>
+              <li>Metalul cu valența lui.</li>
+              <li>Radicalul cu valența lui (<span class="formula">SO₄²⁻</span>, <span class="formula">NO₃⁻</span>, <span class="formula">CO₃²⁻</span>, <span class="formula">PO₄³⁻</span>).</li>
+            </ul>
+          </li>
+          <li>Încrucișezi valențele.</li>
+        </ol>
+
+        <div class="examples">
+          <strong>Exemple:</strong><br>
+          <span class="formula">Cu²⁺ + 2×NO₃⁻ → Cu(NO₃)₂</span><br>
+          <span class="formula">Fe³⁺ + 3×Cl⁻ → FeCl₃</span><br>
+          <span class="formula">Ca²⁺ + CO₃²⁻ → CaCO₃</span>
+        </div>
+      </section>
+
+      <section class="gold-rule">
+        <h2>🧠 REGULA DE AUR</h2>
+        <p><strong>Orice compus chimic este electric neutru.</strong></p>
+        <p>
+          Totalul sarcinilor pozitive = totalul sarcinilor negative.  
+          Din această idee simplă poți reconstrui <strong>toate formulele</strong>, fără să le memorezi mecanic.
+        </p>
+      </section>
+
+      <div class="footer-note">
+        Poți folosi această pagină ca suport de curs sau fișă de recapitulare la clasă.
+      </div>
+    </main>
+  </div>
+</body>
+</html>
