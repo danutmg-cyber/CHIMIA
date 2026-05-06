@@ -131,7 +131,8 @@ button:hover {
 
 <div class="section-box">
 <h2>Ce este valența?</h2>
- <p>
+
+<p>
 Valența reprezintă <strong>numărul de legături</strong> pe care un atom le poate forma cu alte elemente pentru a deveni stabil. 
 Un atom este stabil atunci când ultimul său strat de electroni (numit și <strong>strat de valență</strong>) este complet. 
 Această tendință de a-și completa stratul exterior este una dintre cele mai importante reguli din chimie și explică de ce atomii se combină între ei.
@@ -156,13 +157,22 @@ Elementele care nu au stratul complet pot deveni stabile în trei moduri:
 <li><strong>punând electroni în comun</strong> cu alți atomi.</li>
 </ul>
 
+<div class="example-box">
+    <strong>Exemplu vizual: Molecula de oxigen (O₂)</strong><br>
+    Fiecare atom de oxigen are 6 electroni pe ultimul strat și are nevoie de 2 pentru a ajunge la octet. 
+    Prin formarea unei <strong>legături covalente duble</strong>, cei doi atomi își completează reciproc stratul de valență.
+    <br><br>
+    <img src="https://raw.githubusercontent.com/danutmg-cyber/CHIMIA/main/Clasa-7/Formula-chimica/valenta/licensed-image.png" 
+         alt="Structura moleculei O2" 
+         style="max-width:100%; height:auto; border-radius:6px;">
+</div>
+
 <p>
 Indiferent de metoda folosită, scopul este același: atomul ajunge într-o stare de energie mai mică, mai stabilă, asemănătoare cu cea a gazelor nobile. 
 Aceasta este explicația pentru care elementele formează compuși chimici.
 </p>
 
 </div>
-
 <!-- ========================= -->
 <!-- GRUPELE 1–8 -->
 <!-- ========================= -->
@@ -454,3 +464,21 @@ function genereazaExercitii918() {
 }
 
 function verifica918(id, corect) {
+    let r = document.getElementById("g918_" + id).value.trim();
+    let rez = document.getElementById("rez918_" + id);
+    if (corect.includes(r)) {
+        rez.innerHTML = "✔️ Corect!";
+        rez.style.color = "green";
+    } else {
+        rez.innerHTML = "❌ Mai încearcă!";
+        rez.style.color = "red";
+    }
+}
+
+/* ---------- PORNIRE AUTOMATĂ ---------- */
+genereazaExercitii18();
+genereazaExercitii918();
+</script>
+
+</body>
+</html>
