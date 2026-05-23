@@ -333,7 +333,10 @@
 
   <section id="startCard" class="card">
     <h2>Înscriere elev</h2>
-    
+    <div class="notice">
+      Testul conține întrebări alese aleatoriu. Fiecare elev primește o variantă diferită, iar pe ecran apare o singură întrebare. După verificare se afișează doar „Corect” sau „Greșit”, fără răspunsul corect.
+    </div>
+
     <div class="meta-grid">
       <div>
         <label for="studentName">Numele și prenumele elevului</label>
@@ -804,7 +807,7 @@
     document.getElementById("resultArea").scrollIntoView({ behavior: "smooth" });
   }
 
-  async function sendToGoogleSheet(payload) {
+  function sendToGoogleSheet(payload) {
     const status = document.getElementById("sheetStatus");
 
     if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("PASTE_GOOGLE")) {
@@ -815,13 +818,37 @@
     status.innerText = "Se trimite rezultatul în Google Sheet...";
 
     try {
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
-      });
+      const iframeName = "googleSheetHiddenFrame";
+      let iframe = document.getElementById(iframeName);
+
+      if (!iframe) {
+        iframe = document.createElement("iframe");
+        iframe.name = iframeName;
+        iframe.id = iframeName;
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+      }
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = GOOGLE_SCRIPT_URL;
+      form.target = iframeName;
+      form.style.display = "none";
+
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "payload";
+      input.value = JSON.stringify(payload);
+
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+
       status.innerText = "Cererea de trimitere a fost expediată către Google Sheet. Verifică tabelul și pagina Executions din Apps Script.";
+
+      setTimeout(() => {
+        form.remove();
+      }, 1000);
     } catch (error) {
       status.innerText = "Nu s-a putut trimite rezultatul. Verifică URL-ul Web App și permisiunile din Apps Script.";
       console.error(error);
