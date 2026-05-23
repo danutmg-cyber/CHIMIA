@@ -246,6 +246,39 @@
     color: var(--green);
   }
 
+  .review-table-wrapper {
+    overflow-x: auto;
+    margin-top: 14px;
+  }
+
+  .review-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+
+  .review-table th,
+  .review-table td {
+    border: 1px solid var(--border);
+    padding: 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .review-table th {
+    background: #edf6ff;
+  }
+
+  .review-ok {
+    color: #176b3a;
+    font-weight: bold;
+  }
+
+  .review-wrong {
+    color: #962d22;
+    font-weight: bold;
+  }
+
   .small {
     color: var(--muted);
     font-size: 0.9rem;
@@ -333,7 +366,10 @@
 
   <section id="startCard" class="card">
     <h2>Înscriere elev</h2>
-    
+    <div class="notice">
+      Testul conține întrebări alese aleatoriu. Fiecare elev primește o variantă diferită, iar pe ecran apare o singură întrebare. După verificare se afișează doar „Corect” sau „Greșit”, fără răspunsul corect.
+    </div>
+
     <div class="meta-grid">
       <div>
         <label for="studentName">Numele și prenumele elevului</label>
@@ -346,7 +382,8 @@
     </div>
 
     <div class="warning">
-      <b>Notare:</b> nota este de la 1 la 10, cu <b>2 puncte din oficiu</b>. Partea de test valorează 8 puncte.
+      <b>Notare:</b> nota este de la 1 la 10, cu <b>2 puncte din oficiu</b>. Partea de test valorează 8 puncte.<br /><br />
+      <b>Regulă pentru reluarea testului:</b> testul se susține o singură dată. Dacă ai avut o problemă tehnică, anunță profesorul. O nouă încercare se poate face doar cu acordul profesorului. Nota finală o va decide profesorul.
     </div>
 
     <button class="success" onclick="startTest()">Începe testul</button>
@@ -382,6 +419,7 @@
     <h2>Rezultatul testului</h2>
     <div class="grade" id="gradeDisplay">Nota 0</div>
     <p id="resultDetails"></p>
+    <div id="resultReview"></div>
     <p id="sheetStatus" class="small"></p>
     <button onclick="location.reload()">Test nou</button>
   </section>
@@ -801,6 +839,36 @@
       Răspunsuri corecte: <b>${payload.correct}</b> din <b>${payload.total}</b><br>
       Punctaj: 2 puncte din oficiu + ${Math.round((payload.correct / payload.total) * 8 * 100) / 100} puncte din test.
     `;
+
+    const reviewRows = payload.answers.map(item => {
+      const resultText = item.correct ? "Corect" : "Greșit";
+      const resultClass = item.correct ? "review-ok" : "review-wrong";
+      return `
+        <tr>
+          <td>${item.nr}</td>
+          <td>${prettyFormula(escapeHtml(item.prompt))}</td>
+          <td class="${resultClass}">${resultText}</td>
+        </tr>
+      `;
+    }).join("");
+
+    document.getElementById("resultReview").innerHTML = `
+      <h3>Rezumatul răspunsurilor</h3>
+      <p class="small">Se afișează doar dacă răspunsul a fost corect sau greșit, fără răspunsul corect.</p>
+      <div class="review-table-wrapper">
+        <table class="review-table">
+          <thead>
+            <tr>
+              <th>Nr.</th>
+              <th>Întrebarea</th>
+              <th>Rezultat</th>
+            </tr>
+          </thead>
+          <tbody>${reviewRows}</tbody>
+        </table>
+      </div>
+    `;
+
     document.getElementById("resultArea").scrollIntoView({ behavior: "smooth" });
   }
 
@@ -841,7 +909,7 @@
       document.body.appendChild(form);
       form.submit();
 
-      status.innerText = "Cererea de trimitere a fost expediată către Google Sheet. Verifică tabelul și pagina Executions din Apps Script.";
+      status.innerText = "Testul a fost finalizat. Rezultatul a fost transmis profesorului.";
 
       setTimeout(() => {
         form.remove();
