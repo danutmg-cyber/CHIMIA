@@ -332,8 +332,7 @@
 
     <div class="warning">
       <b>Notare:</b> nota este de la 1 la 10, cu <b>2 puncte din oficiu</b>. Partea de test valorează 8 puncte.<br /><br />
-      <b>Regulă pentru reluarea testului:</b> testul se susține o singură dată. Dacă ai avut o problemă tehnică, anunță profesorul. O nouă încercare se poate face doar cu acordul profesorului. Nota finală o va decide profesorul.<br /><br />
-      <b>Regulă de integritate:</b> în timpul testului se înregistrează părăsirea ecranului testului, durata absenței și itemul la care s-a produs evenimentul.
+      <b>Regulă pentru reluarea testului:</b> testul se susține o singură dată. Dacă ai avut o problemă tehnică, anunță profesorul. O nouă încercare se poate face doar cu acordul profesorului. Nota finală o va decide profesorul.
     </div>
 
     <button class="success" onclick="startTest()">Începe testul</button>
@@ -393,8 +392,7 @@
      - clasa;
      - nota;
      - lista întrebărilor;
-     - răspunsul elevului la fiecare întrebare;
-     - raportul de integritate: număr ieșiri din ecran, timp total lipsă și itemii afectați.
+     - răspunsul elevului la fiecare întrebare.
   ===================================================== */
 
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz57HJXdihQm2KixNxJaIfA8Au2bCb3m2XIyiGBLXCWItSACkxwaH4krmvetNKvk8iciQ/exec";
@@ -421,7 +419,7 @@
 
   let integrityAlertOpen = false;
 
-  const questionBank = 
+  const questionBank = [
     // Scriere formule chimice
     { type: "input", category: "formula", prompt: "Scrie formula chimică pentru apă.", answer: ["H2O"], help: "Hidrogen + oxigen." },
     { type: "input", category: "formula", prompt: "Scrie formula chimică pentru dioxid de carbon.", answer: ["CO2"], help: "Carbon + oxigen." },
@@ -596,6 +594,7 @@
     }));
   }
 
+
   function resetIntegrityLog() {
     integrityLog = {
       exitCount: 0,
@@ -605,68 +604,87 @@
       totalAwaySeconds: 0,
       events: []
     };
+    integrityAlertOpen = false;
   }
 
   function isTestActive() {
     const testArea = document.getElementById("testArea");
-    return Boolean(testArea && !testArea.classList.contains("hidden") && currentQuestions.length > 0 && !submitted);
+    return Boolean(
+      testArea &&
+      !testArea.classList.contains("hidden") &&
+      currentQuestions.length > 0 &&
+      !submitted
+    );
   }
 
-  function getCurrentItemNumber() {
+  function getCurrentIntegrityItem() {
     return currentQuestionIndex + 1;
   }
 
-  function getCurrentQuestionPrompt() {
+  function getCurrentIntegrityQuestion() {
     const q = currentQuestions[currentQuestionIndex];
     return q ? q.prompt : "";
   }
 
-  function formatSeconds(seconds) {
-    const total = Math.max(0, Math.round(Number(seconds) || 0));
-    const minutes = Math.floor(total / 60);
+  function formatDuration(seconds) {
+    const total = Math.max(0, Number(seconds) || 0);
+    const min = Math.floor(total / 60);
     const sec = total % 60;
-    if (minutes === 0) return `${sec} secunde`;
-    return `${minutes} min ${sec} secunde`;
+
+    if (min === 0) return `${sec} secunde`;
+    if (sec === 0) return `${min} minut${min === 1 ? "" : "e"}`;
+    return `${min} minut${min === 1 ? "" : "e"} și ${sec} secunde`;
+  }
+
+  function getIntegrityExitEvents() {
+    return integrityLog.events.filter(event => event.tip === "iesire_din_ecran");
+  }
+
+  function getIntegrityReturnEvents() {
+    return integrityLog.events.filter(event => event.tip === "revenire_in_test");
   }
 
   function getIntegrityItemsSummary() {
-    if (!integrityLog.events.length) return "Nu au fost înregistrate ieșiri din ecran.";
-    return integrityLog.events
-      .map(event => `Item ${event.item}: ${event.durationSeconds} secunde`)
-      .join("; ");
-  }
+    const items = getIntegrityExitEvents()
+      .map(event => event.item)
+      .filter(item => item !== undefined && item !== null && item !== "");
 
-  function createIntegrityPayload() {
-    return {
-      exitCount: integrityLog.exitCount,
-      totalAwaySeconds: integrityLog.totalAwaySeconds,
-      totalAwayFormatted: formatSeconds(integrityLog.totalAwaySeconds),
-      itemsSummary: getIntegrityItemsSummary(),
-      events: integrityLog.events
-    };
+    const uniqueItems = [...new Set(items)];
+
+    if (uniqueItems.length === 0) return "Nu s-au înregistrat părăsiri ale ecranului.";
+
+    return uniqueItems.map(item => `Item ${item}`).join(", ");
   }
 
   function handleScreenExit() {
-    if (!isTestActive() || integrityAlertOpen || integrityLog.awayStart !== null) return;
+    if (!isTestActive() || integrityAlertOpen || integrityLog.awayStart) return;
 
     integrityLog.awayStart = Date.now();
-    integrityLog.awayItem = getCurrentItemNumber();
-    integrityLog.awayQuestion = getCurrentQuestionPrompt();
+    integrityLog.awayItem = getCurrentIntegrityItem();
+    integrityLog.awayQuestion = getCurrentIntegrityQuestion();
+    integrityLog.exitCount++;
+
+    integrityLog.events.push({
+      tip: "iesire_din_ecran",
+      item: integrityLog.awayItem,
+      intrebare: integrityLog.awayQuestion,
+      ora: new Date().toLocaleString("ro-RO")
+    });
   }
 
   function handleScreenReturn() {
-    if (!isTestActive() || integrityAlertOpen || !integrityLog.awayStart) return;
+    if (!isTestActive() || !integrityLog.awayStart) return;
 
     const durationSeconds = Math.max(1, Math.round((Date.now() - integrityLog.awayStart) / 1000));
-
-    integrityLog.exitCount += 1;
     integrityLog.totalAwaySeconds += durationSeconds;
+
     integrityLog.events.push({
+      tip: "revenire_in_test",
       item: integrityLog.awayItem,
-      question: integrityLog.awayQuestion,
-      durationSeconds,
-      leftAt: new Date(integrityLog.awayStart).toLocaleString("ro-RO"),
-      returnedAt: new Date().toLocaleString("ro-RO")
+      intrebare: integrityLog.awayQuestion,
+      durataSecunde: durationSeconds,
+      oraPlecare: new Date(integrityLog.awayStart).toLocaleString("ro-RO"),
+      oraRevenire: new Date().toLocaleString("ro-RO")
     });
 
     integrityLog.awayStart = null;
@@ -674,12 +692,10 @@
     integrityLog.awayQuestion = "";
 
     integrityAlertOpen = true;
+    alert(INTEGRITY_WARNING_MESSAGE);
     setTimeout(() => {
-      alert(INTEGRITY_WARNING_MESSAGE);
-      setTimeout(() => {
-        integrityAlertOpen = false;
-      }, 250);
-    }, 100);
+      integrityAlertOpen = false;
+    }, 500);
   }
 
   document.addEventListener("visibilitychange", function() {
@@ -723,6 +739,7 @@
       return;
     }
 
+    submitted = false;
     variantId = generateVariantId();
     currentQuestions = selectBalancedQuestions();
     currentQuestionIndex = 0;
@@ -876,8 +893,6 @@
     const grade = Math.max(1, OFFICIAL_POINTS + percentage * TEST_POINTS);
     const roundedGrade = Math.round(grade * 100) / 100;
 
-    const integrity = createIntegrityPayload();
-
     const payload = {
       timestamp: new Date().toISOString(),
       test: "Formula chimică – Clasa a VII-a",
@@ -889,12 +904,12 @@
       officialPoints: OFFICIAL_POINTS,
       testPoints: TEST_POINTS,
       grade: roundedGrade,
-      integrityExitCount: integrity.exitCount,
-      integrityTotalAwaySeconds: integrity.totalAwaySeconds,
-      integrityTotalAwayFormatted: integrity.totalAwayFormatted,
-      integrityItemsSummary: integrity.itemsSummary,
-      integrityEvents: integrity.events,
-      answers: answerRows
+      answers: answerRows,
+      integrityExitCount: integrityLog.exitCount,
+      integrityTotalAwaySeconds: integrityLog.totalAwaySeconds,
+      integrityTotalAwayFormatted: formatDuration(integrityLog.totalAwaySeconds),
+      integrityItemsSummary: getIntegrityItemsSummary(),
+      integrityEvents: integrityLog.events
     };
 
     document.getElementById("testArea").classList.add("hidden");
@@ -911,16 +926,33 @@
   function showResult(payload) {
     document.getElementById("resultArea").classList.remove("hidden");
     document.getElementById("gradeDisplay").innerText = `Nota ${payload.grade}`;
-    const integrityRows = payload.integrityEvents.length
-      ? payload.integrityEvents.map(event => `
-          <tr>
-            <td>${event.item}</td>
-            <td>${escapeHtml(event.durationSeconds)} secunde</td>
-            <td>${escapeHtml(event.leftAt)}</td>
-            <td>${escapeHtml(event.returnedAt)}</td>
-          </tr>
-        `).join("")
-      : `<tr><td colspan="4">Nu au fost înregistrate ieșiri din ecranul testului.</td></tr>`;
+    const integrityReturns = getIntegrityReturnEvents();
+    const integrityDetailsRows = integrityReturns.map(event => `
+      <tr>
+        <td>${escapeHtml(event.item)}</td>
+        <td>${escapeHtml(event.durataSecunde)} secunde</td>
+        <td>${escapeHtml(event.oraPlecare || "")}</td>
+        <td>${escapeHtml(event.oraRevenire || "")}</td>
+      </tr>
+    `).join("");
+
+    const integrityDetailsHtml = integrityReturns.length
+      ? `
+        <div class="review-table-wrapper">
+          <table class="review-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Durată lipsă</th>
+                <th>Ora ieșirii</th>
+                <th>Ora revenirii</th>
+              </tr>
+            </thead>
+            <tbody>${integrityDetailsRows}</tbody>
+          </table>
+        </div>
+      `
+      : `<p class="small">Nu s-au înregistrat părăsiri ale ecranului testului.</p>`;
 
     document.getElementById("resultDetails").innerHTML = `
       Elev: <b>${escapeHtml(payload.studentName)}</b><br>
@@ -928,23 +960,11 @@
       Răspunsuri corecte: <b>${payload.correct}</b> din <b>${payload.total}</b><br>
       Punctaj: 2 puncte din oficiu + ${Math.round((payload.correct / payload.total) * 8 * 100) / 100} puncte din test.
       <div class="warning">
-        <b>Raport de integritate:</b><br>
-        Ieșiri din ecranul testului: <b>${payload.integrityExitCount}</b><br>
-        Timp total lipsă din test: <b>${escapeHtml(payload.integrityTotalAwayFormatted)}</b><br>
-        Itemi la care s-a părăsit testul: <b>${escapeHtml(payload.integrityItemsSummary)}</b>
-      </div>
-      <div class="review-table-wrapper">
-        <table class="review-table">
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Durată lipsă</th>
-              <th>Ora ieșirii</th>
-              <th>Ora revenirii</th>
-            </tr>
-          </thead>
-          <tbody>${integrityRows}</tbody>
-        </table>
+        <b>Raport anti-copiere</b><br>
+        Ieșiri din ecran: <b>${escapeHtml(payload.integrityExitCount)}</b><br>
+        Timp total lipsă: <b>${escapeHtml(payload.integrityTotalAwayFormatted)}</b><br>
+        Itemi la care a părăsit ecranul: <b>${escapeHtml(payload.integrityItemsSummary)}</b>
+        ${integrityDetailsHtml}
       </div>
     `;
 
