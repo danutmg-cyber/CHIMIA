@@ -294,54 +294,6 @@
 
   .footer a { color: var(--accent-dark); font-weight: bold; }
 
-  /* Popup tabel Mendeleev */
-  #popup {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.65);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    padding: 14px;
-    z-index: 1000;
-  }
-
-  #popupContent {
-    position: relative;
-    background: #fff;
-    border-radius: 14px;
-    max-width: 1100px;
-    width: 100%;
-    max-height: 92vh;
-    overflow-y: auto;
-    padding: 18px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.30);
-  }
-
-  #popupContent h3 { text-align: center; margin: 6px 42px 12px; }
-
-  #popupContent img {
-    width: 100%;
-    height: auto;
-    display: block;
-    margin: 10px auto 0;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-  }
-
-  .close-x {
-    position: absolute;
-    top: 10px;
-    right: 12px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    padding: 0;
-    font-size: 22px;
-    line-height: 1;
-    background: var(--red);
-  }
-
   @media (max-width: 700px) {
     .wrapper { padding: 10px; }
     h1 { font-size: 1.5rem; }
@@ -380,11 +332,11 @@
 
     <div class="warning">
       <b>Notare:</b> nota este de la 1 la 10, cu <b>2 puncte din oficiu</b>. Partea de test valorează 8 puncte.<br /><br />
-      <b>Regulă pentru reluarea testului:</b> testul se susține o singură dată. Dacă ai avut o problemă tehnică, anunță profesorul. O nouă încercare se poate face doar cu acordul profesorului. Nota finală o va decide profesorul.
+      <b>Regulă pentru reluarea testului:</b> testul se susține o singură dată. Dacă ai avut o problemă tehnică, anunță profesorul. O nouă încercare se poate face doar cu acordul profesorului. Nota finală o va decide profesorul.<br /><br />
+      <b>Regulă de integritate:</b> în timpul testului se înregistrează părăsirea ecranului testului, durata absenței și itemul la care s-a produs evenimentul.
     </div>
 
     <button class="success" onclick="startTest()">Începe testul</button>
-    <button onclick="openMendeleev()">Tabelul lui Mendeleev</button>
   </section>
 
   <section id="testArea" class="hidden">
@@ -408,8 +360,7 @@
       <button class="success" id="checkBtn" onclick="checkCurrentQuestion()">Verifică răspunsul</button>
       <button id="nextBtn" onclick="goToNextQuestion()" disabled>Următoarea întrebare</button>
       <button class="success hidden" id="finishBtn" onclick="submitTest()">Finalizează testul</button>
-      <button onclick="openMendeleev()">Tabelul lui Mendeleev</button>
-    </div>
+      </div>
   </section>
 
   <section id="resultArea" class="result-card hidden">
@@ -424,16 +375,6 @@
   <div class="footer">
     Material realizat de <b>prof. Dănuț Andronie</b>.<br />
     Pentru observații și propuneri: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
-  </div>
-</div>
-
-<!-- POPUP TABEL MENDELEEV -->
-<div id="popup" onclick="closeMendeleev()" aria-hidden="true">
-  <div id="popupContent" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Tabelul lui Mendeleev">
-    <button class="close-x" type="button" onclick="closeMendeleev()" aria-label="Închide tabelul">×</button>
-    <h3>Tabelul lui Mendeleev</h3>
-    <p class="small" style="text-align:center;">Apasă pe X sau fă click lângă imagine pentru a reveni la test.</p>
-    <img src="../tabel.png" alt="Tabelul lui Mendeleev" />
   </div>
 </div>
 
@@ -452,7 +393,8 @@
      - clasa;
      - nota;
      - lista întrebărilor;
-     - răspunsul elevului la fiecare întrebare.
+     - răspunsul elevului la fiecare întrebare;
+     - raportul de integritate: număr ieșiri din ecran, timp total lipsă și itemii afectați.
   ===================================================== */
 
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz57HJXdihQm2KixNxJaIfA8Au2bCb3m2XIyiGBLXCWItSACkxwaH4krmvetNKvk8iciQ/exec";
@@ -465,6 +407,17 @@
   let currentQuestionIndex = 0;
   let variantId = "";
   let submitted = false;
+
+  const INTEGRITY_WARNING_MESSAGE = "Atenție! Ai părăsit ecranul testului. Profesorul va vedea acest eveniment în raportul testului.";
+
+  let integrityLog = {
+    exitCount: 0,
+    awayStart: null,
+    awayItem: null,
+    awayQuestion: "",
+    totalAwaySeconds: 0,
+    events: []
+  };
 
   const questionBank = [
     // Scriere formule chimice
@@ -641,6 +594,128 @@
     }));
   }
 
+  function resetIntegrityLog() {
+    integrityLog = {
+      exitCount: 0,
+      awayStart: null,
+      awayItem: null,
+      awayQuestion: "",
+      totalAwaySeconds: 0,
+      events: []
+    };
+  }
+
+  function isTestActive() {
+    const testArea = document.getElementById("testArea");
+    return Boolean(testArea && !testArea.classList.contains("hidden") && currentQuestions.length > 0 && !submitted);
+  }
+
+  function getCurrentItemNumber() {
+    return currentQuestionIndex + 1;
+  }
+
+  function getCurrentQuestionPrompt() {
+    const q = currentQuestions[currentQuestionIndex];
+    return q ? q.prompt : "";
+  }
+
+  function formatSeconds(seconds) {
+    const total = Math.max(0, Math.round(Number(seconds) || 0));
+    const minutes = Math.floor(total / 60);
+    const sec = total % 60;
+    if (minutes === 0) return `${sec} secunde`;
+    return `${minutes} min ${sec} secunde`;
+  }
+
+  function getIntegrityItemsSummary() {
+    if (!integrityLog.events.length) return "Nu au fost înregistrate ieșiri din ecran.";
+    return integrityLog.events
+      .map(event => `Item ${event.item}: ${event.durationSeconds} secunde`)
+      .join("; ");
+  }
+
+  function createIntegrityPayload() {
+    return {
+      exitCount: integrityLog.exitCount,
+      totalAwaySeconds: integrityLog.totalAwaySeconds,
+      totalAwayFormatted: formatSeconds(integrityLog.totalAwaySeconds),
+      itemsSummary: getIntegrityItemsSummary(),
+      events: integrityLog.events
+    };
+  }
+
+  function handleScreenExit() {
+    if (!isTestActive() || integrityLog.awayStart !== null) return;
+
+    integrityLog.awayStart = Date.now();
+    integrityLog.awayItem = getCurrentItemNumber();
+    integrityLog.awayQuestion = getCurrentQuestionPrompt();
+  }
+
+  function handleScreenReturn() {
+    if (!integrityLog.awayStart) return;
+
+    const durationSeconds = Math.max(1, Math.round((Date.now() - integrityLog.awayStart) / 1000));
+
+    integrityLog.exitCount += 1;
+    integrityLog.totalAwaySeconds += durationSeconds;
+    integrityLog.events.push({
+      item: integrityLog.awayItem,
+      question: integrityLog.awayQuestion,
+      durationSeconds,
+      leftAt: new Date(integrityLog.awayStart).toLocaleString("ro-RO"),
+      returnedAt: new Date().toLocaleString("ro-RO")
+    });
+
+    integrityLog.awayStart = null;
+    integrityLog.awayItem = null;
+    integrityLog.awayQuestion = "";
+
+    setTimeout(() => {
+      alert(INTEGRITY_WARNING_MESSAGE);
+    }, 100);
+  }
+
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      handleScreenExit();
+    } else {
+      handleScreenReturn();
+    }
+  });
+
+  window.addEventListener("blur", function() {
+    handleScreenExit();
+  });
+
+  window.addEventListener("focus", function() {
+    handleScreenReturn();
+  });
+
+  document.addEventListener("contextmenu", function(event) {
+    if (!isTestActive()) return;
+    event.preventDefault();
+    alert("Click dreapta nu este permis în timpul testului.");
+  });
+
+  document.addEventListener("copy", function(event) {
+    if (!isTestActive()) return;
+    event.preventDefault();
+    alert("Copierea nu este permisă în timpul testului.");
+  });
+
+  document.addEventListener("cut", function(event) {
+    if (!isTestActive()) return;
+    event.preventDefault();
+    alert("Decuparea textului nu este permisă în timpul testului.");
+  });
+
+  document.addEventListener("paste", function(event) {
+    if (!isTestActive()) return;
+    event.preventDefault();
+    alert("Lipirea textului nu este permisă în timpul testului.");
+  });
+
   function startTest() {
     const name = document.getElementById("studentName").value.trim();
     const cls = document.getElementById("studentClass").value.trim();
@@ -653,6 +728,7 @@
     variantId = generateVariantId();
     currentQuestions = selectBalancedQuestions();
     currentQuestionIndex = 0;
+    resetIntegrityLog();
 
     document.getElementById("startCard").classList.add("hidden");
     document.getElementById("testArea").classList.remove("hidden");
@@ -802,6 +878,8 @@
     const grade = Math.max(1, OFFICIAL_POINTS + percentage * TEST_POINTS);
     const roundedGrade = Math.round(grade * 100) / 100;
 
+    const integrity = createIntegrityPayload();
+
     const payload = {
       timestamp: new Date().toISOString(),
       test: "Formula chimică – Clasa a VII-a",
@@ -813,6 +891,11 @@
       officialPoints: OFFICIAL_POINTS,
       testPoints: TEST_POINTS,
       grade: roundedGrade,
+      integrityExitCount: integrity.exitCount,
+      integrityTotalAwaySeconds: integrity.totalAwaySeconds,
+      integrityTotalAwayFormatted: integrity.totalAwayFormatted,
+      integrityItemsSummary: integrity.itemsSummary,
+      integrityEvents: integrity.events,
       answers: answerRows
     };
 
@@ -830,11 +913,41 @@
   function showResult(payload) {
     document.getElementById("resultArea").classList.remove("hidden");
     document.getElementById("gradeDisplay").innerText = `Nota ${payload.grade}`;
+    const integrityRows = payload.integrityEvents.length
+      ? payload.integrityEvents.map(event => `
+          <tr>
+            <td>${event.item}</td>
+            <td>${escapeHtml(event.durationSeconds)} secunde</td>
+            <td>${escapeHtml(event.leftAt)}</td>
+            <td>${escapeHtml(event.returnedAt)}</td>
+          </tr>
+        `).join("")
+      : `<tr><td colspan="4">Nu au fost înregistrate ieșiri din ecranul testului.</td></tr>`;
+
     document.getElementById("resultDetails").innerHTML = `
       Elev: <b>${escapeHtml(payload.studentName)}</b><br>
       Clasa: <b>${escapeHtml(payload.studentClass)}</b><br>
       Răspunsuri corecte: <b>${payload.correct}</b> din <b>${payload.total}</b><br>
       Punctaj: 2 puncte din oficiu + ${Math.round((payload.correct / payload.total) * 8 * 100) / 100} puncte din test.
+      <div class="warning">
+        <b>Raport de integritate:</b><br>
+        Ieșiri din ecranul testului: <b>${payload.integrityExitCount}</b><br>
+        Timp total lipsă din test: <b>${escapeHtml(payload.integrityTotalAwayFormatted)}</b><br>
+        Itemi la care s-a părăsit testul: <b>${escapeHtml(payload.integrityItemsSummary)}</b>
+      </div>
+      <div class="review-table-wrapper">
+        <table class="review-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Durată lipsă</th>
+              <th>Ora ieșirii</th>
+              <th>Ora revenirii</th>
+            </tr>
+          </thead>
+          <tbody>${integrityRows}</tbody>
+        </table>
+      </div>
     `;
 
     const reviewRows = payload.answers.map(item => {
@@ -916,22 +1029,6 @@
       console.error(error);
     }
   }
-
-  function openMendeleev() {
-    const popup = document.getElementById("popup");
-    popup.style.display = "flex";
-    popup.setAttribute("aria-hidden", "false");
-  }
-
-  function closeMendeleev() {
-    const popup = document.getElementById("popup");
-    popup.style.display = "none";
-    popup.setAttribute("aria-hidden", "true");
-  }
-
-  document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape") closeMendeleev();
-  });
 
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
