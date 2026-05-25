@@ -419,7 +419,9 @@
     events: []
   };
 
-  const questionBank = [
+  let integrityAlertOpen = false;
+
+  const questionBank = 
     // Scriere formule chimice
     { type: "input", category: "formula", prompt: "Scrie formula chimică pentru apă.", answer: ["H2O"], help: "Hidrogen + oxigen." },
     { type: "input", category: "formula", prompt: "Scrie formula chimică pentru dioxid de carbon.", answer: ["CO2"], help: "Carbon + oxigen." },
@@ -645,7 +647,7 @@
   }
 
   function handleScreenExit() {
-    if (!isTestActive() || integrityLog.awayStart !== null) return;
+    if (!isTestActive() || integrityAlertOpen || integrityLog.awayStart !== null) return;
 
     integrityLog.awayStart = Date.now();
     integrityLog.awayItem = getCurrentItemNumber();
@@ -653,7 +655,7 @@
   }
 
   function handleScreenReturn() {
-    if (!integrityLog.awayStart) return;
+    if (!isTestActive() || integrityAlertOpen || !integrityLog.awayStart) return;
 
     const durationSeconds = Math.max(1, Math.round((Date.now() - integrityLog.awayStart) / 1000));
 
@@ -671,8 +673,12 @@
     integrityLog.awayItem = null;
     integrityLog.awayQuestion = "";
 
+    integrityAlertOpen = true;
     setTimeout(() => {
       alert(INTEGRITY_WARNING_MESSAGE);
+      setTimeout(() => {
+        integrityAlertOpen = false;
+      }, 250);
     }, 100);
   }
 
@@ -682,14 +688,6 @@
     } else {
       handleScreenReturn();
     }
-  });
-
-  window.addEventListener("blur", function() {
-    handleScreenExit();
-  });
-
-  window.addEventListener("focus", function() {
-    handleScreenReturn();
   });
 
   document.addEventListener("contextmenu", function(event) {
