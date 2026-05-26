@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Test online – Formula chimică – Clasa a VII-a</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
   :root {
@@ -294,6 +295,54 @@
 
   .footer a { color: var(--accent-dark); font-weight: bold; }
 
+  /* Popup tabel Mendeleev */
+  #popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 14px;
+    z-index: 1000;
+  }
+
+  #popupContent {
+    position: relative;
+    background: #fff;
+    border-radius: 14px;
+    max-width: 1100px;
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    padding: 18px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.30);
+  }
+
+  #popupContent h3 { text-align: center; margin: 6px 42px 12px; }
+
+  #popupContent img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto 0;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .close-x {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 22px;
+    line-height: 1;
+    background: var(--red);
+  }
+
   @media (max-width: 700px) {
     .wrapper { padding: 10px; }
     h1 { font-size: 1.5rem; }
@@ -318,7 +367,10 @@
 
   <section id="startCard" class="card">
     <h2>Înscriere elev</h2>
-   
+    <div class="notice">
+      Testul conține întrebări alese aleatoriu. Fiecare elev primește o variantă diferită, iar pe ecran apare o singură întrebare. După verificare se afișează doar „Corect” sau „Greșit”, fără răspunsul corect.
+    </div>
+
     <div class="meta-grid">
       <div>
         <label for="studentName">Numele și prenumele elevului</label>
@@ -336,6 +388,7 @@
     </div>
 
     <button class="success" onclick="startTest()">Începe testul</button>
+    <button onclick="openMendeleev()">Tabelul lui Mendeleev</button>
   </section>
 
   <section id="testArea" class="hidden">
@@ -359,7 +412,8 @@
       <button class="success" id="checkBtn" onclick="checkCurrentQuestion()">Verifică răspunsul</button>
       <button id="nextBtn" onclick="goToNextQuestion()" disabled>Următoarea întrebare</button>
       <button class="success hidden" id="finishBtn" onclick="submitTest()">Finalizează testul</button>
-      </div>
+      <button onclick="openMendeleev()">Tabelul lui Mendeleev</button>
+    </div>
   </section>
 
   <section id="resultArea" class="result-card hidden">
@@ -368,12 +422,23 @@
     <p id="resultDetails"></p>
     <div id="resultReview"></div>
     <p id="sheetStatus" class="small"></p>
+    <button class="success" onclick="downloadReportPDF()">Descarcă raportul PDF</button>
     <button onclick="location.reload()">Test nou</button>
   </section>
 
   <div class="footer">
     Material realizat de <b>prof. Dănuț Andronie</b>.<br />
     Pentru observații și propuneri: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+  </div>
+</div>
+
+<!-- POPUP TABEL MENDELEEV -->
+<div id="popup" onclick="closeMendeleev()" aria-hidden="true">
+  <div id="popupContent" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Tabelul lui Mendeleev">
+    <button class="close-x" type="button" onclick="closeMendeleev()" aria-label="Închide tabelul">×</button>
+    <h3>Tabelul lui Mendeleev</h3>
+    <p class="small" style="text-align:center;">Apasă pe X sau fă click lângă imagine pentru a reveni la test.</p>
+    <img src="../tabel.png" alt="Tabelul lui Mendeleev" />
   </div>
 </div>
 
@@ -405,19 +470,7 @@
   let currentQuestionIndex = 0;
   let variantId = "";
   let submitted = false;
-
-  const INTEGRITY_WARNING_MESSAGE = "Atenție! Ai părăsit ecranul testului. Profesorul va vedea acest eveniment în raportul testului.";
-
-  let integrityLog = {
-    exitCount: 0,
-    awayStart: null,
-    awayItem: null,
-    awayQuestion: "",
-    totalAwaySeconds: 0,
-    events: []
-  };
-
-  let integrityAlertOpen = false;
+  let lastReportPayload = null;
 
   const questionBank = [
     // Scriere formule chimice
@@ -594,142 +647,6 @@
     }));
   }
 
-
-  function resetIntegrityLog() {
-    integrityLog = {
-      exitCount: 0,
-      awayStart: null,
-      awayItem: null,
-      awayQuestion: "",
-      totalAwaySeconds: 0,
-      events: []
-    };
-    integrityAlertOpen = false;
-  }
-
-  function isTestActive() {
-    const testArea = document.getElementById("testArea");
-    return Boolean(
-      testArea &&
-      !testArea.classList.contains("hidden") &&
-      currentQuestions.length > 0 &&
-      !submitted
-    );
-  }
-
-  function getCurrentIntegrityItem() {
-    return currentQuestionIndex + 1;
-  }
-
-  function getCurrentIntegrityQuestion() {
-    const q = currentQuestions[currentQuestionIndex];
-    return q ? q.prompt : "";
-  }
-
-  function formatDuration(seconds) {
-    const total = Math.max(0, Number(seconds) || 0);
-    const min = Math.floor(total / 60);
-    const sec = total % 60;
-
-    if (min === 0) return `${sec} secunde`;
-    if (sec === 0) return `${min} minut${min === 1 ? "" : "e"}`;
-    return `${min} minut${min === 1 ? "" : "e"} și ${sec} secunde`;
-  }
-
-  function getIntegrityExitEvents() {
-    return integrityLog.events.filter(event => event.tip === "iesire_din_ecran");
-  }
-
-  function getIntegrityReturnEvents() {
-    return integrityLog.events.filter(event => event.tip === "revenire_in_test");
-  }
-
-  function getIntegrityItemsSummary() {
-    const items = getIntegrityExitEvents()
-      .map(event => event.item)
-      .filter(item => item !== undefined && item !== null && item !== "");
-
-    const uniqueItems = [...new Set(items)];
-
-    if (uniqueItems.length === 0) return "Nu s-au înregistrat părăsiri ale ecranului.";
-
-    return uniqueItems.map(item => `Item ${item}`).join(", ");
-  }
-
-  function handleScreenExit() {
-    if (!isTestActive() || integrityAlertOpen || integrityLog.awayStart) return;
-
-    integrityLog.awayStart = Date.now();
-    integrityLog.awayItem = getCurrentIntegrityItem();
-    integrityLog.awayQuestion = getCurrentIntegrityQuestion();
-    integrityLog.exitCount++;
-
-    integrityLog.events.push({
-      tip: "iesire_din_ecran",
-      item: integrityLog.awayItem,
-      intrebare: integrityLog.awayQuestion,
-      ora: new Date().toLocaleString("ro-RO")
-    });
-  }
-
-  function handleScreenReturn() {
-    if (!isTestActive() || !integrityLog.awayStart) return;
-
-    const durationSeconds = Math.max(1, Math.round((Date.now() - integrityLog.awayStart) / 1000));
-    integrityLog.totalAwaySeconds += durationSeconds;
-
-    integrityLog.events.push({
-      tip: "revenire_in_test",
-      item: integrityLog.awayItem,
-      intrebare: integrityLog.awayQuestion,
-      durataSecunde: durationSeconds,
-      oraPlecare: new Date(integrityLog.awayStart).toLocaleString("ro-RO"),
-      oraRevenire: new Date().toLocaleString("ro-RO")
-    });
-
-    integrityLog.awayStart = null;
-    integrityLog.awayItem = null;
-    integrityLog.awayQuestion = "";
-
-    integrityAlertOpen = true;
-    alert(INTEGRITY_WARNING_MESSAGE);
-    setTimeout(() => {
-      integrityAlertOpen = false;
-    }, 500);
-  }
-
-  document.addEventListener("visibilitychange", function() {
-    if (document.hidden) {
-      handleScreenExit();
-    } else {
-      handleScreenReturn();
-    }
-  });
-
-  document.addEventListener("contextmenu", function(event) {
-    if (!isTestActive()) return;
-    event.preventDefault();
-    alert("Click dreapta nu este permis în timpul testului.");
-  });
-
-  document.addEventListener("copy", function(event) {
-    if (!isTestActive()) return;
-    event.preventDefault();
-    alert("Copierea nu este permisă în timpul testului.");
-  });
-
-  document.addEventListener("cut", function(event) {
-    if (!isTestActive()) return;
-    event.preventDefault();
-    alert("Decuparea textului nu este permisă în timpul testului.");
-  });
-
-  document.addEventListener("paste", function(event) {
-    if (!isTestActive()) return;
-    event.preventDefault();
-    alert("Lipirea textului nu este permisă în timpul testului.");
-  });
-
   function startTest() {
     const name = document.getElementById("studentName").value.trim();
     const cls = document.getElementById("studentClass").value.trim();
@@ -739,11 +656,9 @@
       return;
     }
 
-    submitted = false;
     variantId = generateVariantId();
     currentQuestions = selectBalancedQuestions();
     currentQuestionIndex = 0;
-    resetIntegrityLog();
 
     document.getElementById("startCard").classList.add("hidden");
     document.getElementById("testArea").classList.remove("hidden");
@@ -904,12 +819,7 @@
       officialPoints: OFFICIAL_POINTS,
       testPoints: TEST_POINTS,
       grade: roundedGrade,
-      answers: answerRows,
-      integrityExitCount: integrityLog.exitCount,
-      integrityTotalAwaySeconds: integrityLog.totalAwaySeconds,
-      integrityTotalAwayFormatted: formatDuration(integrityLog.totalAwaySeconds),
-      integrityItemsSummary: getIntegrityItemsSummary(),
-      integrityEvents: integrityLog.events
+      answers: answerRows
     };
 
     document.getElementById("testArea").classList.add("hidden");
@@ -924,48 +834,14 @@
   }
 
   function showResult(payload) {
+    lastReportPayload = payload;
     document.getElementById("resultArea").classList.remove("hidden");
     document.getElementById("gradeDisplay").innerText = `Nota ${payload.grade}`;
-    const integrityReturns = getIntegrityReturnEvents();
-    const integrityDetailsRows = integrityReturns.map(event => `
-      <tr>
-        <td>${escapeHtml(event.item)}</td>
-        <td>${escapeHtml(event.durataSecunde)} secunde</td>
-        <td>${escapeHtml(event.oraPlecare || "")}</td>
-        <td>${escapeHtml(event.oraRevenire || "")}</td>
-      </tr>
-    `).join("");
-
-    const integrityDetailsHtml = integrityReturns.length
-      ? `
-        <div class="review-table-wrapper">
-          <table class="review-table">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Durată lipsă</th>
-                <th>Ora ieșirii</th>
-                <th>Ora revenirii</th>
-              </tr>
-            </thead>
-            <tbody>${integrityDetailsRows}</tbody>
-          </table>
-        </div>
-      `
-      : `<p class="small">Nu s-au înregistrat părăsiri ale ecranului testului.</p>`;
-
     document.getElementById("resultDetails").innerHTML = `
       Elev: <b>${escapeHtml(payload.studentName)}</b><br>
       Clasa: <b>${escapeHtml(payload.studentClass)}</b><br>
       Răspunsuri corecte: <b>${payload.correct}</b> din <b>${payload.total}</b><br>
       Punctaj: 2 puncte din oficiu + ${Math.round((payload.correct / payload.total) * 8 * 100) / 100} puncte din test.
-      <div class="warning">
-        <b>Raport anti-copiere</b><br>
-        Ieșiri din ecran: <b>${escapeHtml(payload.integrityExitCount)}</b><br>
-        Timp total lipsă: <b>${escapeHtml(payload.integrityTotalAwayFormatted)}</b><br>
-        Itemi la care a părăsit ecranul: <b>${escapeHtml(payload.integrityItemsSummary)}</b>
-        ${integrityDetailsHtml}
-      </div>
     `;
 
     const reviewRows = payload.answers.map(item => {
@@ -998,6 +874,103 @@
     `;
 
     document.getElementById("resultArea").scrollIntoView({ behavior: "smooth" });
+  }
+
+  function downloadReportPDF() {
+    if (!lastReportPayload) {
+      alert("Raportul nu este disponibil încă.");
+      return;
+    }
+
+    const payload = lastReportPayload;
+    const safeName = payload.studentName
+      .replace(/[^a-zA-Z0-9ăâîșțĂÂÎȘȚ -]/g, "")
+      .split(" ")
+      .filter(Boolean)
+      .join("-") || "elev";
+
+    const reviewRows = payload.answers.map(item => {
+      const resultText = item.correct ? "Corect" : "Greșit";
+      const resultColor = item.correct ? "#176b3a" : "#962d22";
+      return `
+        <tr>
+          <td style="border:1px solid #d8e1ec; padding:8px; text-align:center;">${item.nr}</td>
+          <td style="border:1px solid #d8e1ec; padding:8px;">${prettyFormula(escapeHtml(item.prompt))}</td>
+          <td style="border:1px solid #d8e1ec; padding:8px; font-weight:bold; color:${resultColor}; text-align:center;">${resultText}</td>
+        </tr>
+      `;
+    }).join("");
+
+    const report = document.createElement("div");
+    report.style.background = "white";
+    report.style.color = "#243447";
+    report.style.fontFamily = "Arial, sans-serif";
+    report.style.padding = "24px";
+    report.style.maxWidth = "900px";
+    report.innerHTML = `
+      <div style="text-align:center; margin-bottom:18px;">
+        <h1 style="margin:0 0 6px; font-size:24px;">Raport test - Formula chimică</h1>
+        <div style="font-size:15px;">Chimie - Clasa a VII-a</div>
+        <div style="font-size:13px; color:#667085; margin-top:4px;">Material realizat de prof. Dănuț Andronie</div>
+      </div>
+
+      <table style="width:100%; border-collapse:collapse; margin-bottom:16px;">
+        <tbody>
+          <tr>
+            <td style="border:1px solid #d8e1ec; padding:8px; width:34%;"><b>Numele și prenumele elevului</b></td>
+            <td style="border:1px solid #d8e1ec; padding:8px;">${escapeHtml(payload.studentName)}</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #d8e1ec; padding:8px;"><b>Clasa</b></td>
+            <td style="border:1px solid #d8e1ec; padding:8px;">${escapeHtml(payload.studentClass)}</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #d8e1ec; padding:8px;"><b>Nota obținută</b></td>
+            <td style="border:1px solid #d8e1ec; padding:8px; font-size:20px;"><b>${payload.grade}</b></td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #d8e1ec; padding:8px;"><b>Răspunsuri corecte</b></td>
+            <td style="border:1px solid #d8e1ec; padding:8px;">${payload.correct} din ${payload.total}</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #d8e1ec; padding:8px;"><b>ID variantă</b></td>
+            <td style="border:1px solid #d8e1ec; padding:8px;">${escapeHtml(payload.variantId)}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 style="font-size:18px; margin:14px 0 8px;">Rezumatul răspunsurilor</h2>
+      <p style="font-size:13px; color:#667085; margin-top:0;">Raportul afișează doar dacă răspunsul a fost corect sau greșit, fără răspunsul corect.</p>
+
+      <table style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead>
+          <tr>
+            <th style="border:1px solid #d8e1ec; padding:8px; background:#edf6ff; width:45px;">Nr.</th>
+            <th style="border:1px solid #d8e1ec; padding:8px; background:#edf6ff;">Întrebarea</th>
+            <th style="border:1px solid #d8e1ec; padding:8px; background:#edf6ff; width:90px;">Rezultat</th>
+          </tr>
+        </thead>
+        <tbody>${reviewRows}</tbody>
+      </table>
+
+      <div style="font-size:12px; color:#667085; margin-top:16px; text-align:center;">
+        Testul se susține o singură dată. Nota finală o decide profesorul.
+      </div>
+    `;
+
+    document.body.appendChild(report);
+
+    const options = {
+      margin: 0.35,
+      filename: `raport-test-formula-chimica-${safeName}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+    };
+
+    html2pdf().set(options).from(report).save().then(() => {
+      report.remove();
+    });
   }
 
   function sendToGoogleSheet(payload) {
@@ -1047,6 +1020,22 @@
       console.error(error);
     }
   }
+
+  function openMendeleev() {
+    const popup = document.getElementById("popup");
+    popup.style.display = "flex";
+    popup.setAttribute("aria-hidden", "false");
+  }
+
+  function closeMendeleev() {
+    const popup = document.getElementById("popup");
+    popup.style.display = "none";
+    popup.setAttribute("aria-hidden", "true");
+  }
+
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") closeMendeleev();
+  });
 
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
