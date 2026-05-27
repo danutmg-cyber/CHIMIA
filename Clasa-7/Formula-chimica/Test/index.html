@@ -1273,23 +1273,42 @@
 
     status.innerText = "Se trimite rezultatul în Google Sheet...";
 
-    const body = "payload=" + encodeURIComponent(JSON.stringify(payload));
+    try {
+      const iframeName = "googleSheetHiddenFrame";
+      let iframe = document.getElementById(iframeName);
 
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
-      },
-      body: body
-    })
-      .then(() => {
-        status.innerText = "Testul a fost finalizat. Rezultatul a fost transmis profesorului.";
-      })
-      .catch(error => {
-        console.error(error);
-        status.innerText = "Nu s-a putut trimite rezultatul. Verifică URL-ul Web App și permisiunile din Apps Script.";
-      });
+      if (!iframe) {
+        iframe = document.createElement("iframe");
+        iframe.name = iframeName;
+        iframe.id = iframeName;
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+      }
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = GOOGLE_SCRIPT_URL;
+      form.target = iframeName;
+      form.style.display = "none";
+
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "payload";
+      input.value = JSON.stringify(payload);
+
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+
+      status.innerText = "Testul a fost finalizat. Rezultatul a fost transmis profesorului.";
+
+      setTimeout(() => {
+        form.remove();
+      }, 1000);
+    } catch (error) {
+      console.error(error);
+      status.innerText = "Nu s-a putut trimite rezultatul. Verifică URL-ul Web App și permisiunile din Apps Script.";
+    }
   }
 
   function scrollToTop() {
