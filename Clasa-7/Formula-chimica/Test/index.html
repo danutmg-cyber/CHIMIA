@@ -333,7 +333,8 @@
 
     <div class="warning">
       <b>Notare:</b> nota este de la 1 la 10, cu <b>2 puncte din oficiu</b>. Partea de test valorează 8 puncte.<br /><br />
-      <b>Regulă pentru reluarea testului:</b> testul se susține o singură dată. Dacă ai avut o problemă tehnică, anunță profesorul. O nouă încercare se poate face doar cu acordul profesorului. Nota finală o va decide profesorul.
+      <b>Regulă pentru reluarea testului:</b> testul se susține o singură dată. Dacă ai avut o problemă tehnică, anunță profesorul. O nouă încercare se poate face doar cu acordul profesorului. Nota finală o va decide profesorul.<br /><br />
+      <b>Atenție la formule:</b> simbolurile elementelor trebuie scrise corect, cu prima literă mare și a doua literă mică, de exemplu <b>NaCl</b>, <b>CaCO3</b>, <b>MgCl2</b>. Dacă scrii <b>NACL</b>, <b>caco3</b> sau <b>mgcl2</b>, răspunsul va fi considerat greșit.
     </div>
 
     <button class="success" onclick="startTest()">Începe testul</button>
@@ -369,7 +370,7 @@
     <p id="resultDetails"></p>
     <div id="resultReview"></div>
     <p id="sheetStatus" class="small"></p>
-    <button class="success" onclick="downloadReportPDF()">Descarcă raportul PDF</button>
+    <button class="success" onclick="downloadReportPDF()">Descarcă rezultatele testului</button>
     <button onclick="location.reload()">Test nou</button>
   </section>
 
@@ -423,66 +424,110 @@
   let integrityAlertOpen = false;
 
   const questionBank = [
-    // Scriere formule chimice
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru apă.", answer: ["H2O"], help: "Hidrogen + oxigen." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru dioxid de carbon.", answer: ["CO2"], help: "Carbon + oxigen." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru monoxid de carbon.", answer: ["CO"], help: "Carbon + un atom de oxigen." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru clorură de sodiu.", answer: ["NaCl"], help: "Na – sodiu, Cl – clor." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru oxid de magneziu.", answer: ["MgO"], help: "Mg – magneziu, O – oxigen." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru oxid de calciu.", answer: ["CaO"], help: "Ca – calciu, O – oxigen." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru clorură de calciu.", answer: ["CaCl2"], help: "Ca are valența II, Cl are valența I." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru clorură de magneziu.", answer: ["MgCl2"], help: "Mg are valența II, Cl are valența I." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru oxid de aluminiu.", answer: ["Al2O3"], help: "Al are valența III, O are valența II." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru hidroxid de sodiu.", answer: ["NaOH"], help: "Na – sodiu + OH – hidroxil." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru hidroxid de calciu.", answer: ["Ca(OH)2", "CaOH2"], help: "Ca are valența II, grupa OH are valența I." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru acid clorhidric.", answer: ["HCl"], help: "H – hidrogen, Cl – clor." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru acid sulfuric.", answer: ["H2SO4"], help: "H – hidrogen, S – sulf, O – oxigen." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru carbonat de calciu.", answer: ["CaCO3"], help: "Ca – calciu + CO3 – carbonat." },
-    { type: "input", category: "formula", prompt: "Scrie formula chimică pentru sulfat de cupru(II).", answer: ["CuSO4"], help: "Cu – cupru, SO4 – sulfat." },
+    // Substanțe simple / compuși binari / compuși ternari
+    { type: "choice", category: "clasificare", prompt: "Alege substanța simplă din lista următoare:", options: ["H₂", "H₂O", "NaCl", "NaOH"], answer: ["H₂"] },
+    { type: "choice", category: "clasificare", prompt: "Alege substanța simplă din lista următoare:", options: ["NaCl", "O₂", "CO₂", "CaCO₃"], answer: ["O₂"] },
+    { type: "choice", category: "clasificare", prompt: "Alege substanța simplă din lista următoare:", options: ["Cl₂", "NaCl", "MgO", "NaOH"], answer: ["Cl₂"] },
+    { type: "choice", category: "clasificare", prompt: "Alege substanța simplă din lista următoare:", options: ["Fe", "CO₂", "NaCl", "CaCO₃"], answer: ["Fe"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul binar din lista următoare:", options: ["O₂", "CO₂", "NaOH", "CaCO₃"], answer: ["CO₂"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul binar din lista următoare:", options: ["H₂", "MgO", "NaOH", "H₂SO₄"], answer: ["MgO"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul binar din lista următoare:", options: ["N₂", "HCl", "Ca(OH)₂", "H₂SO₄"], answer: ["HCl"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul binar din lista următoare:", options: ["H₂", "Al₂O₃", "NaOH", "CaCO₃"], answer: ["Al₂O₃"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul ternar din lista următoare:", options: ["NaCl", "MgO", "Ca(OH)₂", "H₂"], answer: ["Ca(OH)₂"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul ternar din lista următoare:", options: ["CO₂", "NaCl", "H₂SO₄", "O₂"], answer: ["H₂SO₄"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul ternar din lista următoare:", options: ["MgO", "H₂O", "NaOH", "Cl₂"], answer: ["NaOH"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul ternar din lista următoare:", options: ["MgO", "NaCl", "Ca(OH)₂", "O₂"], answer: ["Ca(OH)₂"] },
+
+    // Completări cu nume de elemente
+    { type: "input", category: "text", prompt: "Completează: H₂O conține elementele H – hidrogen și O – .......... .", answer: ["oxigen"] },
+    { type: "input", category: "text", prompt: "Completează: NaCl conține elementele Na – sodiu și Cl – .......... .", answer: ["clor"] },
+    { type: "input", category: "text", prompt: "Completează: CO₂ conține elementele C – carbon și O – .......... .", answer: ["oxigen"] },
+    { type: "input", category: "text", prompt: "Completează: MgO conține elementele Mg – magneziu și O – .......... .", answer: ["oxigen"] },
+    { type: "input", category: "text", prompt: "Completează: HCl conține elementele H – hidrogen și Cl – .......... .", answer: ["clor"] },
+    { type: "input", category: "text", prompt: "Completează: CaO conține elementele Ca – calciu și O – .......... .", answer: ["oxigen"] },
+    { type: "input", category: "text", prompt: "Completează: Al₂O₃ conține elementele Al – aluminiu și O – .......... .", answer: ["oxigen"] },
+    { type: "input", category: "text", prompt: "Completează: Ca(OH)₂ conține elementele Ca – calciu, O – oxigen și H – .......... .", answer: ["hidrogen"] },
+
+    // Alegerea formulei corecte
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru apă:", options: ["H₂O", "CO₂", "NaCl", "O₂"], answer: ["H₂O"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru dioxid de carbon:", options: ["CO", "CO₂", "CaO", "HCl"], answer: ["CO₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru clorură de sodiu:", options: ["NaOH", "NaCl", "MgO", "H₂O"], answer: ["NaCl"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru oxid de magneziu:", options: ["MgO", "MgCl₂", "NaCl", "CO₂"], answer: ["MgO"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru hidroxid de sodiu:", options: ["NaCl", "NaOH", "HCl", "CaO"], answer: ["NaOH"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru oxigen molecular:", options: ["O₂", "H₂O", "CO₂", "O"], answer: ["O₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru acid clorhidric:", options: ["H₂O", "HCl", "NaOH", "CaCO₃"], answer: ["HCl"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru oxid de calciu:", options: ["CaO", "CaCl₂", "NaCl", "CO₂"], answer: ["CaO"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru clorură de calciu:", options: ["CaO", "CaCl₂", "NaOH", "H₂O"], answer: ["CaCl₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru carbonat de calciu:", options: ["CaO", "CaCO₃", "NaCl", "O₂"], answer: ["CaCO₃"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru hidrogen molecular:", options: ["H₂", "H₂O", "HCl", "NaOH"], answer: ["H₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru monoxid de carbon:", options: ["CO", "CO₂", "CaO", "NaCl"], answer: ["CO"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru hidroxid de calciu:", options: ["CaO", "CaCl₂", "Ca(OH)₂", "CO₂"], answer: ["Ca(OH)₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru oxid de aluminiu:", options: ["Al₂O₃", "AlCl₃", "NaOH", "H₂O"], answer: ["Al₂O₃"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru acid sulfuric:", options: ["HCl", "H₂SO₄", "NaCl", "MgO"], answer: ["H₂SO₄"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru azot molecular:", options: ["N₂", "NaCl", "NO₃", "NaOH"], answer: ["N₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru clorură de magneziu:", options: ["MgO", "MgCl₂", "NaCl", "HCl"], answer: ["MgCl₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru oxid de fier(III):", options: ["FeO", "Fe₂O₃", "FeCl₂", "H₂O"], answer: ["Fe₂O₃"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru sulfat de cupru(II):", options: ["CuSO₄", "CaCO₃", "NaOH", "CO₂"], answer: ["CuSO₄"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru clorură de potasiu:", options: ["KCl", "K₂Cl", "CaCl₂", "MgO"], answer: ["KCl"] },
+
+    // Scriere de formule - validare cu litere mari/mici corecte
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru apă.", answer: ["H2O"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru dioxid de carbon.", answer: ["CO2"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru clorură de sodiu.", answer: ["NaCl"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru oxid de magneziu.", answer: ["MgO"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru oxid de calciu.", answer: ["CaO"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru clorură de calciu.", answer: ["CaCl2"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru hidroxid de sodiu.", answer: ["NaOH"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru carbonat de calciu.", answer: ["CaCO3"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru clorură de magneziu.", answer: ["MgCl2"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru oxid de aluminiu.", answer: ["Al2O3"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru hidroxid de calciu.", answer: ["Ca(OH)2"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru acid sulfuric.", answer: ["H2SO4"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru sulfat de cupru(II).", answer: ["CuSO4"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru oxid de fier(III).", answer: ["Fe2O3"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru clorură de potasiu.", answer: ["KCl"] },
 
     // Valențe
-    { type: "input", category: "valenta", prompt: "Ce valență are oxigenul O – oxigen în majoritatea compușilor studiați?", answer: ["II", "2"], help: "Scrie II sau 2." },
-    { type: "input", category: "valenta", prompt: "Ce valență are hidrogenul H – hidrogen?", answer: ["I", "1"], help: "Scrie I sau 1." },
-    { type: "input", category: "valenta", prompt: "Ce valență are clorul Cl – clor în NaCl?", answer: ["I", "1"], help: "Scrie I sau 1." },
-    { type: "input", category: "valenta", prompt: "În formula MgO, ce valență are Mg – magneziu?", answer: ["II", "2"], help: "MgO are raport 1:1, iar O are valența II." },
-    { type: "input", category: "valenta", prompt: "În formula CaCl2, ce valență are Ca – calciu?", answer: ["II", "2"], help: "Cl are valența I, iar sunt 2 atomi de Cl." },
-    { type: "input", category: "valenta", prompt: "În formula Al2O3, ce valență are Al – aluminiu?", answer: ["III", "3"], help: "Al are valența III." },
-    { type: "input", category: "valenta", prompt: "În formula FeCl3, ce valență are Fe – fier?", answer: ["III", "3"], help: "Cl are valența I, iar sunt 3 atomi de Cl." },
-    { type: "input", category: "valenta", prompt: "În formula FeCl2, ce valență are Fe – fier?", answer: ["II", "2"], help: "Cl are valența I, iar sunt 2 atomi de Cl." },
-    { type: "input", category: "valenta", prompt: "Ce valență are radicalul OH – hidroxil?", answer: ["I", "1"], help: "OH are valența I." },
-    { type: "input", category: "valenta", prompt: "Ce valență are radicalul SO4 – sulfat?", answer: ["II", "2"], help: "SO4 are valența II." },
-    { type: "input", category: "valenta", prompt: "Ce valență are radicalul CO3 – carbonat?", answer: ["II", "2"], help: "CO3 are valența II." },
+    { type: "choice", category: "valenta", prompt: "Ce valență are hidrogenul?", options: ["I", "II", "III", "IV"], answer: ["I"] },
+    { type: "choice", category: "valenta", prompt: "Ce valență are oxigenul în majoritatea compușilor studiați?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În NaCl, clorul Cl are valența I. Ce valență are sodiul Na?", options: ["I", "II", "III", "IV"], answer: ["I"] },
+    { type: "choice", category: "valenta", prompt: "În MgO, oxigenul O are valența II. Ce valență are magneziul Mg?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "Ce valență are radicalul OH – hidroxil?", options: ["I", "II", "III", "IV"], answer: ["I"] },
+    { type: "choice", category: "valenta", prompt: "În CaCl₂, clorul Cl are valența I. Ce valență are calciul Ca?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În CaO, oxigenul O are valența II. Ce valență are calciul Ca?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "Ce valență are radicalul SO₄ – sulfat?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În MgCl₂, clorul Cl are valența I. Ce valență are magneziul Mg?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În Al₂O₃, oxigenul O are valența II. Ce valență are aluminiul Al?", options: ["I", "II", "III", "IV"], answer: ["III"] },
+    { type: "choice", category: "valenta", prompt: "Ce valență are radicalul CO₃ – carbonat?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În CuO, oxigenul O are valența II. Ce valență are cuprul Cu?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În AlCl₃, clorul Cl are valența I. Ce valență are aluminiul Al?", options: ["I", "II", "III", "IV"], answer: ["III"] },
 
-    // Corectare formule greșite
-    { type: "input", category: "corectare", prompt: "Corectează formula greșită: NaO.", answer: ["Na2O"], help: "Na are valența I, O are valența II." },
-    { type: "input", category: "corectare", prompt: "Corectează formula greșită: MgCl.", answer: ["MgCl2"], help: "Mg are valența II, Cl are valența I." },
-    { type: "input", category: "corectare", prompt: "Corectează formula greșită: CaCl.", answer: ["CaCl2"], help: "Ca are valența II, Cl are valența I." },
-    { type: "input", category: "corectare", prompt: "Corectează formula greșită: AlO.", answer: ["Al2O3"], help: "Al are valența III, O are valența II." },
-    { type: "input", category: "corectare", prompt: "Corectează formula greșită: MgOH.", answer: ["Mg(OH)2", "MgOH2"], help: "Mg are valența II, OH are valența I." },
-    { type: "input", category: "corectare", prompt: "Corectează formula greșită: CaOH.", answer: ["Ca(OH)2", "CaOH2"], help: "Ca are valența II, OH are valența I." },
-    { type: "input", category: "corectare", prompt: "Corectează formula greșită: AlCl.", answer: ["AlCl3"], help: "Al are valența III, Cl are valența I." },
-    { type: "input", category: "corectare", prompt: "Corectează formula greșită: K2Cl.", answer: ["KCl"], help: "K are valența I, Cl are valența I." },
+    // Denumiri/asocieri
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei H₂O:", options: ["apă", "dioxid de carbon", "clorură de sodiu", "oxid de magneziu"], answer: ["apă"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei CO₂:", options: ["apă", "dioxid de carbon", "acid clorhidric", "hidroxid de sodiu"], answer: ["dioxid de carbon"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei NaCl:", options: ["clorură de sodiu", "oxid de calciu", "apă", "acid clorhidric"], answer: ["clorură de sodiu"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei HCl:", options: ["apă", "acid clorhidric", "oxid de magneziu", "carbonat de calciu"], answer: ["acid clorhidric"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei CO:", options: ["monoxid de carbon", "dioxid de carbon", "apă", "oxid de calciu"], answer: ["monoxid de carbon"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei Ca(OH)₂:", options: ["oxid de calciu", "hidroxid de calciu", "acid clorhidric", "clorură de sodiu"], answer: ["hidroxid de calciu"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei CuSO₄:", options: ["sulfat de cupru(II)", "carbonat de calciu", "oxid de fier", "clorură de sodiu"], answer: ["sulfat de cupru(II)"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei Fe₂O₃:", options: ["oxid de fier(III)", "clorură de fier", "hidroxid de sodiu", "acid sulfuric"], answer: ["oxid de fier(III)"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: NaCl = .......... .", answer: ["clorură de sodiu", "clorura de sodiu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: MgO = .......... .", answer: ["oxid de magneziu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: CaO = .......... .", answer: ["oxid de calciu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: CaCO₃ = .......... .", answer: ["carbonat de calciu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: Al₂O₃ = .......... .", answer: ["oxid de aluminiu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: H₂SO₄ = .......... .", answer: ["acid sulfuric"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: KCl = .......... .", answer: ["clorură de potasiu", "clorura de potasiu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: MgCl₂ = .......... .", answer: ["clorură de magneziu", "clorura de magneziu"] }
+  ];
 
-    // Alegere tip compus / recunoaștere
-    { type: "choice", category: "tip", prompt: "Ce tip de compus este MgO?", options: ["oxid", "acid", "sare ternară", "hidroxid"], answer: ["oxid"], help: "MgO conține oxigen și magneziu." },
-    { type: "choice", category: "tip", prompt: "Ce tip de compus este NaCl?", options: ["sare binară", "oxid", "hidroxid", "oxiacid"], answer: ["sare binară"], help: "NaCl este format din metal și nemetal." },
-    { type: "choice", category: "tip", prompt: "Ce tip de compus este NaOH?", options: ["hidroxid", "oxid", "hidracid", "sare binară"], answer: ["hidroxid"], help: "Conține grupa OH." },
-    { type: "choice", category: "tip", prompt: "Ce tip de compus este HCl?", options: ["hidracid", "oxid", "hidroxid", "sare ternară"], answer: ["hidracid"], help: "H + nemetal." },
-    { type: "choice", category: "tip", prompt: "Ce tip de compus este CaCO3?", options: ["sare ternară", "oxid", "hidracid", "sare binară"], answer: ["sare ternară"], help: "Conține radicalul CO3." },
-    { type: "choice", category: "tip", prompt: "Ce tip de compus este H2SO4?", options: ["oxiacid", "oxid", "hidroxid", "sare binară"], answer: ["oxiacid"], help: "H + nemetal + oxigen." },
-
-    // Binari / ternari
-    { type: "choice", category: "clasificare", prompt: "Formula CO2 reprezintă un compus...", options: ["binar", "ternar", "element simplu", "amestec"], answer: ["binar"], help: "Are două elemente: C – carbon și O – oxigen." },
-    { type: "choice", category: "clasificare", prompt: "Formula H2SO4 reprezintă un compus...", options: ["ternar", "binar", "element simplu", "amestec"], answer: ["ternar"], help: "Are trei elemente: H, S, O." },
-    { type: "choice", category: "clasificare", prompt: "Formula Ca(OH)2 reprezintă un compus...", options: ["ternar", "binar", "element simplu", "amestec"], answer: ["ternar"], help: "Are trei elemente: Ca, O, H." },
-    { type: "choice", category: "clasificare", prompt: "Formula H2O reprezintă un compus...", options: ["binar", "ternar", "element simplu", "radical"], answer: ["binar"], help: "Are două elemente: H și O." },
-
-    // Denumiri
-    { type: "choice", category: "denumire", prompt: "Care este denumirea formulei H2O?", options: ["apă", "dioxid de carbon", "acid clorhidric", "hidroxid de sodiu"], answer: ["apă"], help: "H2O este apa." },
-    { type: "choice", category: "denumire", prompt: "Care este denumirea formulei CO2?", options: ["dioxid de carbon", "monoxid de carbon", "oxid de magneziu", "clorură de sodiu"], answer: ["dioxid de carbon"], help: "CO2 are doi atomi de oxigen." },
-    { type: "choice", category: "denumire", prompt: "Care este denumirea formulei NaCl?", options: ["clorură de sodiu", "oxid de sodiu", "acid clorhidric", "hidroxid de sodiu"], answer: ["clorură de sodiu"], help: "NaCl este clorură de sodiu." },
-    { type: "choice", category: "denumire", prompt: "Care este denumirea formulei CaCO3?", options: ["carbonat de calciu", "sulfat de calciu", "oxid de calciu", "hidroxid de calciu"], answer: ["carbonat de calciu"], help: "CO3 este radical carbonat." },
-    { type: "choice", category: "denumire", prompt: "Care este denumirea formulei CuSO4?", options: ["sulfat de cupru(II)", "carbonat de cupru", "oxid de cupru", "clorură de cupru"], answer: ["sulfat de cupru(II)"], help: "SO4 este radical sulfat." }
+  const QUESTION_DISTRIBUTION = [
+    { category: "clasificare", count: 4 },
+    { category: "text", count: 3 },
+    { category: "formula_choice", count: 5 },
+    { category: "formula_write", count: 3 },
+    { category: "valenta", count: 3 },
+    { category: "denumire", count: 2 }
   ];
 
   function getRandomInt(max) {
@@ -509,9 +554,10 @@
     return `FC7-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}-${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}-${rand}`;
   }
 
-  function normalizeFormula(value) {
+  function convertSubscripts(value) {
     return String(value)
-      .trim()
+      .replaceAll("₀", "0")
+      .replaceAll("₁", "1")
       .replaceAll("₂", "2")
       .replaceAll("₃", "3")
       .replaceAll("₄", "4")
@@ -519,10 +565,20 @@
       .replaceAll("₆", "6")
       .replaceAll("₇", "7")
       .replaceAll("₈", "8")
-      .replaceAll("₉", "9")
-      .replaceAll("₁", "1")
+      .replaceAll("₉", "9");
+  }
+
+  function normalizeFormulaStrict(value) {
+    return convertSubscripts(value)
+      .trim()
+      .replace(/\s+/g, "");
+  }
+
+  function normalizeChoiceFormula(value) {
+    return convertSubscripts(value)
+      .trim()
       .replace(/\s+/g, "")
-      .toUpperCase();
+      .toLowerCase();
   }
 
   function normalizeText(value) {
@@ -542,20 +598,13 @@
   }
 
   function normalizeAnswer(value, question) {
-    if (["formula", "corectare"].includes(question.category)) return normalizeFormula(value);
-    if (question.category === "valenta") return normalizeValence(value);
-    return normalizeText(value);
-  }
+    if (question.category === "formula_write") return normalizeFormulaStrict(value);
 
-  function normalizeValence(value) {
-    const v = normalizeText(value).toUpperCase().replaceAll(" ", "");
-    if (v === "1") return "I";
-    if (v === "2") return "II";
-    if (v === "3") return "III";
-    if (v === "4") return "IV";
-    if (v === "5") return "V";
-    if (v === "6") return "VI";
-    return v;
+    if (question.type === "choice" && ["formula_choice", "clasificare"].includes(question.category)) {
+      return normalizeChoiceFormula(value);
+    }
+
+    return normalizeText(value);
   }
 
   function prettyFormula(text) {
@@ -572,22 +621,19 @@
   }
 
   function selectBalancedQuestions() {
-    const categories = ["formula", "valenta", "corectare", "tip", "clasificare", "denumire"];
     let selected = [];
 
-    categories.forEach(category => {
-      const pool = shuffle(questionBank.filter(q => q.category === category));
-      selected.push(...pool.slice(0, Math.min(4, pool.length)));
+    QUESTION_DISTRIBUTION.forEach(rule => {
+      const pool = shuffle(questionBank.filter(q => q.category === rule.category));
+      selected.push(...pool.slice(0, Math.min(rule.count, pool.length)));
     });
-
-    selected = shuffle(selected).slice(0, QUESTION_COUNT);
 
     if (selected.length < QUESTION_COUNT) {
       const remaining = shuffle(questionBank.filter(q => !selected.includes(q)));
       selected.push(...remaining.slice(0, QUESTION_COUNT - selected.length));
     }
 
-    return shuffle(selected).map((q, index) => ({
+    return shuffle(selected).slice(0, QUESTION_COUNT).map((q, index) => ({
       ...q,
       id: `q${index + 1}`,
       options: q.options ? shuffle(q.options) : undefined,
@@ -778,7 +824,8 @@
         </label>
       `).join("")}</div>`;
     } else {
-      answerHtml = `<input id="${q.id}" type="text" placeholder="Scrie răspunsul aici" value="${escapeHtml(q.studentAnswer)}" ${q.checked ? "disabled" : ""} />`;
+      const placeholder = q.category === "formula_write" ? "Exemplu: NaCl, CaCO3, MgCl2" : "Scrie răspunsul aici";
+      answerHtml = `<input id="${q.id}" type="text" placeholder="${placeholder}" value="${escapeHtml(q.studentAnswer)}" ${q.checked ? "disabled" : ""} />`;
     }
 
     let feedbackHtml = "";
@@ -888,7 +935,6 @@
       prompt: q.prompt,
       category: q.category,
       studentAnswer: q.studentAnswer,
-      correctAnswer: q.answer[0],
       correct: q.correct
     }));
 
@@ -898,7 +944,7 @@
 
     const payload = {
       timestamp: new Date().toISOString(),
-      test: "Formula chimică – Clasa a VII-a",
+      test: "Formula chimică, valența, substanțe simple, binare și ternare – Clasa a VII-a",
       variantId,
       studentName: document.getElementById("studentName").value.trim(),
       studentClass: document.getElementById("studentClass").value.trim(),
@@ -979,6 +1025,7 @@
         <tr>
           <td>${item.nr}</td>
           <td>${prettyFormula(escapeHtml(item.prompt))}</td>
+          <td>${escapeHtml(item.studentAnswer)}</td>
           <td class="${resultClass}">${resultText}</td>
         </tr>
       `;
@@ -993,6 +1040,7 @@
             <tr>
               <th>Nr.</th>
               <th>Întrebarea</th>
+              <th>Răspunsul elevului</th>
               <th>Rezultat</th>
             </tr>
           </thead>
@@ -1171,7 +1219,7 @@
 
     const options = {
       margin: 0.35,
-      filename: `raport-test-formula-chimica-${safeName}.pdf`,
+      filename: `rezultate-test-chimie-${safeName}.pdf`,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: {
         scale: 2,
@@ -1200,7 +1248,7 @@
           reportOverlay.remove();
           if (downloadButton) {
             downloadButton.disabled = false;
-            downloadButton.innerText = "Descarcă raportul PDF";
+            downloadButton.innerText = "Descarcă rezultatele testului";
           }
         })
         .catch(error => {
@@ -1208,7 +1256,7 @@
           reportOverlay.remove();
           if (downloadButton) {
             downloadButton.disabled = false;
-            downloadButton.innerText = "Descarcă raportul PDF";
+            downloadButton.innerText = "Descarcă rezultatele testului";
           }
           alert("Nu s-a putut genera raportul PDF. Încearcă din nou.");
         });
