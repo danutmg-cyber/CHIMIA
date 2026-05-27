@@ -1004,7 +1004,6 @@
     document.getElementById("resultArea").scrollIntoView({ behavior: "smooth" });
   }
 
-
   function downloadReportPDF() {
     if (!lastReportPayload) {
       alert("Raportul nu este disponibil încă.");
@@ -1017,20 +1016,15 @@
     }
 
     const payload = lastReportPayload;
-    const downloadButton = document.querySelector('button[onclick="downloadReportPDF()"]');
-    if (downloadButton) {
-      downloadButton.disabled = true;
-      downloadButton.innerText = "Se generează PDF-ul...";
-    }
-
     const safeName = (payload.studentName || "elev")
       .replace(/[^a-zA-Z0-9ăâîșțĂÂÎȘȚ -]/g, "")
       .split(" ")
       .filter(Boolean)
       .join("-") || "elev";
 
-    const integrityEvents = Array.isArray(payload.integrityEvents) ? payload.integrityEvents : [];
-    const integrityReturns = integrityEvents.filter(event => event.tip === "revenire_in_test");
+    const integrityReturns = Array.isArray(payload.integrityEvents)
+      ? payload.integrityEvents.filter(event => event.tip === "revenire_in_test")
+      : [];
 
     const integrityRows = integrityReturns.length
       ? integrityReturns.map(event => `
@@ -1073,6 +1067,7 @@
     reportOverlay.style.zIndex = "999999";
     reportOverlay.style.overflow = "auto";
     reportOverlay.style.padding = "10px";
+
     reportOverlay.innerHTML = `
       <div style="text-align:center; font-family:Arial, sans-serif; color:#243447; margin:8px 0 12px;">
         <b>Se generează raportul PDF...</b>
@@ -1190,6 +1185,12 @@
       pagebreak: { mode: ["css", "legacy"] }
     };
 
+    const downloadButton = document.querySelector('button[onclick="downloadReportPDF()"]');
+    if (downloadButton) {
+      downloadButton.disabled = true;
+      downloadButton.innerText = "Se generează PDF-ul...";
+    }
+
     setTimeout(() => {
       html2pdf()
         .set(options)
@@ -1224,42 +1225,23 @@
 
     status.innerText = "Se trimite rezultatul în Google Sheet...";
 
-    try {
-      const iframeName = "googleSheetHiddenFrame";
-      let iframe = document.getElementById(iframeName);
+    const body = "payload=" + encodeURIComponent(JSON.stringify(payload));
 
-      if (!iframe) {
-        iframe = document.createElement("iframe");
-        iframe.name = iframeName;
-        iframe.id = iframeName;
-        iframe.style.display = "none";
-        document.body.appendChild(iframe);
-      }
-
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = GOOGLE_SCRIPT_URL;
-      form.target = iframeName;
-      form.style.display = "none";
-
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = "payload";
-      input.value = JSON.stringify(payload);
-
-      form.appendChild(input);
-      document.body.appendChild(form);
-      form.submit();
-
-      status.innerText = "Testul a fost finalizat. Rezultatul a fost transmis profesorului.";
-
-      setTimeout(() => {
-        form.remove();
-      }, 1000);
-    } catch (error) {
-      status.innerText = "Nu s-a putut trimite rezultatul. Verifică URL-ul Web App și permisiunile din Apps Script.";
-      console.error(error);
-    }
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+      },
+      body: body
+    })
+      .then(() => {
+        status.innerText = "Testul a fost finalizat. Rezultatul a fost transmis profesorului.";
+      })
+      .catch(error => {
+        console.error(error);
+        status.innerText = "Nu s-a putut trimite rezultatul. Verifică URL-ul Web App și permisiunile din Apps Script.";
+      });
   }
 
   function scrollToTop() {
