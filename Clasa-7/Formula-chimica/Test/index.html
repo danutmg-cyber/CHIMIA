@@ -1,12 +1,286 @@
-from pathlib import Path
-import re
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Test online – Formula chimică – Clasa a VII-a</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-src = Path("/mnt/data/index(3).html")
-html = src.read_text(encoding="utf-8")
+<style>
+  :root {
+    --bg: #eef2f7;
+    --card: #ffffff;
+    --accent: #3498db;
+    --accent-dark: #217dbb;
+    --green: #1e9b57;
+    --orange: #f39c12;
+    --red: #c0392b;
+    --text: #243447;
+    --muted: #667085;
+    --border: #d8e1ec;
+    --soft: #f7f9fc;
+  }
 
-# 1) CSS for saving panel / retry button
-css_marker = "  .small {\n    color: var(--muted);\n    font-size: 0.9rem;\n  }"
-css_insert = """  .save-panel {
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+  }
+
+  .wrapper {
+    width: 100%;
+    max-width: 980px;
+    padding: 16px;
+  }
+
+  header,
+  .card,
+  .question-card,
+  .result-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  header { text-align: center; }
+
+  h1, h2, h3 { color: var(--text); }
+  h1 { margin: 8px 0; font-size: 2rem; }
+  h2 { margin-top: 0; }
+  h3 { margin: 6px 0; font-weight: normal; color: #555; }
+
+  p, li { line-height: 1.6; }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin: 12px 0 6px;
+  }
+
+  input,
+  select {
+    width: 100%;
+    max-width: 430px;
+    padding: 10px;
+    border: 1px solid #c9d6e2;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+  }
+
+  button {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    background: var(--accent);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: 0.15s ease;
+    margin: 6px 4px 6px 0;
+  }
+
+  button:hover:not(:disabled) {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+  }
+
+  button:disabled {
+    background: #a8b4c0;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  button.secondary { background: #667085; }
+  button.secondary:hover:not(:disabled) { background: #4f5968; }
+  button.success { background: var(--green); }
+  button.success:hover:not(:disabled) { background: #147a42; }
+  button.danger { background: var(--red); }
+  button.danger:hover:not(:disabled) { background: #962d22; }
+
+  .hidden { display: none !important; }
+
+  .notice {
+    background: var(--soft);
+    border-left: 5px solid var(--accent);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 14px 0;
+  }
+
+  .warning {
+    background: #fff7e6;
+    border-left: 5px solid var(--orange);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 14px 0;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .question-card {
+    border-left: 5px solid var(--accent);
+  }
+
+  .question-title {
+    font-size: 1.05rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .question-help {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-top: 6px;
+  }
+
+  .answer-options label {
+    display: block;
+    font-weight: normal;
+    background: var(--soft);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 10px;
+    margin: 8px 0;
+    cursor: pointer;
+  }
+
+  .answer-options input {
+    width: auto;
+    margin-right: 8px;
+  }
+
+  .correct {
+    border-color: var(--green) !important;
+    background: #ecfdf3 !important;
+  }
+
+  .incorrect {
+    border-color: var(--red) !important;
+    background: #fff1f0 !important;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(238, 242, 247, 0.95);
+    backdrop-filter: blur(6px);
+    padding: 8px 0;
+    margin-bottom: 10px;
+  }
+
+  .progress-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: #dce5ef;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--accent);
+    transition: 0.2s ease;
+  }
+
+  .question-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .question-status {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    display: inline-block;
+  }
+
+  .status-correct {
+    color: #176b3a;
+    background: #ecfdf3;
+    border: 1px solid #b7e5c7;
+  }
+
+  .status-wrong {
+    color: #962d22;
+    background: #fff1f0;
+    border: 1px solid #f3b5ac;
+  }
+
+  .grade {
+    font-size: 2.4rem;
+    font-weight: bold;
+    color: var(--green);
+  }
+
+  .review-table-wrapper {
+    overflow-x: auto;
+    margin-top: 14px;
+  }
+
+  .review-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+
+  .review-table th,
+  .review-table td {
+    border: 1px solid var(--border);
+    padding: 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .review-table th {
+    background: #edf6ff;
+  }
+
+  .review-ok {
+    color: #176b3a;
+    font-weight: bold;
+  }
+
+  .review-wrong {
+    color: #962d22;
+    font-weight: bold;
+  }
+
+  .save-panel {
     background: #eef7ff;
     border-left: 5px solid var(--accent);
     border-radius: 10px;
@@ -28,43 +302,996 @@ css_insert = """  .save-panel {
     border-left-color: var(--green);
   }
 
-"""
-if ".save-panel" not in html:
-    html = html.replace(css_marker, css_insert + css_marker)
+  .small {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
 
-# 2) Add save panel before sheetStatus and disable PDF/reload initially
-old_result = """    <div id="resultReview"></div>
-    <p id="sheetStatus" class="small"></p>
-    <button class="success" onclick="downloadReportPDF()">Descarcă rezultatele testului</button>
-    <button onclick="location.reload()">Test nou</button>"""
-new_result = """    <div id="resultReview"></div>
+  .footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+    padding: 18px 8px 26px;
+    line-height: 1.5;
+  }
+
+  .footer a { color: var(--accent-dark); font-weight: bold; }
+
+  @media (max-width: 700px) {
+    .wrapper { padding: 10px; }
+    h1 { font-size: 1.5rem; }
+    header, .card, .question-card, .result-card { padding: 15px; }
+    .meta-grid { grid-template-columns: 1fr; }
+    .topbar { position: static; }
+    .question-card { min-height: calc(100vh - 270px); }
+    .question-nav { flex-direction: column; }
+    button { width: 100%; }
+    input, select { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <header>
+    <h1>Test online – Formula chimică</h1>
+    <h2>Chimie – Clasa a VII-a</h2>
+    <h3>Material realizat de prof. Dănuț Andronie – <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></h3>
+  </header>
+
+  <section id="startCard" class="card">
+    <h2>Înscriere elev</h2>
+   
+    <div class="meta-grid">
+      <div>
+        <label for="studentName">Numele și prenumele elevului</label>
+        <input id="studentName" type="text" autocomplete="name" placeholder="ex: Popescu Andrei" />
+      </div>
+      <div>
+        <label for="studentClass">Clasa</label>
+        <input id="studentClass" type="text" placeholder="ex: a VII-a A" />
+      </div>
+    </div>
+
+    <div class="warning">
+      <b>Notare:</b> nota este de la 1 la 10, cu <b>2 puncte din oficiu</b>. Partea de test valorează 8 puncte.<br /><br />
+      <b>Regulă pentru reluarea testului:</b> testul se susține o singură dată. Dacă ai avut o problemă tehnică, anunță profesorul. O nouă încercare se poate face doar cu acordul profesorului. Nota finală o va decide profesorul.<br /><br />
+      <b>Atenție la formule:</b> simbolurile elementelor trebuie scrise corect, cu prima literă mare și a doua literă mică, de exemplu <b>NaCl</b>, <b>CaCO3</b>, <b>MgCl2</b>. Dacă scrii <b>NACL</b>, <b>caco3</b> sau <b>mgcl2</b>, răspunsul va fi considerat greșit.
+    </div>
+
+    <button class="success" onclick="startTest()">Începe testul</button>
+  </section>
+
+  <section id="testArea" class="hidden">
+    <div class="topbar">
+      <div class="progress-card">
+        <div>
+          <b id="studentInfo"></b><br />
+          <span class="small">Variantă: <span id="variantIdLabel"></span></span>
+        </div>
+        <div>
+          Întrebarea <b id="currentQuestionLabel">1</b> / <span id="totalCount">0</span><br />
+          <span class="small"><b id="answeredCount">0</b> întrebări verificate</span>
+        </div>
+        <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+      </div>
+    </div>
+
+    <div id="questionsContainer"></div>
+
+    <div class="card question-nav">
+      <button class="success" id="checkBtn" onclick="checkCurrentQuestion()">Verifică răspunsul</button>
+      <button id="nextBtn" onclick="goToNextQuestion()" disabled>Următoarea întrebare</button>
+      <button class="success hidden" id="finishBtn" onclick="submitTest()">Finalizează testul</button>
+      </div>
+  </section>
+
+  <section id="resultArea" class="result-card hidden">
+    <h2>Rezultatul testului</h2>
+    <div class="grade" id="gradeDisplay">Nota 0</div>
+    <p id="resultDetails"></p>
+    <div id="resultReview"></div>
     <div id="savePanel" class="save-panel hidden">
       <strong id="saveTitle">Se salvează rezultatul...</strong><br />
       <span id="saveMessage">Nu închide pagina și nu descărca raportul încă.</span>
     </div>
     <p id="sheetStatus" class="small"></p>
     <button id="downloadPdfBtn" class="success" onclick="downloadReportPDF()" disabled>Descarcă rezultatele testului</button>
-    <button id="newTestBtn" onclick="location.reload()" disabled>Test nou</button>"""
-if old_result in html:
-    html = html.replace(old_result, new_result)
-else:
-    # More flexible fallback
-    html = re.sub(
-        r'    <div id="resultReview"></div>\s*<p id="sheetStatus" class="small"></p>\s*<button class="success" onclick="downloadReportPDF\(\)">Descarcă rezultatele testului</button>\s*<button onclick="location\.reload\(\)">Test nou</button>',
-        new_result,
-        html
-    )
+    <button id="newTestBtn" onclick="location.reload()" disabled>Test nou</button>
+  </section>
 
-# 3) Add constants after TEST_POINTS
-constants_marker = "  const TEST_POINTS = 8;"
-constants_insert = """  const SAVE_WAIT_SECONDS = 15;
+  <div class="footer">
+    Material realizat de <b>prof. Dănuț Andronie</b>.<br />
+    Pentru observații și propuneri: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+  </div>
+</div>
+
+<script>
+  /* =====================================================
+     CONFIGURARE GOOGLE SHEET
+     1. Creează un Google Sheet.
+     2. Extensions → Apps Script.
+     3. Lipește codul Code.gs primit în conversație.
+     4. Deploy → New deployment → Web app.
+     5. Execute as: Me; Who has access: Anyone.
+     6. Copiază URL-ul Web App și lipește-l mai jos.
+
+     Datele trimise includ:
+     - numele și prenumele elevului;
+     - clasa;
+     - nota;
+     - lista întrebărilor;
+     - răspunsul elevului la fiecare întrebare.
+  ===================================================== */
+
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz57HJXdihQm2KixNxJaIfA8Au2bCb3m2XIyiGBLXCWItSACkxwaH4krmvetNKvk8iciQ/exec";
+
+  const QUESTION_COUNT = 20;
+  const OFFICIAL_POINTS = 2;
+  const TEST_POINTS = 8;
+  const SAVE_WAIT_SECONDS = 15;
   const SAVE_RETRY_DELAYS_MS = [0, 5000, 10000];
-"""
-if "SAVE_WAIT_SECONDS" not in html:
-    html = html.replace(constants_marker, constants_marker + "\n" + constants_insert)
 
-# 4) Add save helpers before sendToGoogleSheet
-helper_func = r'''  function setResultButtonsEnabled(enabled) {
+  let currentQuestions = [];
+  let currentQuestionIndex = 0;
+  let variantId = "";
+  let submitted = false;
+  let lastReportPayload = null;
+
+  const INTEGRITY_WARNING_MESSAGE = "Atenție! Ai părăsit ecranul testului. Profesorul va vedea acest eveniment în raportul testului.";
+
+  let integrityLog = {
+    exitCount: 0,
+    awayStart: null,
+    awayItem: null,
+    awayQuestion: "",
+    totalAwaySeconds: 0,
+    events: []
+  };
+
+  let integrityAlertOpen = false;
+
+  const questionBank = [
+    // Substanțe simple / compuși binari / compuși ternari
+    { type: "choice", category: "clasificare", prompt: "Alege substanța simplă din lista următoare:", options: ["H₂", "H₂O", "NaCl", "NaOH"], answer: ["H₂"] },
+    { type: "choice", category: "clasificare", prompt: "Alege substanța simplă din lista următoare:", options: ["NaCl", "O₂", "CO₂", "CaCO₃"], answer: ["O₂"] },
+    { type: "choice", category: "clasificare", prompt: "Alege substanța simplă din lista următoare:", options: ["Cl₂", "NaCl", "MgO", "NaOH"], answer: ["Cl₂"] },
+    { type: "choice", category: "clasificare", prompt: "Alege substanța simplă din lista următoare:", options: ["Fe", "CO₂", "NaCl", "CaCO₃"], answer: ["Fe"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul binar din lista următoare:", options: ["O₂", "CO₂", "NaOH", "CaCO₃"], answer: ["CO₂"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul binar din lista următoare:", options: ["H₂", "MgO", "NaOH", "H₂SO₄"], answer: ["MgO"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul binar din lista următoare:", options: ["N₂", "HCl", "Ca(OH)₂", "H₂SO₄"], answer: ["HCl"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul binar din lista următoare:", options: ["H₂", "Al₂O₃", "NaOH", "CaCO₃"], answer: ["Al₂O₃"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul ternar din lista următoare:", options: ["NaCl", "MgO", "Ca(OH)₂", "H₂"], answer: ["Ca(OH)₂"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul ternar din lista următoare:", options: ["CO₂", "NaCl", "H₂SO₄", "O₂"], answer: ["H₂SO₄"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul ternar din lista următoare:", options: ["MgO", "H₂O", "NaOH", "Cl₂"], answer: ["NaOH"] },
+    { type: "choice", category: "clasificare", prompt: "Alege compusul ternar din lista următoare:", options: ["MgO", "NaCl", "Ca(OH)₂", "O₂"], answer: ["Ca(OH)₂"] },
+
+    // Completări cu nume de elemente
+    { type: "input", category: "text", prompt: "Completează: H₂O conține elementele H – hidrogen și O – .......... .", answer: ["oxigen"] },
+    { type: "input", category: "text", prompt: "Completează: NaCl conține elementele Na – sodiu și Cl – .......... .", answer: ["clor"] },
+    { type: "input", category: "text", prompt: "Completează: CO₂ conține elementele C – carbon și O – .......... .", answer: ["oxigen"] },
+    { type: "input", category: "text", prompt: "Completează: MgO conține elementele Mg – magneziu și O – .......... .", answer: ["oxigen"] },
+    { type: "input", category: "text", prompt: "Completează: HCl conține elementele H – hidrogen și Cl – .......... .", answer: ["clor"] },
+    { type: "input", category: "text", prompt: "Completează: CaO conține elementele Ca – calciu și O – .......... .", answer: ["oxigen"] },
+    { type: "input", category: "text", prompt: "Completează: Al₂O₃ conține elementele Al – aluminiu și O – .......... .", answer: ["oxigen"] },
+    { type: "input", category: "text", prompt: "Completează: Ca(OH)₂ conține elementele Ca – calciu, O – oxigen și H – .......... .", answer: ["hidrogen"] },
+
+    // Alegerea formulei corecte
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru apă:", options: ["H₂O", "CO₂", "NaCl", "O₂"], answer: ["H₂O"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru dioxid de carbon:", options: ["CO", "CO₂", "CaO", "HCl"], answer: ["CO₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru clorură de sodiu:", options: ["NaOH", "NaCl", "MgO", "H₂O"], answer: ["NaCl"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru oxid de magneziu:", options: ["MgO", "MgCl₂", "NaCl", "CO₂"], answer: ["MgO"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru hidroxid de sodiu:", options: ["NaCl", "NaOH", "HCl", "CaO"], answer: ["NaOH"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru oxigen molecular:", options: ["O₂", "H₂O", "CO₂", "O"], answer: ["O₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru acid clorhidric:", options: ["H₂O", "HCl", "NaOH", "CaCO₃"], answer: ["HCl"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru oxid de calciu:", options: ["CaO", "CaCl₂", "NaCl", "CO₂"], answer: ["CaO"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru clorură de calciu:", options: ["CaO", "CaCl₂", "NaOH", "H₂O"], answer: ["CaCl₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru carbonat de calciu:", options: ["CaO", "CaCO₃", "NaCl", "O₂"], answer: ["CaCO₃"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru hidrogen molecular:", options: ["H₂", "H₂O", "HCl", "NaOH"], answer: ["H₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru monoxid de carbon:", options: ["CO", "CO₂", "CaO", "NaCl"], answer: ["CO"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru hidroxid de calciu:", options: ["CaO", "CaCl₂", "Ca(OH)₂", "CO₂"], answer: ["Ca(OH)₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru oxid de aluminiu:", options: ["Al₂O₃", "AlCl₃", "NaOH", "H₂O"], answer: ["Al₂O₃"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru acid sulfuric:", options: ["HCl", "H₂SO₄", "NaCl", "MgO"], answer: ["H₂SO₄"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru azot molecular:", options: ["N₂", "NaCl", "NO₃", "NaOH"], answer: ["N₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru clorură de magneziu:", options: ["MgO", "MgCl₂", "NaCl", "HCl"], answer: ["MgCl₂"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru oxid de fier(III):", options: ["FeO", "Fe₂O₃", "FeCl₂", "H₂O"], answer: ["Fe₂O₃"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru sulfat de cupru(II):", options: ["CuSO₄", "CaCO₃", "NaOH", "CO₂"], answer: ["CuSO₄"] },
+    { type: "choice", category: "formula_choice", prompt: "Alege formula corectă pentru clorură de potasiu:", options: ["KCl", "K₂Cl", "CaCl₂", "MgO"], answer: ["KCl"] },
+
+    // Scriere de formule - validare cu litere mari/mici corecte
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru apă.", answer: ["H2O"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru dioxid de carbon.", answer: ["CO2"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru clorură de sodiu.", answer: ["NaCl"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru oxid de magneziu.", answer: ["MgO"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru oxid de calciu.", answer: ["CaO"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru clorură de calciu.", answer: ["CaCl2"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru hidroxid de sodiu.", answer: ["NaOH"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru carbonat de calciu.", answer: ["CaCO3"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru clorură de magneziu.", answer: ["MgCl2"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru oxid de aluminiu.", answer: ["Al2O3"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru hidroxid de calciu.", answer: ["Ca(OH)2"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru acid sulfuric.", answer: ["H2SO4"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru sulfat de cupru(II).", answer: ["CuSO4"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru oxid de fier(III).", answer: ["Fe2O3"] },
+    { type: "input", category: "formula_write", prompt: "Scrie formula chimică pentru clorură de potasiu.", answer: ["KCl"] },
+
+    // Valențe
+    { type: "choice", category: "valenta", prompt: "Ce valență are hidrogenul?", options: ["I", "II", "III", "IV"], answer: ["I"] },
+    { type: "choice", category: "valenta", prompt: "Ce valență are oxigenul în majoritatea compușilor studiați?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În NaCl, clorul Cl are valența I. Ce valență are sodiul Na?", options: ["I", "II", "III", "IV"], answer: ["I"] },
+    { type: "choice", category: "valenta", prompt: "În MgO, oxigenul O are valența II. Ce valență are magneziul Mg?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "Ce valență are radicalul OH – hidroxil?", options: ["I", "II", "III", "IV"], answer: ["I"] },
+    { type: "choice", category: "valenta", prompt: "În CaCl₂, clorul Cl are valența I. Ce valență are calciul Ca?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În CaO, oxigenul O are valența II. Ce valență are calciul Ca?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "Ce valență are radicalul SO₄ – sulfat?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În MgCl₂, clorul Cl are valența I. Ce valență are magneziul Mg?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În Al₂O₃, oxigenul O are valența II. Ce valență are aluminiul Al?", options: ["I", "II", "III", "IV"], answer: ["III"] },
+    { type: "choice", category: "valenta", prompt: "Ce valență are radicalul CO₃ – carbonat?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În CuO, oxigenul O are valența II. Ce valență are cuprul Cu?", options: ["I", "II", "III", "IV"], answer: ["II"] },
+    { type: "choice", category: "valenta", prompt: "În AlCl₃, clorul Cl are valența I. Ce valență are aluminiul Al?", options: ["I", "II", "III", "IV"], answer: ["III"] },
+
+    // Denumiri/asocieri
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei H₂O:", options: ["apă", "dioxid de carbon", "clorură de sodiu", "oxid de magneziu"], answer: ["apă"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei CO₂:", options: ["apă", "dioxid de carbon", "acid clorhidric", "hidroxid de sodiu"], answer: ["dioxid de carbon"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei NaCl:", options: ["clorură de sodiu", "oxid de calciu", "apă", "acid clorhidric"], answer: ["clorură de sodiu"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei HCl:", options: ["apă", "acid clorhidric", "oxid de magneziu", "carbonat de calciu"], answer: ["acid clorhidric"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei CO:", options: ["monoxid de carbon", "dioxid de carbon", "apă", "oxid de calciu"], answer: ["monoxid de carbon"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei Ca(OH)₂:", options: ["oxid de calciu", "hidroxid de calciu", "acid clorhidric", "clorură de sodiu"], answer: ["hidroxid de calciu"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei CuSO₄:", options: ["sulfat de cupru(II)", "carbonat de calciu", "oxid de fier", "clorură de sodiu"], answer: ["sulfat de cupru(II)"] },
+    { type: "choice", category: "denumire", prompt: "Alege denumirea formulei Fe₂O₃:", options: ["oxid de fier(III)", "clorură de fier", "hidroxid de sodiu", "acid sulfuric"], answer: ["oxid de fier(III)"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: NaCl = .......... .", answer: ["clorură de sodiu", "clorura de sodiu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: MgO = .......... .", answer: ["oxid de magneziu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: CaO = .......... .", answer: ["oxid de calciu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: CaCO₃ = .......... .", answer: ["carbonat de calciu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: Al₂O₃ = .......... .", answer: ["oxid de aluminiu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: H₂SO₄ = .......... .", answer: ["acid sulfuric"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: KCl = .......... .", answer: ["clorură de potasiu", "clorura de potasiu"] },
+    { type: "input", category: "text", prompt: "Asociază formula cu denumirea: MgCl₂ = .......... .", answer: ["clorură de magneziu", "clorura de magneziu"] }
+  ];
+
+  const QUESTION_DISTRIBUTION = [
+    { category: "clasificare", count: 4 },
+    { category: "text", count: 3 },
+    { category: "formula_choice", count: 5 },
+    { category: "formula_write", count: 3 },
+    { category: "valenta", count: 3 },
+    { category: "denumire", count: 2 }
+  ];
+
+  function getRandomInt(max) {
+    if (window.crypto && window.crypto.getRandomValues) {
+      const arr = new Uint32Array(1);
+      window.crypto.getRandomValues(arr);
+      return arr[0] % max;
+    }
+    return Math.floor(Math.random() * max);
+  }
+
+  function shuffle(array) {
+    const copy = [...array];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = getRandomInt(i + 1);
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function generateVariantId() {
+    const now = new Date();
+    const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+    return `FC7-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}-${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}-${rand}`;
+  }
+
+  function convertSubscripts(value) {
+    return String(value)
+      .replaceAll("₀", "0")
+      .replaceAll("₁", "1")
+      .replaceAll("₂", "2")
+      .replaceAll("₃", "3")
+      .replaceAll("₄", "4")
+      .replaceAll("₅", "5")
+      .replaceAll("₆", "6")
+      .replaceAll("₇", "7")
+      .replaceAll("₈", "8")
+      .replaceAll("₉", "9");
+  }
+
+  function normalizeFormulaStrict(value) {
+    return convertSubscripts(value)
+      .trim()
+      .replace(/\s+/g, "");
+  }
+
+  function normalizeChoiceFormula(value) {
+    return convertSubscripts(value)
+      .trim()
+      .replace(/\s+/g, "")
+      .toLowerCase();
+  }
+
+  function normalizeText(value) {
+    return String(value)
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/ă/g, "a")
+      .replace(/â/g, "a")
+      .replace(/î/g, "i")
+      .replace(/ș/g, "s")
+      .replace(/ş/g, "s")
+      .replace(/ț/g, "t")
+      .replace(/ţ/g, "t")
+      .replace(/\s+/g, " ");
+  }
+
+  function normalizeAnswer(value, question) {
+    if (question.category === "formula_write") return normalizeFormulaStrict(value);
+
+    if (question.type === "choice" && ["formula_choice", "clasificare"].includes(question.category)) {
+      return normalizeChoiceFormula(value);
+    }
+
+    return normalizeText(value);
+  }
+
+  function prettyFormula(text) {
+    return String(text).replace(/([A-Za-z\)])(\d+)/g, (_, a, n) => a + "<sub>" + n + "</sub>");
+  }
+
+  function escapeHtml(text) {
+    return String(text)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function selectBalancedQuestions() {
+    let selected = [];
+
+    QUESTION_DISTRIBUTION.forEach(rule => {
+      const pool = shuffle(questionBank.filter(q => q.category === rule.category));
+      selected.push(...pool.slice(0, Math.min(rule.count, pool.length)));
+    });
+
+    if (selected.length < QUESTION_COUNT) {
+      const remaining = shuffle(questionBank.filter(q => !selected.includes(q)));
+      selected.push(...remaining.slice(0, QUESTION_COUNT - selected.length));
+    }
+
+    return shuffle(selected).slice(0, QUESTION_COUNT).map((q, index) => ({
+      ...q,
+      id: `q${index + 1}`,
+      options: q.options ? shuffle(q.options) : undefined,
+      studentAnswer: "",
+      checked: false,
+      correct: false
+    }));
+  }
+
+
+  function resetIntegrityLog() {
+    integrityLog = {
+      exitCount: 0,
+      awayStart: null,
+      awayItem: null,
+      awayQuestion: "",
+      totalAwaySeconds: 0,
+      events: []
+    };
+    integrityAlertOpen = false;
+  }
+
+  function isTestActive() {
+    const testArea = document.getElementById("testArea");
+    return Boolean(
+      testArea &&
+      !testArea.classList.contains("hidden") &&
+      currentQuestions.length > 0 &&
+      !submitted
+    );
+  }
+
+  function getCurrentIntegrityItem() {
+    return currentQuestionIndex + 1;
+  }
+
+  function getCurrentIntegrityQuestion() {
+    const q = currentQuestions[currentQuestionIndex];
+    return q ? q.prompt : "";
+  }
+
+  function formatDuration(seconds) {
+    const total = Math.max(0, Number(seconds) || 0);
+    const min = Math.floor(total / 60);
+    const sec = total % 60;
+
+    if (min === 0) return `${sec} secunde`;
+    if (sec === 0) return `${min} minut${min === 1 ? "" : "e"}`;
+    return `${min} minut${min === 1 ? "" : "e"} și ${sec} secunde`;
+  }
+
+  function getIntegrityExitEvents() {
+    return integrityLog.events.filter(event => event.tip === "iesire_din_ecran");
+  }
+
+  function getIntegrityReturnEvents() {
+    return integrityLog.events.filter(event => event.tip === "revenire_in_test");
+  }
+
+  function getIntegrityItemsSummary() {
+    const items = getIntegrityExitEvents()
+      .map(event => event.item)
+      .filter(item => item !== undefined && item !== null && item !== "");
+
+    const uniqueItems = [...new Set(items)];
+
+    if (uniqueItems.length === 0) return "Nu s-au înregistrat părăsiri ale ecranului.";
+
+    return uniqueItems.map(item => `Item ${item}`).join(", ");
+  }
+
+  function handleScreenExit() {
+    if (!isTestActive() || integrityAlertOpen || integrityLog.awayStart) return;
+
+    integrityLog.awayStart = Date.now();
+    integrityLog.awayItem = getCurrentIntegrityItem();
+    integrityLog.awayQuestion = getCurrentIntegrityQuestion();
+    integrityLog.exitCount++;
+
+    integrityLog.events.push({
+      tip: "iesire_din_ecran",
+      item: integrityLog.awayItem,
+      intrebare: integrityLog.awayQuestion,
+      ora: new Date().toLocaleString("ro-RO")
+    });
+  }
+
+  function handleScreenReturn() {
+    if (!isTestActive() || !integrityLog.awayStart) return;
+
+    const durationSeconds = Math.max(1, Math.round((Date.now() - integrityLog.awayStart) / 1000));
+    integrityLog.totalAwaySeconds += durationSeconds;
+
+    integrityLog.events.push({
+      tip: "revenire_in_test",
+      item: integrityLog.awayItem,
+      intrebare: integrityLog.awayQuestion,
+      durataSecunde: durationSeconds,
+      oraPlecare: new Date(integrityLog.awayStart).toLocaleString("ro-RO"),
+      oraRevenire: new Date().toLocaleString("ro-RO")
+    });
+
+    integrityLog.awayStart = null;
+    integrityLog.awayItem = null;
+    integrityLog.awayQuestion = "";
+
+    integrityAlertOpen = true;
+    alert(INTEGRITY_WARNING_MESSAGE);
+    setTimeout(() => {
+      integrityAlertOpen = false;
+    }, 500);
+  }
+
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      handleScreenExit();
+    } else {
+      handleScreenReturn();
+    }
+  });
+
+  document.addEventListener("contextmenu", function(event) {
+    if (!isTestActive()) return;
+    event.preventDefault();
+    alert("Click dreapta nu este permis în timpul testului.");
+  });
+
+  document.addEventListener("copy", function(event) {
+    if (!isTestActive()) return;
+    event.preventDefault();
+    alert("Copierea nu este permisă în timpul testului.");
+  });
+
+  document.addEventListener("cut", function(event) {
+    if (!isTestActive()) return;
+    event.preventDefault();
+    alert("Decuparea textului nu este permisă în timpul testului.");
+  });
+
+  document.addEventListener("paste", function(event) {
+    if (!isTestActive()) return;
+    event.preventDefault();
+    alert("Lipirea textului nu este permisă în timpul testului.");
+  });
+
+  function startTest() {
+    const name = document.getElementById("studentName").value.trim();
+    const cls = document.getElementById("studentClass").value.trim();
+
+    if (!name || !cls) {
+      alert("Completează numele, prenumele și clasa înainte de a începe testul.");
+      return;
+    }
+
+    submitted = false;
+    variantId = generateVariantId();
+    currentQuestions = selectBalancedQuestions();
+    currentQuestionIndex = 0;
+    resetIntegrityLog();
+
+    document.getElementById("startCard").classList.add("hidden");
+    document.getElementById("testArea").classList.remove("hidden");
+    document.getElementById("studentInfo").innerText = `${name} – ${cls}`;
+    document.getElementById("variantIdLabel").innerText = variantId;
+    document.getElementById("totalCount").innerText = currentQuestions.length;
+
+    renderCurrentQuestion();
+    updateProgress();
+    scrollToTop();
+  }
+
+  function renderCurrentQuestion() {
+    const container = document.getElementById("questionsContainer");
+    const q = currentQuestions[currentQuestionIndex];
+    container.innerHTML = "";
+
+    const card = document.createElement("div");
+    card.className = "question-card";
+    card.id = `card-${q.id}`;
+
+    let answerHtml = "";
+
+    if (q.type === "choice") {
+      answerHtml = `<div class="answer-options">${q.options.map(opt => `
+        <label>
+          <input type="radio" name="${q.id}" value="${escapeHtml(opt)}" ${q.studentAnswer === opt ? "checked" : ""} ${q.checked ? "disabled" : ""} />
+          ${prettyFormula(escapeHtml(opt))}
+        </label>
+      `).join("")}</div>`;
+    } else {
+      const placeholder = q.category === "formula_write" ? "Exemplu: NaCl, CaCO3, MgCl2" : "Scrie răspunsul aici";
+      answerHtml = `<input id="${q.id}" type="text" placeholder="${placeholder}" value="${escapeHtml(q.studentAnswer)}" ${q.checked ? "disabled" : ""} />`;
+    }
+
+    let feedbackHtml = "";
+    if (q.checked) {
+      feedbackHtml = q.correct
+        ? `<div class="question-status status-correct">Corect.</div>`
+        : `<div class="question-status status-wrong">Greșit.</div>`;
+    }
+
+    card.innerHTML = `
+      <div class="question-title">${currentQuestionIndex + 1}. ${prettyFormula(escapeHtml(q.prompt))}</div>
+      ${answerHtml}
+      <div id="feedback-${q.id}" class="feedback">${feedbackHtml}</div>
+    `;
+
+    container.appendChild(card);
+
+    document.getElementById("currentQuestionLabel").innerText = currentQuestionIndex + 1;
+    updateButtons();
+    updateProgress();
+  }
+
+  function getCurrentAnswer() {
+    const q = currentQuestions[currentQuestionIndex];
+
+    if (q.type === "choice") {
+      const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+      return checked ? checked.value : "";
+    }
+
+    const input = document.getElementById(q.id);
+    return input ? input.value : "";
+  }
+
+  function isCorrect(q, value) {
+    const normalizedValue = normalizeAnswer(value, q);
+    return q.answer.some(ans => normalizeAnswer(ans, q) === normalizedValue);
+  }
+
+  function checkCurrentQuestion() {
+    const q = currentQuestions[currentQuestionIndex];
+
+    if (q.checked) return;
+
+    const studentAnswer = getCurrentAnswer().trim();
+
+    if (!studentAnswer) {
+      alert("Scrie sau alege un răspuns înainte de verificare.");
+      return;
+    }
+
+    const ok = isCorrect(q, studentAnswer);
+    q.studentAnswer = studentAnswer;
+    q.checked = true;
+    q.correct = ok;
+
+    renderCurrentQuestion();
+  }
+
+  function goToNextQuestion() {
+    const q = currentQuestions[currentQuestionIndex];
+
+    if (!q.checked) {
+      alert("Mai întâi verifică răspunsul la această întrebare.");
+      return;
+    }
+
+    if (currentQuestionIndex < currentQuestions.length - 1) {
+      currentQuestionIndex++;
+      renderCurrentQuestion();
+      scrollToTop();
+    }
+  }
+
+  function updateButtons() {
+    const q = currentQuestions[currentQuestionIndex];
+    const isLast = currentQuestionIndex === currentQuestions.length - 1;
+
+    document.getElementById("checkBtn").disabled = q.checked;
+    document.getElementById("nextBtn").disabled = !q.checked || isLast;
+    document.getElementById("nextBtn").classList.toggle("hidden", isLast);
+    document.getElementById("finishBtn").classList.toggle("hidden", !isLast);
+    document.getElementById("finishBtn").disabled = !q.checked || submitted;
+  }
+
+  function updateProgress() {
+    const answered = currentQuestions.filter(q => q.checked).length;
+    document.getElementById("answeredCount").innerText = answered;
+    const percent = currentQuestions.length ? (answered / currentQuestions.length) * 100 : 0;
+    document.getElementById("progressFill").style.width = `${percent}%`;
+  }
+
+  function submitTest() {
+    if (submitted) return;
+
+    const unchecked = currentQuestions.filter(q => !q.checked).length;
+    if (unchecked > 0) {
+      alert(`Mai ai ${unchecked} întrebări neverificate.`);
+      return;
+    }
+
+    submitted = true;
+
+    const correct = currentQuestions.filter(q => q.correct).length;
+    const answerRows = currentQuestions.map((q, index) => ({
+      nr: index + 1,
+      prompt: q.prompt,
+      category: q.category,
+      studentAnswer: q.studentAnswer,
+      correct: q.correct
+    }));
+
+    const percentage = correct / currentQuestions.length;
+    const grade = Math.max(1, OFFICIAL_POINTS + percentage * TEST_POINTS);
+    const roundedGrade = Math.round(grade * 100) / 100;
+
+    const payload = {
+      timestamp: new Date().toISOString(),
+      test: "Formula chimică, valența, substanțe simple, binare și ternare – Clasa a VII-a",
+      variantId,
+      studentName: document.getElementById("studentName").value.trim(),
+      studentClass: document.getElementById("studentClass").value.trim(),
+      correct,
+      total: currentQuestions.length,
+      officialPoints: OFFICIAL_POINTS,
+      testPoints: TEST_POINTS,
+      grade: roundedGrade,
+      answers: answerRows,
+      integrityExitCount: integrityLog.exitCount,
+      integrityTotalAwaySeconds: integrityLog.totalAwaySeconds,
+      integrityTotalAwayFormatted: formatDuration(integrityLog.totalAwaySeconds),
+      integrityItemsSummary: getIntegrityItemsSummary(),
+      integrityEvents: integrityLog.events
+    };
+
+    document.getElementById("testArea").classList.add("hidden");
+    showResult(payload);
+    sendToGoogleSheet(payload);
+  }
+
+  function lockTestInputs() {
+    document.querySelectorAll("#testArea input, #testArea select, #testArea button").forEach(el => {
+      if (!el.closest("#resultArea")) el.disabled = true;
+    });
+  }
+
+  function showResult(payload) {
+    lastReportPayload = payload;
+    document.getElementById("resultArea").classList.remove("hidden");
+    document.getElementById("gradeDisplay").innerText = `Nota ${payload.grade}`;
+    const integrityReturns = getIntegrityReturnEvents();
+    const integrityDetailsRows = integrityReturns.map(event => `
+      <tr>
+        <td>${escapeHtml(event.item)}</td>
+        <td>${escapeHtml(event.durataSecunde)} secunde</td>
+        <td>${escapeHtml(event.oraPlecare || "")}</td>
+        <td>${escapeHtml(event.oraRevenire || "")}</td>
+      </tr>
+    `).join("");
+
+    const integrityDetailsHtml = integrityReturns.length
+      ? `
+        <div class="review-table-wrapper">
+          <table class="review-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Durată lipsă</th>
+                <th>Ora ieșirii</th>
+                <th>Ora revenirii</th>
+              </tr>
+            </thead>
+            <tbody>${integrityDetailsRows}</tbody>
+          </table>
+        </div>
+      `
+      : `<p class="small">Nu s-au înregistrat părăsiri ale ecranului testului.</p>`;
+
+    document.getElementById("resultDetails").innerHTML = `
+      Elev: <b>${escapeHtml(payload.studentName)}</b><br>
+      Clasa: <b>${escapeHtml(payload.studentClass)}</b><br>
+      Răspunsuri corecte: <b>${payload.correct}</b> din <b>${payload.total}</b><br>
+      Punctaj: 2 puncte din oficiu + ${Math.round((payload.correct / payload.total) * 8 * 100) / 100} puncte din test.
+      <div class="warning">
+        <b>Raport anti-copiere</b><br>
+        Ieșiri din ecran: <b>${escapeHtml(payload.integrityExitCount)}</b><br>
+        Timp total lipsă: <b>${escapeHtml(payload.integrityTotalAwayFormatted)}</b><br>
+        Itemi la care a părăsit ecranul: <b>${escapeHtml(payload.integrityItemsSummary)}</b>
+        ${integrityDetailsHtml}
+      </div>
+    `;
+
+    const reviewRows = payload.answers.map(item => {
+      const resultText = item.correct ? "Corect" : "Greșit";
+      const resultClass = item.correct ? "review-ok" : "review-wrong";
+      return `
+        <tr>
+          <td>${item.nr}</td>
+          <td>${prettyFormula(escapeHtml(item.prompt))}</td>
+          <td>${escapeHtml(item.studentAnswer)}</td>
+          <td class="${resultClass}">${resultText}</td>
+        </tr>
+      `;
+    }).join("");
+
+    document.getElementById("resultReview").innerHTML = `
+      <h3>Rezumatul răspunsurilor</h3>
+      <p class="small">Se afișează doar dacă răspunsul a fost corect sau greșit, fără răspunsul corect.</p>
+      <div class="review-table-wrapper">
+        <table class="review-table">
+          <thead>
+            <tr>
+              <th>Nr.</th>
+              <th>Întrebarea</th>
+              <th>Răspunsul elevului</th>
+              <th>Rezultat</th>
+            </tr>
+          </thead>
+          <tbody>${reviewRows}</tbody>
+        </table>
+      </div>
+    `;
+
+    document.getElementById("resultArea").scrollIntoView({ behavior: "smooth" });
+  }
+
+  function downloadReportPDF() {
+    if (!lastReportPayload) {
+      alert("Raportul nu este disponibil încă.");
+      return;
+    }
+
+    if (typeof html2pdf === "undefined") {
+      alert("Modulul pentru generarea PDF nu s-a încărcat. Verifică conexiunea la internet și încearcă din nou.");
+      return;
+    }
+
+    const payload = lastReportPayload;
+    const safeName = (payload.studentName || "elev")
+      .replace(/[^a-zA-Z0-9ăâîșțĂÂÎȘȚ -]/g, "")
+      .split(" ")
+      .filter(Boolean)
+      .join("-") || "elev";
+
+    const integrityReturns = Array.isArray(payload.integrityEvents)
+      ? payload.integrityEvents.filter(event => event.tip === "revenire_in_test")
+      : [];
+
+    const integrityRows = integrityReturns.length
+      ? integrityReturns.map(event => `
+          <tr>
+            <td style="border:1px solid #d8e1ec; padding:7px; text-align:center;">${escapeHtml(event.item || "")}</td>
+            <td style="border:1px solid #d8e1ec; padding:7px; text-align:center;">${escapeHtml(event.durataSecunde || 0)} secunde</td>
+            <td style="border:1px solid #d8e1ec; padding:7px;">${escapeHtml(event.oraPlecare || "")}</td>
+            <td style="border:1px solid #d8e1ec; padding:7px;">${escapeHtml(event.oraRevenire || "")}</td>
+          </tr>
+        `).join("")
+      : `
+          <tr>
+            <td colspan="4" style="border:1px solid #d8e1ec; padding:8px; text-align:center;">
+              Nu s-au înregistrat părăsiri ale ecranului testului.
+            </td>
+          </tr>
+        `;
+
+    const reviewRows = payload.answers.map(item => {
+      const resultText = item.correct ? "Corect" : "Greșit";
+      const resultColor = item.correct ? "#176b3a" : "#962d22";
+
+      return `
+        <tr>
+          <td style="border:1px solid #d8e1ec; padding:7px; text-align:center;">${item.nr}</td>
+          <td style="border:1px solid #d8e1ec; padding:7px;">${prettyFormula(escapeHtml(item.prompt))}</td>
+          <td style="border:1px solid #d8e1ec; padding:7px; font-weight:bold; color:${resultColor}; text-align:center;">${resultText}</td>
+        </tr>
+      `;
+    }).join("");
+
+    const reportOverlay = document.createElement("div");
+    reportOverlay.id = "pdfReportOverlay";
+    reportOverlay.style.position = "fixed";
+    reportOverlay.style.left = "0";
+    reportOverlay.style.top = "0";
+    reportOverlay.style.width = "100vw";
+    reportOverlay.style.minHeight = "100vh";
+    reportOverlay.style.background = "rgba(255,255,255,0.98)";
+    reportOverlay.style.zIndex = "999999";
+    reportOverlay.style.overflow = "auto";
+    reportOverlay.style.padding = "10px";
+
+    reportOverlay.innerHTML = `
+      <div style="text-align:center; font-family:Arial, sans-serif; color:#243447; margin:8px 0 12px;">
+        <b>Se generează raportul PDF...</b>
+      </div>
+      <div id="pdfReportContent" style="
+        width: 760px;
+        max-width: 100%;
+        margin: 0 auto;
+        background: white;
+        color: #243447;
+        font-family: Arial, sans-serif;
+        padding: 24px;
+        border: 1px solid #d8e1ec;
+      ">
+        <div style="text-align:center; margin-bottom:16px;">
+          <h1 style="margin:0 0 6px; font-size:24px;">Raport final - Test formula chimică</h1>
+          <div style="font-size:15px;">Chimie - Clasa a VII-a</div>
+          <div style="font-size:13px; color:#667085; margin-top:4px;">Material realizat de prof. Dănuț Andronie</div>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; margin-bottom:14px; font-size:13px;">
+          <tbody>
+            <tr>
+              <td style="border:1px solid #d8e1ec; padding:8px; width:35%;"><b>Numele și prenumele elevului</b></td>
+              <td style="border:1px solid #d8e1ec; padding:8px;">${escapeHtml(payload.studentName)}</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #d8e1ec; padding:8px;"><b>Clasa</b></td>
+              <td style="border:1px solid #d8e1ec; padding:8px;">${escapeHtml(payload.studentClass)}</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #d8e1ec; padding:8px;"><b>Nota obținută</b></td>
+              <td style="border:1px solid #d8e1ec; padding:8px; font-size:20px;"><b>${escapeHtml(payload.grade)}</b></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #d8e1ec; padding:8px;"><b>Răspunsuri corecte</b></td>
+              <td style="border:1px solid #d8e1ec; padding:8px;">${escapeHtml(payload.correct)} din ${escapeHtml(payload.total)}</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #d8e1ec; padding:8px;"><b>ID variantă</b></td>
+              <td style="border:1px solid #d8e1ec; padding:8px;">${escapeHtml(payload.variantId)}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 style="font-size:17px; margin:12px 0 8px;">Raport anti-copiere</h2>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px;">
+          <tbody>
+            <tr>
+              <td style="border:1px solid #d8e1ec; padding:7px; width:35%;"><b>Ieșiri din ecran</b></td>
+              <td style="border:1px solid #d8e1ec; padding:7px;">${escapeHtml(payload.integrityExitCount || 0)}</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #d8e1ec; padding:7px;"><b>Timp total lipsă</b></td>
+              <td style="border:1px solid #d8e1ec; padding:7px;">${escapeHtml(payload.integrityTotalAwayFormatted || "0 secunde")}</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #d8e1ec; padding:7px;"><b>Itemi afectați</b></td>
+              <td style="border:1px solid #d8e1ec; padding:7px;">${escapeHtml(payload.integrityItemsSummary || "Nu s-au înregistrat părăsiri ale ecranului.")}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:11px;">
+          <thead>
+            <tr>
+              <th style="border:1px solid #d8e1ec; padding:7px; background:#edf6ff;">Item</th>
+              <th style="border:1px solid #d8e1ec; padding:7px; background:#edf6ff;">Durată lipsă</th>
+              <th style="border:1px solid #d8e1ec; padding:7px; background:#edf6ff;">Ora ieșirii</th>
+              <th style="border:1px solid #d8e1ec; padding:7px; background:#edf6ff;">Ora revenirii</th>
+            </tr>
+          </thead>
+          <tbody>${integrityRows}</tbody>
+        </table>
+
+        <h2 style="font-size:17px; margin:12px 0 8px;">Rezumatul răspunsurilor</h2>
+        <p style="font-size:12px; color:#667085; margin-top:0;">
+          Raportul afișează doar dacă răspunsul a fost corect sau greșit, fără răspunsul corect.
+        </p>
+
+        <table style="width:100%; border-collapse:collapse; font-size:11px;">
+          <thead>
+            <tr>
+              <th style="border:1px solid #d8e1ec; padding:7px; background:#edf6ff; width:42px;">Nr.</th>
+              <th style="border:1px solid #d8e1ec; padding:7px; background:#edf6ff;">Întrebarea</th>
+              <th style="border:1px solid #d8e1ec; padding:7px; background:#edf6ff; width:85px;">Rezultat</th>
+            </tr>
+          </thead>
+          <tbody>${reviewRows}</tbody>
+        </table>
+
+        <div style="font-size:11px; color:#667085; margin-top:14px; text-align:center;">
+          Testul se susține o singură dată. Nota finală o decide profesorul.
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(reportOverlay);
+
+    const reportContent = document.getElementById("pdfReportContent");
+
+    const options = {
+      margin: 0.35,
+      filename: `rezultate-test-chimie-${safeName}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 900
+      },
+      jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+      pagebreak: { mode: ["css", "legacy"] }
+    };
+
+    const downloadButton = document.querySelector('button[onclick="downloadReportPDF()"]');
+    if (downloadButton) {
+      downloadButton.disabled = true;
+      downloadButton.innerText = "Se generează PDF-ul...";
+    }
+
+    setTimeout(() => {
+      html2pdf()
+        .set(options)
+        .from(reportContent)
+        .save()
+        .then(() => {
+          reportOverlay.remove();
+          if (downloadButton) {
+            downloadButton.disabled = false;
+            downloadButton.innerText = "Descarcă rezultatele testului";
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          reportOverlay.remove();
+          if (downloadButton) {
+            downloadButton.disabled = false;
+            downloadButton.innerText = "Descarcă rezultatele testului";
+          }
+          alert("Nu s-a putut genera raportul PDF. Încearcă din nou.");
+        });
+    }, 300);
+  }
+
+  function setResultButtonsEnabled(enabled) {
     const downloadBtn = document.getElementById("downloadPdfBtn");
     const newTestBtn = document.getElementById("newTestBtn");
 
@@ -139,12 +1366,7 @@ helper_func = r'''  function setResultButtonsEnabled(enabled) {
     });
   }
 
-'''
-if "function setResultButtonsEnabled" not in html:
-    html = html.replace("  function sendToGoogleSheet(payload) {", helper_func + "  function sendToGoogleSheet(payload) {")
-
-# 5) Replace sendToGoogleSheet implementation
-new_send = r'''  function sendToGoogleSheet(payload) {
+  function sendToGoogleSheet(payload) {
     const status = document.getElementById("sheetStatus");
 
     setResultButtonsEnabled(false);
@@ -189,25 +1411,9 @@ new_send = r'''  function sendToGoogleSheet(payload) {
     }, SAVE_WAIT_SECONDS * 1000);
   }
 
-'''
-html2 = re.sub(
-    r"  function sendToGoogleSheet\(payload\) \{[\s\S]*?\n  function scrollToTop\(\) \{",
-    new_send + "  function scrollToTop() {",
-    html
-)
-
-if html2 == html:
-    raise RuntimeError("Nu am reușit să înlocuiesc funcția sendToGoogleSheet.")
-
-out = Path("/mnt/data/index_salvare_sigura_15s.html")
-out.write_text(html2, encoding="utf-8")
-
-print(f"Fișier generat: {out}")
-print(f"Dimensiune: {out.stat().st_size} bytes")
-print("Verificări:")
-print("- Are mesaj de salvare:", "Se salvează rezultatul. Nu închide pagina." in html2)
-print("- Așteptare 15 secunde:", "SAVE_WAIT_SECONDS = 15" in html2)
-print("- 3 încercări:", "SAVE_RETRY_DELAYS_MS = [0, 5000, 10000]" in html2)
-print("- Buton PDF blocat inițial:", 'id="downloadPdfBtn"' in html2 and "disabled>Descarcă" in html2)
-print("- URL Apps Script păstrat:", "AKfycbz57HJXdihQm2KixNxJaIfA8Au2bCb3m2XIyiGBLXCWItSACkxwaH4krmvetNKvk8iciQ" in html2)
-print("- Anti-fraudă păstrată:", "visibilitychange" in html2 and "integrityExitCount" in html2)
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+</script>
+</body>
+</html>
